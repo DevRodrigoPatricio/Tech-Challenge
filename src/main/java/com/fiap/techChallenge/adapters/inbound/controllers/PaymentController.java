@@ -1,7 +1,6 @@
-package com.fiap.techChallenge.adapters.inbound.controllers;
+package com.fiap.techChallenge.adapters.inbound.controller;
 
-
-import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
+import com.fiap.techChallenge.application.usecases.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.PaymentRequest;
 import com.fiap.techChallenge.domain.PaymentResponse;
 import org.springframework.http.ResponseEntity;
@@ -22,4 +21,6 @@ public class PaymentController {
         PaymentResponse response = processPaymentUseCase.execute(request);
         return ResponseEntity.ok(response);
     }
+
+
 }

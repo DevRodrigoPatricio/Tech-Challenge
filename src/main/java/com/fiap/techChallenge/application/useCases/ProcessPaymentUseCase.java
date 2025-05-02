@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.application.useCases;
+package com.fiap.techChallenge.application.usecases;
 
 import com.fiap.techChallenge.application.ports.PaymentProcessingPort;
 import com.fiap.techChallenge.domain.PaymentRequest;
@@ -17,4 +17,5 @@ public class ProcessPaymentUseCase {
     public PaymentResponse execute(PaymentRequest request) {
         return paymentProcessingPort.processPayment(request);
     }
+
 }
