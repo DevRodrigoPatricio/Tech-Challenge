@@ -25,8 +25,8 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("{orderId}/{paymentId}")
-    public ResponseEntity<PaymentStatus> getPaymentStatus(@PathVariable UUID orderId, @PathVariable Long paymentId) {
-        return ResponseEntity.ok(processPaymentUseCase.processPayment(orderId, paymentId));
+    @GetMapping("{orderId}")
+    public ResponseEntity<PaymentStatus> getPaymentStatus(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(processPaymentUseCase.processPayment(orderId));
     }
 }

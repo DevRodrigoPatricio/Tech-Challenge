@@ -3,8 +3,8 @@ package com.fiap.techChallenge.adapters.outbound.payment;
 import com.fiap.techChallenge.application.ports.PaymentProcessingPort;
 import com.fiap.techChallenge.domain.PaymentRequest;
 import com.fiap.techChallenge.domain.PaymentResponse;
+import com.fiap.techChallenge.domain.enums.PaymentStatus;
 import com.fiap.techChallenge.domain.exceptions.PaymentException;
-
 import org.springframework.http.*;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;
@@ -72,14 +72,13 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         payload.put("external_reference", request.getOrderId());
         payload.put("title", "Pedido " + request.getOrderId());
         payload.put("description", "Compra no tech challenge ");
-        payload.put("notification_url", "https://www.yourserver.com/notifications");
         payload.put("total_amount", request.getAmount());
 
         Map<String, Object> item = new HashMap<>();
         item.put("sku_number", "A123K9191938");
         item.put("category", "marketplace");
-        item.put("title", "Combo Fast Food");
-        item.put("description", "Pedido realizado no totem");
+        item.put("title", "Compra no tech challenge");
+        item.put("description", "Pedido realizado no tech challenge");
         item.put("unit_price", request.getAmount());
         item.put("quantity", 1);
         item.put("unit_measure", "unit");
@@ -97,6 +96,58 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
 
         return payload;
     }
+
+    @Override
+    public PaymentStatus checkStatus(UUID orderId) {
+        try {
+            String url = "https://api.mercadopago.com/merchant_orders/search?external_reference=" + orderId;
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setBearerAuth(ACCESS_TOKEN);
+            HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<Map> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    entity,
+                    Map.class
+            );
+
+            if (response.getStatusCode() == HttpStatus.OK) {
+                Map<String, Object> body = response.getBody();
+                List<Map<String, Object>> elements = (List<Map<String, Object>>) body.get("elements");
+
+                if (elements == null || elements.isEmpty()) {
+                    return PaymentStatus.PENDING;
+                }
+
+                Map<String, Object> merchantOrder = elements.get(0);
+                List<Map<String, Object>> payments = (List<Map<String, Object>>) merchantOrder.get("payments");
+
+                if (payments == null || payments.isEmpty()) {
+                    return PaymentStatus.PENDING;
+                }
+
+                // Pega o status do primeiro pagamento
+                String status = (String) payments.get(0).get("status");
+                return mapStatus(status);
+            } else {
+                throw new PaymentException("Erro ao consultar status do pedido: " + response.getStatusCode());
+            }
+        } catch (Exception e) {
+            throw new PaymentException("Erro ao consultar status do pedido", e);
+        }
+    }
+
+
+    private PaymentStatus mapStatus(String mpStatus) {
+        return switch (mpStatus) {
+            case "approved" -> PaymentStatus.APPROVED;
+            case "rejected", "cancelled" -> PaymentStatus.REJECTED;
+            default -> PaymentStatus.PENDING;
+        };
+    }
+
 
     @Recover
     public PaymentResponse recoverProcessPayment(Exception e, PaymentRequest request) {
