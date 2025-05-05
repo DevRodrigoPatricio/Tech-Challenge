@@ -7,6 +7,7 @@ public class PaymentRequest {
     private UUID orderId;
     private BigDecimal amount;
 
+
     public PaymentRequest(){}
 
     public PaymentRequest(UUID orderId, BigDecimal amount) {

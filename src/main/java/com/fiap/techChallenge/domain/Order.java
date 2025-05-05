@@ -23,7 +23,11 @@ public class Order {
         EM_PREPARACAO,
         PRONTO,
         ENTREGUE,
-        FINALIZADO
+        FINALIZADO,
+        PAGO,
+        NAO_PAGO,
+        PAGAMENTO_PENDENTE
+
     }
 
     public UUID getId() {
@@ -104,5 +108,9 @@ public class Order {
         }
         this.status = OrderStatus.FINALIZADO;
         this.horarioFinalizado = LocalDateTime.now();
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }

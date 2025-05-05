@@ -1,22 +1,19 @@
 package com.fiap.techChallenge.domain;
 
+import java.util.UUID;
+
 public class PaymentResponse {
-    private String qrCode;
+    private UUID orderId;
     private String status;
-    private String qrCodeBase64;
+    private String  qrCodeImage;
 
     public PaymentResponse() {
     }
 
-    public PaymentResponse(String qrCode, String status) {
-        this.status = status;
-        this.qrCode = qrCode;
-    }
-
-    public PaymentResponse(String pending, String qrCode, String qrCodeBase64) {
-     this.status = pending;
-     this.qrCode = qrCode;
-     this.qrCodeBase64 = qrCodeBase64;
+    public PaymentResponse(String status,UUID orderId, String qrCodeImage) {
+     this.status = status;
+     this.orderId = orderId;
+     this.qrCodeImage = qrCodeImage;
     }
 
     public String getStatus() {
@@ -27,21 +24,19 @@ public class PaymentResponse {
         this.status = status;
     }
 
-    public String getQrCode() {
-        return qrCode;
+    public UUID getOrderId() {
+        return orderId;
     }
 
-    public void setQrCode(String qrCode) {
-        this.qrCode = qrCode;
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
     }
 
-    public String getQrCodeBase64() {
-        return qrCodeBase64;
+    public String getQrCodeImage() {
+        return qrCodeImage;
     }
 
-    public void setQrCodeBase64(String qrCodeBase64) {
-        this.qrCodeBase64 = qrCodeBase64;
+    public void setQrCodeImage(String qrCodeImage) {
+        this.qrCodeImage = qrCodeImage;
     }
-
-
 }

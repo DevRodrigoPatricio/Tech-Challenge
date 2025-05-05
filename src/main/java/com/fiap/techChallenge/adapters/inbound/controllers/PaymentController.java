@@ -1,10 +1,13 @@
-package com.fiap.techChallenge.adapters.inbound.controller;
+package com.fiap.techChallenge.adapters.inbound.controllers;
 
-import com.fiap.techChallenge.application.usecases.ProcessPaymentUseCase;
+import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.PaymentRequest;
 import com.fiap.techChallenge.domain.PaymentResponse;
+import com.fiap.techChallenge.domain.enums.PaymentStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/pagamento")
@@ -22,5 +25,8 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-
+    @GetMapping("{orderId}/{paymentId}")
+    public ResponseEntity<PaymentStatus> getPaymentStatus(@PathVariable UUID orderId, @PathVariable Long paymentId) {
+        return ResponseEntity.ok(processPaymentUseCase.processPayment(orderId, paymentId));
+    }
 }

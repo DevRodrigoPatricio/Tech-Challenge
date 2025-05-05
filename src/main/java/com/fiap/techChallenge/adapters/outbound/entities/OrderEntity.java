@@ -13,7 +13,10 @@ public class OrderEntity {
         EM_PREPARACAO,
         PRONTO,
         ENTREGUE,
-        FINALIZADO
+        FINALIZADO,
+        PAGO,
+        NAO_PAGO,
+        PAGAMENTO_PENDENTE
     }
 
     @Id
