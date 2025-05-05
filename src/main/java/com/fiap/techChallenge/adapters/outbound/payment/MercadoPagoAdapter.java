@@ -12,18 +12,31 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Value;
 
 @Component
 public class MercadoPagoAdapter implements PaymentProcessingPort {
 
-    private static final String ACCESS_TOKEN = "APP_USR-7885298402464176-050508-28625df9a6c9cbd4560bbfc22cb73b98-2416569013";
-    private static final String COLLECTOR_ID = "2416569013";
-    private static final String POS_ID = "SUC001POS001";
+    private final String accessToken;
+    private final String collectorId;
+    private final String posId;
+
 
     private static final String QR_URL_TEMPLATE =
             "https://api.mercadopago.com/instore/orders/qr/seller/collectors/{collector_id}/pos/{pos_id}/qrs";
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+    public MercadoPagoAdapter(
+            @Value("${mercado.pago.access-token}") String accessToken,
+            @Value("${mercado.pago.collector-id}") String collectorId,
+            @Value("${mercado.pago.pos-id}") String posId
+    ) {
+        this.accessToken = accessToken;
+        this.collectorId = collectorId;
+        this.posId = posId;
+    }
+
 
     @Override
     @Retryable(
@@ -35,14 +48,14 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(ACCESS_TOKEN);
+            headers.setBearerAuth(accessToken);
 
             Map<String, Object> payload = buildPayload(request);
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 
             String url = QR_URL_TEMPLATE
-                    .replace("{collector_id}", COLLECTOR_ID)
-                    .replace("{pos_id}", POS_ID);
+                    .replace("{collector_id}", collectorId)
+                    .replace("{pos_id}", posId);
 
             ResponseEntity<Map> response = restTemplate.exchange(
                     url,
@@ -103,7 +116,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
             String url = "https://api.mercadopago.com/merchant_orders/search?external_reference=" + orderId;
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setBearerAuth(ACCESS_TOKEN);
+            headers.setBearerAuth(accessToken);
             HttpEntity<Void> entity = new HttpEntity<>(headers);
 
             ResponseEntity<Map> response = restTemplate.exchange(
