@@ -27,7 +27,6 @@ public class Order {
         PAGO,
         NAO_PAGO,
         PAGAMENTO_PENDENTE
-
     }
 
     public UUID getId() {

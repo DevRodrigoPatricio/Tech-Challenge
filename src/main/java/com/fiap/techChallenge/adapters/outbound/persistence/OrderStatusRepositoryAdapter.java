@@ -34,6 +34,7 @@ public class OrderStatusRepositoryAdapter implements OrderStatusRepositoryPort {
         return OrderMapper.toDomain(savedEntity);
     }
 
+
     @Override
     @Transactional
     public void updateOrderStatus(UUID orderId, Order.OrderStatus orderStatus) {

@@ -10,4 +10,5 @@ public interface OrderStatusRepositoryPort {
     Order save(Order order);
 
     void updateOrderStatus(UUID orderId, Order.OrderStatus orderStatus);
+
 }
