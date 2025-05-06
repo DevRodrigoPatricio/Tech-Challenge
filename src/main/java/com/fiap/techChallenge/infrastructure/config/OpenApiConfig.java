@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.config;
+package com.fiap.techChallenge.infrastructure.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain;
+package com.fiap.techChallenge.domain.payment;
 
 import java.util.UUID;
 

@@ -1,8 +1,9 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import com.fiap.techChallenge.application.services.OrderStatusService;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.exceptions.*;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.utils.exceptions.*;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

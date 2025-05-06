@@ -1,10 +1,10 @@
-package com.fiap.techChallenge.adapters.outbound.payment;
+package com.fiap.techChallenge.adapters.outbound.storage.payment;
 
-import com.fiap.techChallenge.application.ports.PaymentProcessingPort;
-import com.fiap.techChallenge.domain.PaymentRequest;
-import com.fiap.techChallenge.domain.PaymentResponse;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
-import com.fiap.techChallenge.domain.exceptions.PaymentException;
+import com.fiap.techChallenge.domain.payment.PaymentRequest;
+import com.fiap.techChallenge.domain.payment.PaymentResponse;
+import com.fiap.techChallenge.utils.exceptions.PaymentException;
+
 import org.springframework.http.*;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Recover;

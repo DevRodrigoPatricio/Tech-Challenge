@@ -1,23 +1,24 @@
-package com.fiap.techChallenge.adapters.outbound.persistence;
-
-import com.fiap.techChallenge.adapters.outbound.repositories.SpringOrderStatusRepository;
-import com.fiap.techChallenge.application.ports.OrderStatusRepositoryPort;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.adapters.outbound.mappers.OrderMapper;
-import com.fiap.techChallenge.domain.exceptions.OrderNotFoundException;
-import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Component;
+package com.fiap.techChallenge.adapters.outbound.repositories.order;
 
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.stereotype.Component;
+
+import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.status.OrderStatusRepository;
+import com.fiap.techChallenge.utils.exceptions.OrderNotFoundException;
+import com.fiap.techChallenge.utils.mappers.OrderMapper;
+
+import jakarta.transaction.Transactional;
+
 @Component
-public class OrderStatusRepositoryAdapter implements OrderStatusRepositoryPort {
+public class OrderStatusRepositoryImpl implements OrderStatusRepository {
 
-    private final SpringOrderStatusRepository springRepository;
+    private final JpaOrderStatusRepository springRepository;
 
-    public OrderStatusRepositoryAdapter(SpringOrderStatusRepository springRepository) {
+    public OrderStatusRepositoryImpl(JpaOrderStatusRepository springRepository) {
         this.springRepository = springRepository;
     }
 

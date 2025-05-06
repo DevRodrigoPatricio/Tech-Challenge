@@ -1,9 +1,10 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
-import com.fiap.techChallenge.domain.PaymentRequest;
-import com.fiap.techChallenge.domain.PaymentResponse;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.domain.payment.PaymentRequest;
+import com.fiap.techChallenge.domain.payment.PaymentResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;

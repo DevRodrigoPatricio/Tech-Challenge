@@ -1,8 +1,10 @@
 package com.fiap.techChallenge.adapters.outbound.mappers;
 
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.Order.OrderStatus;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.Order.OrderStatus;
+import com.fiap.techChallenge.utils.mappers.OrderMapper;
+
 import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.UUID;

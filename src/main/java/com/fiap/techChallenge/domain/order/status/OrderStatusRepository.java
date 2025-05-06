@@ -1,11 +1,11 @@
-package com.fiap.techChallenge.application.ports;
-
-import com.fiap.techChallenge.domain.Order;
+package com.fiap.techChallenge.domain.order.status;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface OrderStatusRepositoryPort {
+import com.fiap.techChallenge.domain.order.Order;
+
+public interface OrderStatusRepository {
     Optional<Order> findById(UUID orderId);
     Order save(Order order);
 

@@ -1,8 +1,9 @@
-package com.fiap.techChallenge.adapters.outbound.notification;
+package com.fiap.techChallenge.adapters.outbound.storage.order.status;
 
-import com.fiap.techChallenge.application.ports.OrderStatusNotificationPort;
-import com.fiap.techChallenge.domain.Order;
 import org.springframework.stereotype.Component;
+
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.status.OrderStatusNotificationPort;
 
 @Component
 public class OrderStatusNotificationAdapter implements OrderStatusNotificationPort {

@@ -1,8 +1,9 @@
-package com.fiap.techChallenge.domain;
+package com.fiap.techChallenge.domain.order;
 
-import com.fiap.techChallenge.domain.exceptions.InvalidOrderStatusTransitionException;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
 
 public class Order {
 

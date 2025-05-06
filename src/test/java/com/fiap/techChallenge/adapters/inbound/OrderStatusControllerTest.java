@@ -2,8 +2,9 @@ package com.fiap.techChallenge.adapters.inbound;
 
 import com.fiap.techChallenge.adapters.inbound.controllers.OrderStatusController;
 import com.fiap.techChallenge.application.services.OrderStatusService;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.Order.OrderStatus;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.Order.OrderStatus;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

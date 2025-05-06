@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.adapters.outbound.mappers;
+package com.fiap.techChallenge.utils.mappers;
 
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
 import com.fiap.techChallenge.domain.product.Product;

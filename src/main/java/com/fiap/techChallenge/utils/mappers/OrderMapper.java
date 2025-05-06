@@ -1,7 +1,7 @@
-package com.fiap.techChallenge.adapters.outbound.mappers;
+package com.fiap.techChallenge.utils.mappers;
 
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.domain.Order;
+import com.fiap.techChallenge.domain.order.Order;
 
 public class OrderMapper {
 

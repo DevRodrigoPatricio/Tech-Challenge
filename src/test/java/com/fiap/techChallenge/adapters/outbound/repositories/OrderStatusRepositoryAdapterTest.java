@@ -1,10 +1,12 @@
 package com.fiap.techChallenge.adapters.outbound.repositories;
 
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.adapters.outbound.mappers.OrderMapper;
-import com.fiap.techChallenge.adapters.outbound.persistence.OrderStatusRepositoryAdapter;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.Order.OrderStatus;
+import com.fiap.techChallenge.adapters.outbound.repositories.order.JpaOrderStatusRepository;
+import com.fiap.techChallenge.adapters.outbound.repositories.order.OrderStatusRepositoryImpl;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.Order.OrderStatus;
+import com.fiap.techChallenge.utils.mappers.OrderMapper;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,10 +21,10 @@ import static org.mockito.Mockito.*;
 class OrderStatusRepositoryAdapterTest {
 
     @Mock
-    private SpringOrderStatusRepository springRepository;
+    private JpaOrderStatusRepository springRepository;
 
     @InjectMocks
-    private OrderStatusRepositoryAdapter repositoryAdapter;
+    private OrderStatusRepositoryImpl repositoryAdapter;
 
     private final UUID orderId = UUID.randomUUID();
 

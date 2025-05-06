@@ -1,6 +1,8 @@
 package com.fiap.techChallenge.domain;
 
-import com.fiap.techChallenge.domain.exceptions.InvalidOrderStatusTransitionException;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
+
 import org.junit.jupiter.api.Test;
 import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;

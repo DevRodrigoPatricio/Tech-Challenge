@@ -1,8 +1,9 @@
 package com.fiap.techChallenge.application.services;
 
-import com.fiap.techChallenge.application.ports.PaymentProcessingPort;
-import com.fiap.techChallenge.domain.PaymentRequest;
-import com.fiap.techChallenge.domain.PaymentResponse;
+import com.fiap.techChallenge.adapters.outbound.storage.payment.PaymentProcessingPort;
+import com.fiap.techChallenge.domain.payment.PaymentRequest;
+import com.fiap.techChallenge.domain.payment.PaymentResponse;
+
 import org.springframework.stereotype.Service;
 
 @Service

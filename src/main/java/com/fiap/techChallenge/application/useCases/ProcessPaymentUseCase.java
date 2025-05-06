@@ -1,9 +1,10 @@
 package com.fiap.techChallenge.application.useCases;
 
-import com.fiap.techChallenge.application.ports.PaymentProcessingPort;
-import com.fiap.techChallenge.domain.PaymentRequest;
-import com.fiap.techChallenge.domain.PaymentResponse;
+import com.fiap.techChallenge.adapters.outbound.storage.payment.PaymentProcessingPort;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.domain.payment.PaymentRequest;
+import com.fiap.techChallenge.domain.payment.PaymentResponse;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.UUID;

@@ -1,8 +1,9 @@
-package com.fiap.techChallenge.application.ports;
+package com.fiap.techChallenge.adapters.outbound.storage.payment;
 
-import com.fiap.techChallenge.domain.PaymentRequest;
-import com.fiap.techChallenge.domain.PaymentResponse;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.domain.payment.PaymentRequest;
+import com.fiap.techChallenge.domain.payment.PaymentResponse;
+
 import java.util.UUID;
 
 public interface PaymentProcessingPort {

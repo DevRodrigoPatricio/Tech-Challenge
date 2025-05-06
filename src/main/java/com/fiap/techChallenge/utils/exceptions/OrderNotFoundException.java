@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.exceptions;
+package com.fiap.techChallenge.utils.exceptions;
 
 import java.util.UUID;
 

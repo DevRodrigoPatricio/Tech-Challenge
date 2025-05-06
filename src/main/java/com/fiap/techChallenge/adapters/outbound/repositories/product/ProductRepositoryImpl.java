@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.adapters.outbound.persistence;
+package com.fiap.techChallenge.adapters.outbound.repositories.product;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,17 +7,16 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
-import com.fiap.techChallenge.adapters.outbound.mappers.ProductMapper;
-import com.fiap.techChallenge.adapters.outbound.repositories.SpringProductRepository;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.utils.mappers.ProductMapper;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private final SpringProductRepository springRepository;
+    private final JpaProductRepository springRepository;
 
-    public ProductRepositoryImpl(SpringProductRepository springRepository) {
+    public ProductRepositoryImpl(JpaProductRepository springRepository) {
         this.springRepository = springRepository;
     }
 

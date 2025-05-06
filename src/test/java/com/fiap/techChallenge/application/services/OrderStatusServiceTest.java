@@ -1,10 +1,11 @@
 package com.fiap.techChallenge.application.services;
 
-import com.fiap.techChallenge.application.ports.OrderStatusNotificationPort;
-import com.fiap.techChallenge.application.ports.OrderStatusRepositoryPort;
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.Order.OrderStatus;
-import com.fiap.techChallenge.domain.exceptions.OrderNotFoundException;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.Order.OrderStatus;
+import com.fiap.techChallenge.domain.order.status.OrderStatusNotificationPort;
+import com.fiap.techChallenge.domain.order.status.OrderStatusRepository;
+import com.fiap.techChallenge.utils.exceptions.OrderNotFoundException;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class OrderStatusServiceTest {
 
-    @Mock private OrderStatusRepositoryPort repository;
+    @Mock private OrderStatusRepository repository;
     @Mock private OrderStatusNotificationPort notificationPort;
     @InjectMocks private OrderStatusService service;
 

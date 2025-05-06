@@ -1,7 +1,9 @@
 package com.fiap.techChallenge.adapters.outbound.notification;
 
-import com.fiap.techChallenge.domain.Order;
-import com.fiap.techChallenge.domain.Order.OrderStatus;
+import com.fiap.techChallenge.adapters.outbound.storage.order.status.OrderStatusNotificationAdapter;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.Order.OrderStatus;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
