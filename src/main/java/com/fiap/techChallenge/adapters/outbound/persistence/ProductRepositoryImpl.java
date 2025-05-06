@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
 import com.fiap.techChallenge.adapters.outbound.mappers.ProductMapper;
@@ -12,7 +12,7 @@ import com.fiap.techChallenge.adapters.outbound.repositories.SpringProductReposi
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 
-@Component
+@Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
     private final SpringProductRepository springRepository;
@@ -33,12 +33,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product update(Product produto) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void delete(Product produto) {
+    public void delete(Product product) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -53,12 +48,12 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Product> listByCategory(String categoria) {
+    public List<Product> listByCategory(String category) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public List<Product> listAvaiablesByCategory(String categoria) {
+    public List<Product> listAvaiablesByCategory(String category) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

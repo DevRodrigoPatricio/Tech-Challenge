@@ -10,16 +10,14 @@ public interface ProductRepository {
 
     Optional<Product> findById(UUID id);
 
-    Product update(Product produto);
-
-    void delete(Product produto);
+    void delete(Product product);
 
     List<Product> list();
 
     List<Product> listAvaiables();
 
-    List<Product> listByCategory(String categoria);
+    List<Product> listByCategory(String category);
 
-    List<Product> listAvaiablesByCategory(String categoria);
+    List<Product> listAvaiablesByCategory(String category);
 
 }
