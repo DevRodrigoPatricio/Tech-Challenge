@@ -20,42 +20,42 @@ public class ProductEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "descricao")
-    private String descricao;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "preco")
-    private BigDecimal preco;
+    @Column(name = "price")
+    private BigDecimal price;
 
-    @Column(name = "quantidade")
-    private BigDecimal quantidade;
+    @Column(name = "quantity")
+    private BigDecimal quantity;
 
-    @Column(name = "categoria")
-    private String categoria;
+    @Column(name = "category")
+    private String category;
 
-    @Column(name = "imagem")
-    private String imagem;
+    @Column(name = "image")
+    private String image;
 
-    public ProductEntity(UUID id, String nome, String descricao, BigDecimal preco, BigDecimal quantidade, String categoria, String imagem) {
+    public ProductEntity(UUID id, String name, String description, BigDecimal price, BigDecimal quantity, String category, String image) {
         this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.categoria = categoria;
-        this.imagem = imagem;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
+        this.image = image;
     }
 
     public ProductEntity(Product produto) {
         this.id = produto.getId();
-        this.nome = produto.getNome();
-        this.descricao = produto.getDescricao();
-        this.preco = produto.getPreco();
-        this.quantidade = produto.getQuantidade();
-        this.categoria = produto.getCategoria();
-        this.imagem = produto.getImagem();
+        this.name = produto.getName();
+        this.description = produto.getDescription();
+        this.price = produto.getPrice();
+        this.quantity = produto.getQuantity();
+        this.category = produto.getCategory();
+        this.image = produto.getImage();
     }
 
     public ProductEntity() {
@@ -69,52 +69,52 @@ public class ProductEntity {
         this.id = id;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getName() {
+        return this.name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescricao() {
-        return this.descricao;
+    public String getDescription() {
+        return this.description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public BigDecimal getPreco() {
-        return this.preco;
+    public BigDecimal getPrice() {
+        return this.price;
     }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getQuantidade() {
-        return this.quantidade;
+    public BigDecimal getQuantity() {
+        return this.quantity;
     }
 
-    public void setQuantidade(BigDecimal quantidade) {
-        this.quantidade = quantidade;
+    public void setQuantity(BigDecimal quantity) {
+        this.quantity = quantity;
     }
 
-    public String getCategoria() {
-        return this.categoria;
+    public String getCategory() {
+        return this.category;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getImagem() {
-        return this.imagem;
+    public String getImage() {
+        return this.image;
     }
 
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }
