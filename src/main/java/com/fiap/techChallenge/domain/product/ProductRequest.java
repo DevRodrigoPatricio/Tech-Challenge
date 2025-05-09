@@ -1,13 +1,10 @@
 package com.fiap.techChallenge.domain.product;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
-public class Product {
-
-    private UUID id;
+public class ProductRequest {
 
     private String name;
 
@@ -21,21 +18,13 @@ public class Product {
 
     private String image;
 
-    public Product(String name, String description, BigDecimal price, String category, ProductStatus status, String image) {
+    public ProductRequest(String name, String description, BigDecimal price, String category, ProductStatus status, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.category = category;
         this.status = status;
+        this.category = category;
         this.image = image;
-    }
-
-    public UUID getId() {
-        return this.id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getName() {

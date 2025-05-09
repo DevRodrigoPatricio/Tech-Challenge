@@ -1,5 +1,9 @@
 package com.fiap.techChallenge.utils.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
 import com.fiap.techChallenge.domain.product.Product;
 
@@ -10,8 +14,10 @@ public class ProductMapper {
             return null;
         }
 
-        Product domain = new Product(entity.getName(), entity.getDescription(), entity.getPrice(), entity.getQuantity(),
-                entity.getCategory(), entity.getImage());
+        Product domain = new Product(entity.getName(), entity.getDescription(), entity.getPrice(),
+                entity.getCategory(), entity.getStatus(), entity.getImage());
+
+        domain.setId(entity.getId());
 
         return domain;
     }
@@ -26,10 +32,21 @@ public class ProductMapper {
         entity.setName(domain.getName());
         entity.setDescription(domain.getDescription());
         entity.setPrice(domain.getPrice());
-        entity.setQuantity(domain.getQuantity());
         entity.setCategory(domain.getCategory());
         entity.setImage(domain.getImage());
 
         return entity;
+    }
+
+    public static List<Product> toDomainList(List<ProductEntity> entities) {
+        List<Product> domainList = new ArrayList<>();
+
+        domainList.addAll(
+                entities.stream()
+                        .map(ProductMapper::toDomain)
+                        .collect(Collectors.toList())
+        );
+
+        return domainList;
     }
 }
