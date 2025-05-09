@@ -27,7 +27,7 @@ public class PaymentController {
     @Operation(summary = "criar pagamento por qrCode.",
             description = "Criação do qrCode para fazer o pagamento do pedido")
     public ResponseEntity<PaymentResponse> processPayment(@RequestBody PaymentRequest request) {
-        PaymentResponse response = processPaymentUseCase.execute(request);
+        PaymentResponse response = processPaymentUseCase.process(request);
         return ResponseEntity.ok(response);
     }
 
