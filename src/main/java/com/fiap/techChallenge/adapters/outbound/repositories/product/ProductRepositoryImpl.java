@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
+import com.fiap.techChallenge.adapters.outbound.entities.CategoryEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import com.fiap.techChallenge.domain.category.CategoryRepository;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
@@ -15,53 +17,57 @@ import com.fiap.techChallenge.utils.mappers.ProductMapper;
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
 
-    private final JpaProductRepository jpaRepository;
+    private final JpaProductRepository repository;
+    private final CategoryRepository categoryRepository;
 
-    public ProductRepositoryImpl(JpaProductRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
+    public ProductRepositoryImpl(JpaProductRepository jpaRepository, CategoryRepository categoryRepository) {
+        this.repository = jpaRepository;
+        this.categoryRepository = categoryRepository;
     }
 
     @Override
     public Product save(Product product) {
-        ProductEntity entity = new ProductEntity(product);
-        entity = jpaRepository.save(entity);
+        CategoryEntity category = categoryRepository.validate(product.getCategoryId());
+
+        ProductEntity entity = ProductMapper.toEntity(product, category);
+        entity = repository.save(entity);
 
         return ProductMapper.toDomain(entity);
     }
 
     @Override
     public Optional<Product> findById(UUID id) {
-        return jpaRepository.findById(id).map(ProductMapper::toDomain);
+        return repository.findById(id).map(ProductMapper::toDomain);
     }
 
     @Override
     public Optional<Product> findByName(String name) {
-        return jpaRepository.findByName(name).map(ProductMapper::toDomain);
+        return repository.findByName(name).map(ProductMapper::toDomain);
     }
 
     @Override
     public List<Product> list() {
-        return ProductMapper.toDomainList(jpaRepository.findAll());
+        return ProductMapper.toDomainList(repository.findAll());
     }
 
     @Override
     public List<Product> listByStatus(ProductStatus status) {
-        return ProductMapper.toDomainList(jpaRepository.findByStatus(status));
+        return ProductMapper.toDomainList(repository.findByStatus(status));
     }
 
     @Override
-    public List<Product> listByCategory(String category) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Product> listByCategory(UUID categoryId) {
+        return ProductMapper.toDomainList(repository.findByCategory_Id(categoryId));
     }
 
     @Override
-    public List<Product> listByStatusAndCategory(ProductStatus status, String category) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Product> listByStatusAndCategory(ProductStatus status, UUID categoryId) {
+        return ProductMapper.toDomainList(repository.findByStatusAndCategory_Id(status, categoryId));
     }
 
     @Override
-    public void delete(Product product) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void delete(UUID id) {
+        repository.deleteById(id);
     }
 
 }

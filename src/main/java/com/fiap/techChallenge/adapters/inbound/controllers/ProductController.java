@@ -64,6 +64,20 @@ public class ProductController {
         return ResponseEntity.ok(service.listAvaiables());
     }
 
+    @GetMapping("/list-by-category/{categoryId}")
+    @Operation(summary = "List By Category",
+            description = "Lista todos os produtos da categoria informada")
+    public ResponseEntity<List<Product>> listByCategory(@PathVariable UUID categoryId) {
+        return ResponseEntity.ok(service.listByCategory(categoryId));
+    }
+
+    @GetMapping("/list-avaiables-by-category/{categoryId}")
+    @Operation(summary = "List Avaiables",
+            description = "Lista todos os produtos disponiveis da categoria informada")
+    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable UUID categoryId) {
+        return ResponseEntity.ok(service.listAvaiablesByCategory(categoryId));
+    }
+
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
         String message = e.getMessage();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fiap.techChallenge.adapters.outbound.entities.CategoryEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
 import com.fiap.techChallenge.domain.product.Product;
 
@@ -15,14 +16,13 @@ public class ProductMapper {
         }
 
         Product domain = new Product(entity.getName(), entity.getDescription(), entity.getPrice(),
-                entity.getCategory(), entity.getStatus(), entity.getImage());
+                entity.getCategory().getId(), entity.getStatus(), entity.getImage());
 
         domain.setId(entity.getId());
-
         return domain;
     }
 
-    public static ProductEntity toEntity(Product domain) {
+    public static ProductEntity toEntity(Product domain, CategoryEntity categoryEntity) {
         if (domain == null) {
             return null;
         }
@@ -32,7 +32,8 @@ public class ProductMapper {
         entity.setName(domain.getName());
         entity.setDescription(domain.getDescription());
         entity.setPrice(domain.getPrice());
-        entity.setCategory(domain.getCategory());
+        entity.setStatus(domain.getStatus());
+        entity.setCategory(categoryEntity);
         entity.setImage(domain.getImage());
 
         return entity;

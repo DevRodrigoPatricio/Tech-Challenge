@@ -24,7 +24,7 @@ public class ProductAdapter implements ProductPort {
     @Override
     public Product save(ProductRequest request) {
         Product product = new Product(request.getName(), request.getDescription(), request.getPrice(),
-                request.getCategory(), request.getStatus(), request.getImage());
+                request.getCategoryId(), request.getStatus(), request.getImage());
 
         this.validateName(request.getName());
 
@@ -49,6 +49,21 @@ public class ProductAdapter implements ProductPort {
     @Override
     public List<Product> listAvaiables() {
         return repository.listByStatus(ProductStatus.DISPONIVEL);
+    }
+
+    @Override
+    public List<Product> listByCategory(UUID categoryId) {
+        return repository.listByCategory(categoryId);
+    }
+
+    @Override
+    public List<Product> listAvaiablesByCategory(UUID categoryId) {
+        return repository.listByStatusAndCategory(ProductStatus.DISPONIVEL, categoryId);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        repository.delete(id);
     }
 
     private void validateName(String name) {

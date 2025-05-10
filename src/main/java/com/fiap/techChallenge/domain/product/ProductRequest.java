@@ -1,6 +1,7 @@
 package com.fiap.techChallenge.domain.product;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
@@ -12,18 +13,18 @@ public class ProductRequest {
 
     private BigDecimal price;
 
-    private String category;
+    private UUID categoryId;
 
     private ProductStatus status;
 
     private String image;
 
-    public ProductRequest(String name, String description, BigDecimal price, String category, ProductStatus status, String image) {
+    public ProductRequest(String name, String description, BigDecimal price, UUID categoryId, ProductStatus status, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.status = status;
-        this.category = category;
+        this.categoryId = categoryId;
         this.image = image;
     }
 
@@ -51,12 +52,12 @@ public class ProductRequest {
         this.price = price;
     }
 
-    public String getCategory() {
-        return this.category;
+    public UUID getCategoryId() {
+        return this.categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(UUID categoryId) {
+        this.categoryId = categoryId;
     }
 
     public ProductStatus getStatus() {

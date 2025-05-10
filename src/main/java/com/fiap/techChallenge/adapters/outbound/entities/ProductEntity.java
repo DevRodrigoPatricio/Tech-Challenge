@@ -4,14 +4,16 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.ProductStatus;
-import com.fiap.techChallenge.domain.product.Product;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,8 +34,9 @@ public class ProductEntity {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "category", nullable = false)
-    private String category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -42,7 +45,7 @@ public class ProductEntity {
     @Column(name = "image", nullable = false)
     private String image;
 
-    public ProductEntity(UUID id, String name, String description, BigDecimal price, String category, ProductStatus status, String image) {
+    public ProductEntity(UUID id, String name, String description, BigDecimal price, CategoryEntity category, ProductStatus status, String image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -50,16 +53,6 @@ public class ProductEntity {
         this.category = category;
         this.status = status;
         this.image = image;
-    }
-
-    public ProductEntity(Product produto) {
-        this.id = produto.getId();
-        this.name = produto.getName();
-        this.description = produto.getDescription();
-        this.price = produto.getPrice();
-        this.category = produto.getCategory();
-        this.status = produto.getStatus();
-        this.image = produto.getImage();
     }
 
     public ProductEntity() {
@@ -97,11 +90,11 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public String getCategory() {
+    public CategoryEntity getCategory() {
         return this.category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(CategoryEntity category) {
         this.category = category;
     }
 

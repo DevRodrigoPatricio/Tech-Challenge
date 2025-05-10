@@ -39,4 +39,12 @@ public class ProductService {
         return port.listAvaiables();
     }
 
+    public List<Product> listByCategory(UUID categoryId) {
+        return port.listByCategory(categoryId);
+    }
+
+    public List<Product> listAvaiablesByCategory(UUID categoryId) {
+        return port.listAvaiablesByCategory(categoryId);
+    }
+
 }

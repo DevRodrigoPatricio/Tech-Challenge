@@ -15,17 +15,17 @@ public class Product {
 
     private BigDecimal price;
 
-    private String category;
+    private UUID categoriaId;
 
     private ProductStatus status;
 
     private String image;
 
-    public Product(String name, String description, BigDecimal price, String category, ProductStatus status, String image) {
+    public Product(String name, String description, BigDecimal price, UUID categoriaId, ProductStatus status, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.category = category;
+        this.categoriaId = categoriaId;
         this.status = status;
         this.image = image;
     }
@@ -62,12 +62,12 @@ public class Product {
         this.price = price;
     }
 
-    public String getCategory() {
-        return this.category;
+    public UUID getCategoryId() {
+        return this.categoriaId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(UUID categoriaId) {
+        this.categoriaId = categoriaId;
     }
 
     public ProductStatus getStatus() {

@@ -14,14 +14,13 @@ public interface ProductRepository {
 
     Optional<Product> findByName(String name);
 
-    void delete(Product product);
-
     List<Product> list();
 
-    List<Product> listByCategory(String category);
+    List<Product> listByCategory(UUID categoryId);
 
-    List<Product> listByStatusAndCategory(ProductStatus status, String category);
+    List<Product> listByStatusAndCategory(ProductStatus status, UUID categoryId);
 
     List<Product> listByStatus(ProductStatus status);
 
+    void delete(UUID id);
 }
