@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.application.services;
 
+import com.fiap.techChallenge.application.useCases.OrderStatusUseCase;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.status.OrderStatusNotificationPort;
 import com.fiap.techChallenge.domain.order.status.OrderStatusRepository;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.UUID;
 
 @Service
-public class OrderStatusService {
+public class OrderStatusService implements OrderStatusUseCase {
 
     private final OrderStatusRepository repository;
     private final OrderStatusNotificationPort notificationPort;
