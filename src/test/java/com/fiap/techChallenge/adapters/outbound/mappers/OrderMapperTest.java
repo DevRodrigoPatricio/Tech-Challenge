@@ -26,14 +26,14 @@ class OrderMapperTest {
 
         OrderEntity entity = new OrderEntity();
         entity.setId(id);
-        entity.setStatus(OrderEntity.OrderStatus.PRONTO);
-        entity.setHorarioPronto(now);
+        entity.setStatus(OrderEntity.OrderStatus.READY);
+        entity.setReadySchedule(now);
 
         Order domain = OrderMapper.toDomain(entity);
 
         assertEquals(id, domain.getId());
-        assertEquals(OrderStatus.PRONTO, domain.getStatus());
-        assertEquals(now, domain.getHorarioPronto());
+        assertEquals(OrderStatus.READY, domain.getStatus());
+        assertEquals(now, domain.getReadySchedule());
     }
 
     /**
@@ -48,14 +48,14 @@ class OrderMapperTest {
         UUID id = UUID.randomUUID();
         LocalDateTime now = LocalDateTime.now();
 
-        Order domain = new Order(id, OrderStatus.EM_PREPARACAO);
-        domain.setInicioPreparo(now);
+        Order domain = new Order(id, OrderStatus.IN_PREPARATION);
+        domain.setStartPreparation(now);
 
         OrderEntity entity = OrderMapper.toEntity(domain);
 
         assertEquals(id, entity.getId());
-        assertEquals(OrderEntity.OrderStatus.EM_PREPARACAO, entity.getStatus());
-        assertEquals(now, entity.getInicioPreparo());
+        assertEquals(OrderEntity.OrderStatus.IN_PREPARATION, entity.getStatus());
+        assertEquals(now, entity.getStartPreparation());
     }
 
     /**

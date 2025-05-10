@@ -20,7 +20,7 @@ class OrderStatusNotificationAdapterTest {
     @Test
     void shouldNotifyStatusChange() {
         UUID orderId = UUID.randomUUID();
-        Order order = new Order(orderId, OrderStatus.PRONTO);
+        Order order = new Order(orderId, OrderStatus.READY);
 
         notificationAdapter.notifyStatusChange(order);
     }

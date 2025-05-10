@@ -24,7 +24,7 @@ class OrderStatusServiceTest {
     @InjectMocks private OrderStatusService service;
 
     private final UUID orderId = UUID.randomUUID();
-    private final Order order = new Order(orderId, OrderStatus.RECEBIDO);
+    private final Order order = new Order(orderId, OrderStatus.RECEIVED);
 
     /**
      * Testa o cenário de sucesso onde o preparo de um pedido é iniciado corretamente.
@@ -37,9 +37,9 @@ class OrderStatusServiceTest {
         when(repository.findById(orderId)).thenReturn(Optional.of(order));
         when(repository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        Order result = service.preparo(orderId);
+        Order result = service.preparation(orderId);
 
-        assertEquals(OrderStatus.EM_PREPARACAO, result.getStatus());
+        assertEquals(OrderStatus.IN_PREPARATION, result.getStatus());
         verify(notificationPort).notifyStatusChange(any());
     }
 
@@ -50,7 +50,7 @@ class OrderStatusServiceTest {
     @Test
     void shouldThrowWhenOrderNotFound() {
         when(repository.findById(orderId)).thenReturn(Optional.empty());
-        assertThrows(OrderNotFoundException.class, () -> service.preparo(orderId));
+        assertThrows(OrderNotFoundException.class, () -> service.preparation(orderId));
     }
 
     /**

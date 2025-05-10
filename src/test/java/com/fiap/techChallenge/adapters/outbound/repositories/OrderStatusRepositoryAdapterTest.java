@@ -39,7 +39,7 @@ class OrderStatusRepositoryAdapterTest {
     void shouldFindOrderById() {
         OrderEntity entity = new OrderEntity();
         entity.setId(orderId);
-        entity.setStatus(OrderEntity.OrderStatus.PRONTO);
+        entity.setStatus(OrderEntity.OrderStatus.READY);
 
         when(springRepository.findById(orderId)).thenReturn(Optional.of(entity));
 
@@ -47,7 +47,7 @@ class OrderStatusRepositoryAdapterTest {
 
         assertTrue(result.isPresent());
         assertEquals(orderId, result.get().getId());
-        assertEquals(OrderStatus.PRONTO, result.get().getStatus());
+        assertEquals(OrderStatus.READY, result.get().getStatus());
     }
 
     /**
@@ -59,7 +59,7 @@ class OrderStatusRepositoryAdapterTest {
      */
     @Test
     void shouldSaveOrder() {
-        Order order = new Order(orderId, OrderStatus.EM_PREPARACAO);
+        Order order = new Order(orderId, OrderStatus.IN_PREPARATION);
         OrderEntity entity = OrderMapper.toEntity(order);
 
         when(springRepository.save(any())).thenReturn(entity);
@@ -67,6 +67,6 @@ class OrderStatusRepositoryAdapterTest {
         Order saved = repositoryAdapter.save(order);
 
         assertEquals(orderId, saved.getId());
-        assertEquals(OrderStatus.EM_PREPARACAO, saved.getStatus());
+        assertEquals(OrderStatus.IN_PREPARATION, saved.getStatus());
     }
 }

@@ -83,6 +83,7 @@ public class ProductEntity {
     }
 
     public BigDecimal getPrice() {
+
         return this.price;
     }
 
@@ -113,5 +114,4 @@ public class ProductEntity {
     public void setImage(String image) {
         this.image = image;
     }
-
 }

@@ -22,7 +22,7 @@ class OrderStatusControllerTest {
     @MockBean private OrderStatusService orderStatusService;
 
     private final UUID orderId = UUID.randomUUID();
-    private final Order order = new Order(orderId, OrderStatus.PRONTO);
+    private final Order order = new Order(orderId, OrderStatus.READY);
 
     /**
      * Testa o endpoint GET /api/order-status/{orderId}
@@ -34,7 +34,7 @@ class OrderStatusControllerTest {
     @Test
     void shouldReturnOkWhenGettingStatus() throws Exception {
         UUID orderId = UUID.randomUUID();
-        Order order = new Order(orderId, OrderStatus.PRONTO);
+        Order order = new Order(orderId, OrderStatus.READY);
 
         when(orderStatusService.getStatus(orderId)).thenReturn(order);
 
@@ -53,8 +53,8 @@ class OrderStatusControllerTest {
      */
     @Test
     void shouldStartPreparationSuccessfully() throws Exception {
-        order.preparo();
-        when(orderStatusService.preparo(orderId)).thenReturn(order);
+        order.preparation();
+        when(orderStatusService.preparation(orderId)).thenReturn(order);
 
         mockMvc.perform(patch("/api/pedidos/{orderId}/preparar", orderId))
                 .andExpect(status().isOk())

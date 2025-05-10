@@ -13,10 +13,10 @@ public class OrderMapper {
         Order order = new Order(entity.getId(),
                 Order.OrderStatus.valueOf(entity.getStatus().name()));
 
-        order.setInicioPreparo(entity.getInicioPreparo());
-        order.setHorarioPronto(entity.getHorarioPronto());
-        order.setHorarioEntregue(entity.getHorarioEntregue());
-        order.setHorarioFinalizado(entity.getHorarioFinalizado());
+        order.setStartPreparation(entity.getStartPreparation());
+        order.setReadySchedule(entity.getReadySchedule());
+        order.setDeliveryTime(entity.getDeliveryTime());
+        order.setFinalizedSchedule(entity.getFinalizedSchedule());
 
         return order;
     }
@@ -29,10 +29,10 @@ public class OrderMapper {
         OrderEntity entity = new OrderEntity();
         entity.setId(domain.getId());
         entity.setStatus(OrderEntity.OrderStatus.valueOf(domain.getStatus().name()));
-        entity.setInicioPreparo(domain.getInicioPreparo());
-        entity.setHorarioPronto(domain.getHorarioPronto());
-        entity.setHorarioEntregue(domain.getHorarioEntregue());
-        entity.setHorarioFinalizado(domain.getHorarioFinalizado());
+        entity.setStartPreparation(domain.getStartPreparation());
+        entity.setReadySchedule(domain.getReadySchedule());
+        entity.setDeliveryTime(domain.getDeliveryTime());
+        entity.setFinalizedSchedule(domain.getFinalizedSchedule());
 
         return entity;
     }
