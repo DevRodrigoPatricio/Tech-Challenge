@@ -7,25 +7,25 @@ public class Product {
 
     private UUID id;
 
-    private String nome;
+    private String name;
 
-    private String descricao;
+    private String description;
 
-    private BigDecimal preco;
+    private BigDecimal price;
 
-    private BigDecimal quantidade;
+    private BigDecimal amount;
 
-    private String categoria;
+    private String category;
 
-    private String imagem;
+    private String image;
 
-    public Product(String nome, String descricao, BigDecimal preco, BigDecimal quantidade, String categoria, String imagem) {
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.categoria = categoria;
-        this.imagem = imagem;
+    public Product(String name, String description, BigDecimal price, BigDecimal amount, String category, String image) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amount = amount;
+        this.category = category;
+        this.image = image;
     }
 
     public UUID getId() {
@@ -36,52 +36,51 @@ public class Product {
         this.id = id;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescricao() {
-        return this.descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public BigDecimal getPreco() {
-        return this.preco;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getQuantidade() {
-        return this.quantidade;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setQuantidade(BigDecimal quantidade) {
-        this.quantidade = quantidade;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public String getCategoria() {
-        return this.categoria;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getImagem() {
-        return this.imagem;
+    public String getImage() {
+        return image;
     }
 
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
+    public void setImage(String image) {
+        this.image = image;
     }
-
 }

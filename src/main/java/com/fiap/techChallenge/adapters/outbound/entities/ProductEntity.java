@@ -21,41 +21,41 @@ public class ProductEntity {
     private UUID id;
 
     @Column(name = "nome")
-    private String nome;
+    private String name;
 
     @Column(name = "descricao")
-    private String descricao;
+    private String description;
 
     @Column(name = "preco")
-    private BigDecimal preco;
+    private BigDecimal price;
 
     @Column(name = "quantidade")
-    private BigDecimal quantidade;
+    private BigDecimal amount;
 
     @Column(name = "categoria")
-    private String categoria;
+    private String category;
 
     @Column(name = "imagem")
-    private String imagem;
+    private String image;
 
-    public ProductEntity(UUID id, String nome, String descricao, BigDecimal preco, BigDecimal quantidade, String categoria, String imagem) {
+    public ProductEntity(UUID id, String name, String description, BigDecimal price, BigDecimal amount, String category, String image) {
         this.id = id;
-        this.nome = nome;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.quantidade = quantidade;
-        this.categoria = categoria;
-        this.imagem = imagem;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amount = amount;
+        this.category = category;
+        this.image = image;
     }
 
-    public ProductEntity(Product produto) {
-        this.id = produto.getId();
-        this.nome = produto.getNome();
-        this.descricao = produto.getDescricao();
-        this.preco = produto.getPreco();
-        this.quantidade = produto.getQuantidade();
-        this.categoria = produto.getCategoria();
-        this.imagem = produto.getImagem();
+    public ProductEntity(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.description = product.getDescription();
+        this.price = product.getPrice();
+        this.amount = product.getAmount();
+        this.category = product.getCategory();
+        this.image = product.getImage();
     }
 
     public ProductEntity() {
@@ -69,52 +69,51 @@ public class ProductEntity {
         this.id = id;
     }
 
-    public String getNome() {
-        return this.nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getDescricao() {
-        return this.descricao;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public BigDecimal getPreco() {
-        return this.preco;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPreco(BigDecimal preco) {
-        this.preco = preco;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public BigDecimal getQuantidade() {
-        return this.quantidade;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setQuantidade(BigDecimal quantidade) {
-        this.quantidade = quantidade;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public String getCategoria() {
-        return this.categoria;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getImagem() {
-        return this.imagem;
+    public String getImage() {
+        return image;
     }
 
-    public void setImagem(String imagem) {
-        this.imagem = imagem;
+    public void setImage(String image) {
+        this.image = image;
     }
-
 }

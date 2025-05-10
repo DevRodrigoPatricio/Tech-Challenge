@@ -9,10 +9,10 @@ public class Order {
 
     private final UUID id;
     private OrderStatus status;
-    private LocalDateTime inicioPreparo;
-    private LocalDateTime horarioPronto;
-    private LocalDateTime horarioEntregue;
-    private LocalDateTime horarioFinalizado;
+    private LocalDateTime startPreparation;
+    private LocalDateTime readySchedule;
+    private LocalDateTime deliveryTime;
+    private LocalDateTime finalizedSchedule;
 
     public Order(UUID id, OrderStatus status) {
         this.id = id;
@@ -20,14 +20,14 @@ public class Order {
     }
 
     public enum OrderStatus {
-        RECEBIDO,
-        EM_PREPARACAO,
-        PRONTO,
-        ENTREGUE,
-        FINALIZADO,
-        PAGO,
-        NAO_PAGO,
-        PAGAMENTO_PENDENTE
+        RECEIVED,
+        IN_PREPARATION,
+        READY,
+        DELIVERED,
+        FINISHED,
+        PAID,
+        NOT_PAID,
+        PAYMENT_PENDING
     }
 
     public UUID getId() {
@@ -38,79 +38,81 @@ public class Order {
         return status;
     }
 
-    public LocalDateTime getInicioPreparo() {
-        return inicioPreparo;
-    }
-
-    public LocalDateTime getHorarioPronto() {
-        return horarioPronto;
-    }
-
-    public LocalDateTime getHorarioEntregue() {
-        return horarioEntregue;
-    }
-
-    public LocalDateTime getHorarioFinalizado() {
-        return horarioFinalizado;
-    }
-
-    public void setInicioPreparo(LocalDateTime inicioPreparo) {
-        this.inicioPreparo = inicioPreparo;
-    }
-
-    public void setHorarioPronto(LocalDateTime horarioPronto) {
-        this.horarioPronto = horarioPronto;
-    }
-
-    public void setHorarioEntregue(LocalDateTime horarioEntregue) {
-        this.horarioEntregue = horarioEntregue;
-    }
-
-    public void setHorarioFinalizado(LocalDateTime horarioFinalizado) {
-        this.horarioFinalizado = horarioFinalizado;
-    }
-
-    public void preparo() {
-        if (this.status != OrderStatus.RECEBIDO) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível iniciar preparo. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.RECEBIDO));
-        }
-        this.status = OrderStatus.EM_PREPARACAO;
-        this.inicioPreparo = LocalDateTime.now();
-    }
-
-    public void pronto() {
-        if (this.status != OrderStatus.EM_PREPARACAO) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível marcar como pronto. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.EM_PREPARACAO));
-        }
-        this.status = OrderStatus.PRONTO;
-        this.horarioPronto = LocalDateTime.now();
-    }
-
-    public void entregue() {
-        if (this.status != OrderStatus.PRONTO) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível marcar como entregue. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.PRONTO));
-        }
-        this.status = OrderStatus.ENTREGUE;
-        this.horarioEntregue = LocalDateTime.now();
-    }
-
-    public void finalizado() {
-        if (this.status != OrderStatus.ENTREGUE) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível finalizar. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.ENTREGUE));
-        }
-        this.status = OrderStatus.FINALIZADO;
-        this.horarioFinalizado = LocalDateTime.now();
-    }
-
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
+
+    public LocalDateTime getStartPreparation() {
+        return startPreparation;
+    }
+
+    public void setStartPreparation(LocalDateTime startPreparation) {
+        this.startPreparation = startPreparation;
+    }
+
+    public LocalDateTime getReadySchedule() {
+        return readySchedule;
+    }
+
+    public void setReadySchedule(LocalDateTime readySchedule) {
+        this.readySchedule = readySchedule;
+    }
+
+    public LocalDateTime getDeliveryTime() {
+        return deliveryTime;
+    }
+
+    public void setDeliveryTime(LocalDateTime deliveryTime) {
+        this.deliveryTime = deliveryTime;
+    }
+
+    public LocalDateTime getFinalizedSchedule() {
+        return finalizedSchedule;
+    }
+
+    public void setFinalizedSchedule(LocalDateTime finalizedSchedule) {
+        this.finalizedSchedule = finalizedSchedule;
+    }
+
+    public void preparation() {
+        if (this.status != OrderStatus.RECEIVED) {
+            throw new InvalidOrderStatusTransitionException(
+                    String.format("Não é possível iniciar preparo. Status atual: %s (Requerido: %s)",
+                            this.status, OrderStatus.RECEIVED));
+        }
+        this.status = OrderStatus.IN_PREPARATION;
+        this.startPreparation = LocalDateTime.now();
+    }
+
+    public void ready() {
+        if (this.status != OrderStatus.IN_PREPARATION) {
+            throw new InvalidOrderStatusTransitionException(
+                    String.format("Não é possível marcar como pronto. Status atual: %s (Requerido: %s)",
+                            this.status, OrderStatus.IN_PREPARATION));
+        }
+        this.status = OrderStatus.READY;
+        this.readySchedule = LocalDateTime.now();
+    }
+
+    public void delivered() {
+        if (this.status != OrderStatus.READY) {
+            throw new InvalidOrderStatusTransitionException(
+                    String.format("Não é possível marcar como entregue. Status atual: %s (Requerido: %s)",
+                            this.status, OrderStatus.READY));
+        }
+        this.status = OrderStatus.DELIVERED;
+        this.deliveryTime = LocalDateTime.now();
+    }
+
+    public void finished() {
+        if (this.status != OrderStatus.DELIVERED) {
+            throw new InvalidOrderStatusTransitionException(
+                    String.format("Não é possível finalizar. Status atual: %s (Requerido: %s)",
+                            this.status, OrderStatus.DELIVERED));
+        }
+        this.status = OrderStatus.FINISHED;
+        this.finalizedSchedule = LocalDateTime.now();
+    }
+
+
 }

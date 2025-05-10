@@ -10,8 +10,8 @@ public class ProductMapper {
             return null;
         }
 
-        Product domain = new Product(entity.getNome(), entity.getDescricao(), entity.getPreco(), entity.getQuantidade(),
-                entity.getCategoria(), entity.getImagem());
+        Product domain = new Product(entity.getName(), entity.getDescription(), entity.getPrice()   , entity.getAmount(),
+                entity.getCategory(), entity.getImage());
 
         return domain;
     }
@@ -23,12 +23,12 @@ public class ProductMapper {
 
         ProductEntity entity = new ProductEntity();
         entity.setId(domain.getId());
-        entity.setNome(domain.getNome());
-        entity.setDescricao(domain.getDescricao());
-        entity.setPreco(domain.getPreco());
-        entity.setQuantidade(domain.getQuantidade());
-        entity.setCategoria(domain.getCategoria());
-        entity.setImagem(domain.getImagem());
+        entity.setName(domain.getName());
+        entity.setDescription(domain.getDescription());
+        entity.setPrice(domain.getPrice());
+        entity.setAmount(domain.getAmount());
+        entity.setCategory(domain.getCategory());
+        entity.setImage(domain.getImage());
 
         return entity;
     }

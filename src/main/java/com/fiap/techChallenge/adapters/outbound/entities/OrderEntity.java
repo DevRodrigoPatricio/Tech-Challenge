@@ -9,14 +9,14 @@ import java.util.UUID;
 public class OrderEntity {
 
     public enum OrderStatus {
-        RECEBIDO,
-        EM_PREPARACAO,
-        PRONTO,
-        ENTREGUE,
-        FINALIZADO,
-        PAGO,
-        NAO_PAGO,
-        PAGAMENTO_PENDENTE
+        RECEIVED,
+        IN_PREPARATION,
+        READY,
+        DELIVERED,
+        FINISHED,
+        PAID,
+        NOT_PAID,
+        PAYMENT_PENDING
     }
 
     @Id
@@ -28,31 +28,31 @@ public class OrderEntity {
     private OrderStatus status;
 
     @Column(name = "inicio_preparo")
-    private LocalDateTime inicioPreparo;
+    private LocalDateTime startPreparation;
 
     @Column(name = "horario_pronto")
-    private LocalDateTime horarioPronto;
+    private LocalDateTime readySchedule;
 
     @Column(name = "horario_entregue")
-    private LocalDateTime horarioEntregue;
+    private LocalDateTime deliveryTime;
 
     @Column(name = "horario_finalizado")
-    private LocalDateTime horarioFinalizado;
+    private LocalDateTime finalizedSchedule;
 
     public OrderEntity() {
     }
 
     public OrderEntity(UUID id, OrderStatus status,
-                       LocalDateTime inicioPreparo,
-                       LocalDateTime horarioPronto,
-                       LocalDateTime horarioEntregue,
-                       LocalDateTime horarioFinalizado ){
+                       LocalDateTime startPreparation,
+                       LocalDateTime readySchedule,
+                       LocalDateTime deliveryTime,
+                       LocalDateTime finalizedSchedule ){
         this.id = id;
         this.status = status;
-        this.inicioPreparo = inicioPreparo;
-        this.horarioPronto = horarioPronto;
-        this.horarioEntregue = horarioEntregue;
-        this.horarioFinalizado = horarioFinalizado;
+        this.startPreparation = startPreparation;
+        this.readySchedule = readySchedule;
+        this.deliveryTime = deliveryTime;
+        this.finalizedSchedule = finalizedSchedule;
     }
 
     public UUID getId() {
@@ -71,35 +71,35 @@ public class OrderEntity {
         this.status = status;
     }
 
-    public LocalDateTime getInicioPreparo() {
-        return inicioPreparo;
+    public LocalDateTime getStartPreparation() {
+        return startPreparation;
     }
 
-    public void setInicioPreparo(LocalDateTime inicioPreparo) {
-        this.inicioPreparo = inicioPreparo;
+    public void setStartPreparation(LocalDateTime startPreparation) {
+        this.startPreparation = startPreparation;
     }
 
-    public LocalDateTime getHorarioPronto() {
-        return horarioPronto;
+    public LocalDateTime getReadySchedule() {
+        return readySchedule;
     }
 
-    public void setHorarioPronto(LocalDateTime horarioPronto) {
-        this.horarioPronto = horarioPronto;
+    public void setReadySchedule(LocalDateTime readySchedule) {
+        this.readySchedule = readySchedule;
     }
 
-    public LocalDateTime getHorarioEntregue() {
-        return horarioEntregue;
+    public LocalDateTime getFinalizedSchedule() {
+        return finalizedSchedule;
     }
 
-    public void setHorarioEntregue(LocalDateTime horarioEntregue) {
-        this.horarioEntregue = horarioEntregue;
+    public void setFinalizedSchedule(LocalDateTime finalizedSchedule) {
+        this.finalizedSchedule = finalizedSchedule;
     }
 
-    public LocalDateTime getHorarioFinalizado() {
-        return horarioFinalizado;
+    public LocalDateTime getDeliveryTime() {
+        return deliveryTime;
     }
 
-    public void setHorarioFinalizado(LocalDateTime horarioFinalizado) {
-        this.horarioFinalizado = horarioFinalizado;
+    public void setDeliveryTime(LocalDateTime deliveryTime) {
+        this.deliveryTime = deliveryTime;
     }
 }

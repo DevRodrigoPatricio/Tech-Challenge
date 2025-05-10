@@ -21,8 +21,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product save(Product produto) {
-        ProductEntity entity = new ProductEntity(produto);
+    public Product save(Product product) {
+        ProductEntity entity = new ProductEntity(product);
         return ProductMapper.toDomain(springRepository.save(entity));
     }
 

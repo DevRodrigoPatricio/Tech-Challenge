@@ -21,12 +21,12 @@ public class OrderStatusService {
         this.notificationPort = notificationPort;
     }
 
-    public Order preparo(UUID orderId) {
+    public Order preparation(UUID orderId) {
         Order order = repository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.preparo();
+            order.preparation();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -35,12 +35,12 @@ public class OrderStatusService {
         }
     }
 
-    public Order pronto(UUID orderId) {
+    public Order ready(UUID orderId) {
         Order order = repository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.pronto();
+            order.ready();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -49,12 +49,12 @@ public class OrderStatusService {
         }
     }
 
-    public Order entregue(UUID orderId) {
+    public Order delivered(UUID orderId) {
         Order order = repository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.entregue();
+            order.delivered();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -63,12 +63,12 @@ public class OrderStatusService {
         }
     }
 
-    public Order finalizado(UUID orderId) {
+    public Order finished(UUID orderId) {
         Order order = repository.findById(orderId)
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.finalizado();
+            order.finished();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -88,10 +88,10 @@ public class OrderStatusService {
 
         try {
             switch (Order.OrderStatus.valueOf(status)) {
-                case EM_PREPARACAO -> order.preparo();
-                case PRONTO -> order.pronto();
-                case ENTREGUE -> order.entregue();
-                case FINALIZADO -> order.finalizado();
+                case IN_PREPARATION -> order.preparation();
+                case READY -> order.ready();
+                case DELIVERED -> order.delivered();
+                case FINISHED -> order.finished();
                 default -> throw new IllegalArgumentException("Invalid status: " + status);
             }
 

@@ -25,35 +25,35 @@ public class OrderStatusController {
     @PatchMapping("/{orderId}/preparar")
     @Operation(summary = "Iniciar preparação do pedido",
             description = "Muda o status para EM_PREPARACAO (requer status RECEBIDO)")
-    public ResponseEntity<Order> prepararPedido(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.preparo(orderId));
+    public ResponseEntity<Order> prepareOrder(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderStatusService.preparation(orderId));
     }
 
     @PatchMapping("/{orderId}/pronto")
     @Operation(summary = "Marcar pedido como pronto",
             description = "Muda o status para PRONTO (requer status EM_PREPARACAO)")
-    public ResponseEntity<Order> marcarComoPronto(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.pronto(orderId));
+    public ResponseEntity<Order> markAsReady(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderStatusService.ready(orderId));
     }
 
     @PatchMapping("/{orderId}/entregue")
     @Operation(summary = "Marcar pedido como entregue",
             description = "Muda o status para ENTREGUE (requer status PRONTO)")
-    public ResponseEntity<Order> marcarComoEntregue(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.entregue(orderId));
+    public ResponseEntity<Order> markAsDelivered(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderStatusService.delivered(orderId));
     }
 
     @PatchMapping("/{orderId}/finalizar")
     @Operation(summary = "Finalizar pedido",
             description = "Muda status para FINALIZADO (requer status ENTREGUE)")
-    public ResponseEntity<Order> finalizarPedido(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.finalizado(orderId));
+    public ResponseEntity<Order> finalizeOrder(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(orderStatusService.finished(orderId));
     }
 
     @GetMapping("/{orderId}")
     @Operation(summary = "Consultar status do pedido",
             description = "Retorna o status atual do pedido")
-    public ResponseEntity<Order> consultarStatus(@PathVariable UUID orderId) {
+    public ResponseEntity<Order> checkStatus(@PathVariable UUID orderId) {
         return ResponseEntity.ok(orderStatusService.getStatus(orderId));
     }
 
