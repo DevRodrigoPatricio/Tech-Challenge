@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.adapters.outbound.storage;
+package com.fiap.techChallenge.adapters.outbound.storage.category;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,7 +17,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.fiap.techChallenge.adapters.outbound.storage.category.CategoryAdapter;
 import com.fiap.techChallenge.domain.category.Category;
 import com.fiap.techChallenge.domain.category.CategoryRepository;
 import com.fiap.techChallenge.domain.category.CategoryRequest;
