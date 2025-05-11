@@ -23,4 +23,6 @@ public interface ProductRepository {
     List<Product> listByStatus(ProductStatus status);
 
     void delete(UUID id);
+
+    void deleteByCategoryId(UUID categoryId);
 }

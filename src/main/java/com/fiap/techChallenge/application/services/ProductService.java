@@ -47,4 +47,12 @@ public class ProductService {
         return port.listAvaiablesByCategory(categoryId);
     }
 
+    public void delete(UUID id) {
+        port.delete(id);
+    }
+
+    public void deleteByCategoryId(UUID categoryId) {
+        port.deleteByCategoryId(categoryId);
+    }
+
 }

@@ -66,12 +66,17 @@ public class ProductAdapter implements ProductPort {
         repository.delete(id);
     }
 
-    private void validateName(String name) {
+    @Override
+    public void deleteByCategoryId(UUID categoryId) {
+        repository.deleteByCategoryId(categoryId);
+    }
+
+    public void validateName(String name) {
         Optional<Product> existingProduct = repository.findByName(name);
 
         if (!existingProduct.isEmpty()) {
             throw new NameAlreadyRegisteredException(name);
         }
-
     }
+
 }

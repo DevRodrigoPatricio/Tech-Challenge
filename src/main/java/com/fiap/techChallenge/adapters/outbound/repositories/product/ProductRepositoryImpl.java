@@ -70,4 +70,9 @@ public class ProductRepositoryImpl implements ProductRepository {
         repository.deleteById(id);
     }
 
+    @Override
+    public void deleteByCategoryId(UUID categoryId) {
+        repository.deleteByCategory_Id(categoryId);
+    }
+
 }

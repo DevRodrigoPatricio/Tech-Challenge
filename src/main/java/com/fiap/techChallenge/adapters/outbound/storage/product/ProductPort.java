@@ -25,4 +25,6 @@ public interface ProductPort {
 
     void delete(UUID id);
 
+    void deleteByCategoryId(UUID categoryId);
+
 }

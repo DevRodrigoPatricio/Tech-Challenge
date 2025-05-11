@@ -78,6 +78,22 @@ public class ProductController {
         return ResponseEntity.ok(service.listAvaiablesByCategory(categoryId));
     }
 
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete",
+            description = "Deleta um produto")
+    public ResponseEntity<Optional<Product>> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete-by-category-id/{categoryId}")
+    @Operation(summary = "Delete By Category ID",
+            description = "Deleta os produtos da categoria informada")
+    public ResponseEntity<Optional<Product>> deleteByCategoryId(@PathVariable UUID categoryId) {
+        service.deleteByCategoryId(categoryId);
+        return ResponseEntity.noContent().build();
+    }
+
     @ExceptionHandler({HttpMessageNotReadableException.class})
     public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
         String message = e.getMessage();

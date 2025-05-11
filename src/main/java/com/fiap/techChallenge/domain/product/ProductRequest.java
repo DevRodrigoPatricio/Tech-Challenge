@@ -23,8 +23,8 @@ public class ProductRequest {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.status = status;
         this.categoryId = categoryId;
+        this.status = status;
         this.image = image;
     }
 
