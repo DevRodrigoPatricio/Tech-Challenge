@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.category.Category;
 import com.fiap.techChallenge.domain.category.CategoryRepository;
-import com.fiap.techChallenge.domain.category.CategoryRequest;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.CategoryHasProductsException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
@@ -25,10 +24,14 @@ public class CategoryAdapter implements CategoryPort {
     }
 
     @Override
-    public Category save(CategoryRequest request) {
-        Category category = new Category(request.getName());
+    public Category save(Category category) {
 
-        this.validateName(request.getName());
+        if (category.getId() == null) {
+            this.validateName(category.getName());
+
+        } else {
+            this.validateUpdate(category);
+        }
 
         return repository.save(category);
     }
@@ -62,5 +65,13 @@ public class CategoryAdapter implements CategoryPort {
 
     public Boolean existsProductInCategory(UUID id) {
         return !productRepository.listByCategory(id).isEmpty();
+    }
+
+    public void validateUpdate(Category category) {
+        Optional<Category> existingCategory = repository.findByName(category.getName());
+
+        if (existingCategory.isPresent() && !existingCategory.get().getId().equals(category.getId())) {
+            throw new NameAlreadyRegisteredException(category.getName());
+        }
     }
 }

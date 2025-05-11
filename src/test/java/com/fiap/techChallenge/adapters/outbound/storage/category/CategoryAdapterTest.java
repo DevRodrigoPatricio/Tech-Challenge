@@ -19,7 +19,6 @@ import org.junit.jupiter.api.Test;
 
 import com.fiap.techChallenge.domain.category.Category;
 import com.fiap.techChallenge.domain.category.CategoryRepository;
-import com.fiap.techChallenge.domain.category.CategoryRequest;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
@@ -53,25 +52,24 @@ public class CategoryAdapterTest {
     @Test
     public void shouldCallValidateNameWhenSavingCategory() {
         String name = "Lanche";
-        CategoryRequest request = new CategoryRequest(name);
+        Category category = new Category(name);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         CategoryAdapter spyAdapter = spy(new CategoryAdapter(repository, productRepository));
 
-        spyAdapter.save(request);
+        spyAdapter.save(category);
         verify(spyAdapter).validateName(name);
     }
 
     @Test
     public void shouldSaveCategorySuccessfully() {
         String name = "Lanche";
-        CategoryRequest request = new CategoryRequest(name);
-        Category newCategory = new Category(name);
+        Category category = new Category(name);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
-        when(repository.save(any(Category.class))).thenReturn(newCategory);
+        when(repository.save(any(Category.class))).thenReturn(category);
 
-        Category saved = adapter.save(request);
+        Category saved = adapter.save(category);
 
         assertEquals(name, saved.getName());
     }

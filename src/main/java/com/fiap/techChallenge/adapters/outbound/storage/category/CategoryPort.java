@@ -5,11 +5,10 @@ import java.util.UUID;
 import java.util.Optional;
 
 import com.fiap.techChallenge.domain.category.Category;
-import com.fiap.techChallenge.domain.category.CategoryRequest;
 
 public interface CategoryPort {
 
-    Category save(CategoryRequest request);
+    Category save(Category category);
 
     Optional<Category> findById(UUID id);
 

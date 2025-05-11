@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.domain.product.ProductRequest;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 @Component
@@ -22,11 +21,14 @@ public class ProductAdapter implements ProductPort {
     }
 
     @Override
-    public Product save(ProductRequest request) {
-        Product product = new Product(request.getName(), request.getDescription(), request.getPrice(),
-                request.getCategoryId(), request.getStatus(), request.getImage());
+    public Product save(Product product) {
 
-        this.validateName(request.getName());
+        if (product.getId() == null) {
+            this.validateName(product.getName());
+
+        } else {
+            this.validateUpdate(product);
+        }
 
         return repository.save(product);
     }
@@ -79,4 +81,11 @@ public class ProductAdapter implements ProductPort {
         }
     }
 
+    public void validateUpdate(Product product) {
+        Optional<Product> existingProduct = repository.findByName(product.getName());
+
+        if (existingProduct.isPresent() && !existingProduct.get().getId().equals(product.getId())) {
+            throw new NameAlreadyRegisteredException(product.getName());
+        }
+    }
 }

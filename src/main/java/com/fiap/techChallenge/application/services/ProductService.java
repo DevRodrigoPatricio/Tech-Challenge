@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.adapters.outbound.storage.product.ProductPort;
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRequest;
 
 @Service
 public class ProductService {
@@ -19,8 +18,8 @@ public class ProductService {
         this.port = port;
     }
 
-    public Product save(ProductRequest request) {
-        return port.save(request);
+    public Product save(Product product) {
+        return port.save(product);
     }
 
     public Optional<Product> findByName(String name) {

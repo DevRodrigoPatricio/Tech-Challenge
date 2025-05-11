@@ -25,6 +25,16 @@ public class Product {
         
     }
 
+    public Product(UUID id,String name, String description, BigDecimal price, UUID categoriaId, ProductStatus status, String image) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.categoriaId = categoriaId;
+        this.status = status;
+        this.image = image;
+    }
+
     public Product(String name, String description, BigDecimal price, UUID categoriaId, ProductStatus status, String image) {
         this.name = name;
         this.description = description;

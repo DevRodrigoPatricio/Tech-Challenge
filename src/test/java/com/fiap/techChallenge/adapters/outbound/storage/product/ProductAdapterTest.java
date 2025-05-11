@@ -19,7 +19,6 @@ import static org.mockito.Mockito.when;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.domain.product.ProductRequest;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 public class ProductAdapterTest {
@@ -50,13 +49,13 @@ public class ProductAdapterTest {
     @Test
     public void shouldCallValidateNameWhenSavingCategory() {
         String name = "X Tudo";
-        ProductRequest request = new ProductRequest(name, "Lanche completo",
+        Product product = new Product(name, "Lanche completo",
                 new BigDecimal(20.0), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.jpg");
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         ProductAdapter spyAdapter = spy(new ProductAdapter(repository));
 
-        spyAdapter.save(request);
+        spyAdapter.save(product);
         verify(spyAdapter).validateName(name);
     }
 
@@ -69,13 +68,13 @@ public class ProductAdapterTest {
         ProductStatus status = ProductStatus.DISPONIVEL;
         String image = "image.jpg";
 
-        ProductRequest request = new ProductRequest(name, description, price, categoryId, status, image);
+        Product product = new Product(name, description, price, categoryId, status, image);
         Product newProduct = new Product(name, description, price, categoryId, status, image);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         when(repository.save(any(Product.class))).thenReturn(newProduct);
 
-        Product saved = adapter.save(request);
+        Product saved = adapter.save(product);
         assertEquals(name, saved.getName());
     }
 

@@ -5,11 +5,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRequest;
 
 public interface ProductPort {
 
-    Product save(ProductRequest request);
+    Product save(Product product);
 
     Optional<Product> findById(UUID id);
 

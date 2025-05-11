@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.adapters.outbound.storage.category.CategoryPort;
 import com.fiap.techChallenge.domain.category.Category;
-import com.fiap.techChallenge.domain.category.CategoryRequest;
 
 @Service
 public class CategoryService {
@@ -19,8 +18,8 @@ public class CategoryService {
         this.port = port;
     }
 
-    public Category save(CategoryRequest request) {
-        return port.save(request);
+    public Category save(Category category) {
+        return port.save(category);
     }
 
     public Optional<Category> findById(UUID id) {

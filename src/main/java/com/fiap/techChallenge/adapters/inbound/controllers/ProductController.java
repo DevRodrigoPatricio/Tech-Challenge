@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fiap.techChallenge.application.services.ProductService;
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRequest;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,8 +30,8 @@ public class ProductController {
 
     @PostMapping("/save")
     @Operation(summary = "Save",
-            description = "Cria um novo produto")
-    public ResponseEntity<Product> save(@RequestBody ProductRequest product) {
+            description = "Salva um produto")
+    public ResponseEntity<Product> save(@RequestBody Product product) {
         return ResponseEntity.ok(service.save(product));
     }
 

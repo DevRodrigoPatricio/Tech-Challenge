@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fiap.techChallenge.application.services.CategoryService;
 import com.fiap.techChallenge.domain.category.Category;
-import com.fiap.techChallenge.domain.category.CategoryRequest;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,9 +33,9 @@ public class CategoryController {
 
     @PostMapping("/save")
     @Operation(summary = "Save",
-            description = "Cria uma nova categoria")
-    public ResponseEntity<Category> save(@RequestBody CategoryRequest request) {
-        return ResponseEntity.ok(service.save(request));
+            description = "Salva uma categoria")
+    public ResponseEntity<Category> save(@RequestBody Category category) {
+        return ResponseEntity.ok(service.save(category));
     }
 
     @GetMapping("/find-by-id/{id}")
