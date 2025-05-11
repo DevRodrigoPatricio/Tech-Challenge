@@ -9,15 +9,19 @@ import org.springframework.stereotype.Component;
 import com.fiap.techChallenge.domain.category.Category;
 import com.fiap.techChallenge.domain.category.CategoryRepository;
 import com.fiap.techChallenge.domain.category.CategoryRequest;
+import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.utils.exceptions.CategoryHasProductsException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 @Component
 public class CategoryAdapter implements CategoryPort {
 
     private final CategoryRepository repository;
+    private final ProductRepository productRepository;
 
-    public CategoryAdapter(CategoryRepository repository) {
+    public CategoryAdapter(CategoryRepository repository, ProductRepository productRepository) {
         this.repository = repository;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -41,16 +45,22 @@ public class CategoryAdapter implements CategoryPort {
 
     @Override
     public void delete(UUID id) {
-        // LÓGICA PARA NÃO DELETAR CATEGORIA QUE POSSUI PRODUTO CADASTRADO
+        if (this.existsProductInCategory(id)) {
+            throw new CategoryHasProductsException();
+        }
 
         repository.delete(id);
     }
 
-    private void validateName(String name) {
+    public void validateName(String name) {
         Optional<Category> existingCategory = repository.findByName(name);
 
         if (!existingCategory.isEmpty()) {
             throw new NameAlreadyRegisteredException(name);
         }
+    }
+
+    public Boolean existsProductInCategory(UUID id) {
+        return !productRepository.listByCategory(id).isEmpty();
     }
 }
