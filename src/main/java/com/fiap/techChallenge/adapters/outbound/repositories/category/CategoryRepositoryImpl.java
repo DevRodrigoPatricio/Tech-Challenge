@@ -30,14 +30,37 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
+    public List<Category> saveAll(List<Category> categoryList) {
+        List<CategoryEntity> entities = CategoryMapper.toEntityList(categoryList);
+        return CategoryMapper.toDomainList(repository.saveAll(entities));
+    }
+
+    @Override
+    public int findLastDisplayOrder() {
+        Optional<CategoryEntity> optional = repository.findTopByOrderByDisplayOrderDesc();
+
+        if (optional.isPresent()) {
+            CategoryEntity category = repository.findTopByOrderByDisplayOrderDesc().orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada"));
+            return category.getDisplayOrder();
+        }
+
+        return 0;
+    }
+
+    @Override
     public Optional<Category> findById(UUID id) {
         return repository.findById(id).map(CategoryMapper::toDomain);
     }
 
     @Override
-    public CategoryEntity validate(UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada pelo ID: " + id));
+    public Boolean existsById(UUID id) {
+        return repository.existsById(id);
+    }
+
+    @Override
+    public Category validate(UUID id) {
+        return CategoryMapper.toDomain(repository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("Categoria não encontrada pelo ID: " + id)));
     }
 
     @Override
@@ -47,7 +70,17 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public List<Category> list() {
-        return CategoryMapper.toDomainList(repository.findAll());
+        return CategoryMapper.toDomainList(repository.findAllByOrderByDisplayOrderAsc());
+    }
+
+    @Override
+    public List<Category> listByDisplayOrder(int displayOrder) {
+        return CategoryMapper.toDomainList(repository.findByDisplayOrderGreaterThanEqualOrderByDisplayOrderAsc(displayOrder));
+    }
+
+    @Override
+    public List<Category> findByDisplayOrderRange(int start, int end) {
+        return CategoryMapper.toDomainList(repository.findByDisplayOrderRange(start, end));
     }
 
     @Override

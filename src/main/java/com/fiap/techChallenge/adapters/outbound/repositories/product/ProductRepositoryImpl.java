@@ -12,6 +12,7 @@ import com.fiap.techChallenge.domain.category.CategoryRepository;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.utils.mappers.CategoryMapper;
 import com.fiap.techChallenge.utils.mappers.ProductMapper;
 
 @Repository
@@ -27,7 +28,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public Product save(Product product) {
-        CategoryEntity category = categoryRepository.validate(product.getCategoryId());
+        CategoryEntity category = CategoryMapper.toEntity(categoryRepository.validate(product.getCategoryId()));
 
         ProductEntity entity = ProductMapper.toEntity(product, category);
         entity = repository.save(entity);

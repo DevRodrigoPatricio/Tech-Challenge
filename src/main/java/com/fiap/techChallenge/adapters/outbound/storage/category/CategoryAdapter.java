@@ -33,6 +33,7 @@ public class CategoryAdapter implements CategoryPort {
             this.validateUpdate(category);
         }
 
+        this.organizeDisplayOrderToSave(category);
         return repository.save(category);
     }
 
@@ -52,6 +53,7 @@ public class CategoryAdapter implements CategoryPort {
             throw new CategoryHasProductsException();
         }
 
+        this.organizeDisplayOrderToDelete(repository.validate(id));
         repository.delete(id);
     }
 
@@ -73,5 +75,70 @@ public class CategoryAdapter implements CategoryPort {
         if (existingCategory.isPresent() && !existingCategory.get().getId().equals(category.getId())) {
             throw new NameAlreadyRegisteredException(category.getName());
         }
+    }
+
+    private void organizeDisplayOrderToSave(Category category) {
+        int newDisplayOrder = category.getDisplayOrder();
+        int lastDisplayOrder = repository.findLastDisplayOrder();
+
+        if (newDisplayOrder <= 0) {
+            newDisplayOrder = 1;
+
+        } else if (newDisplayOrder > lastDisplayOrder + 1) {
+            newDisplayOrder = lastDisplayOrder + 1;
+        }
+
+        boolean isUpdate = category.getId() != null && repository.existsById(category.getId());
+        Integer currentDisplayOrder = isUpdate
+                ? repository.findById(category.getId())
+                        .map(Category::getDisplayOrder)
+                        .orElse(null)
+                : null;
+
+        if (isUpdate && currentDisplayOrder != null) {
+            if (newDisplayOrder == currentDisplayOrder) {
+                return;
+            }
+
+            List<Category> affected;
+
+            if (newDisplayOrder < currentDisplayOrder) {
+                affected = repository.findByDisplayOrderRange(newDisplayOrder, currentDisplayOrder - 1);
+                affected.forEach(c -> c.setDisplayOrder(c.getDisplayOrder() + 1));
+            } else {
+                affected = repository.findByDisplayOrderRange(currentDisplayOrder + 1, newDisplayOrder);
+                affected.forEach(c -> c.setDisplayOrder(c.getDisplayOrder() - 1));
+            }
+
+            repository.saveAll(removeCurrentCategoryFromAffectedList(affected, category.getId()));
+        } else {
+            if (newDisplayOrder > lastDisplayOrder) {
+                newDisplayOrder = lastDisplayOrder + 1;
+            } else {
+                List<Category> affected = repository.findByDisplayOrderRange(newDisplayOrder, lastDisplayOrder);
+                affected.forEach(c -> c.setDisplayOrder(c.getDisplayOrder() + 1));
+
+                repository.saveAll(removeCurrentCategoryFromAffectedList(affected, category.getId()));
+            }
+        }
+
+        category.setDisplayOrder(newDisplayOrder);
+    }
+
+    private void organizeDisplayOrderToDelete(Category category) {
+        int removedDisplayOrder = category.getDisplayOrder();
+        int lastDisplayOrder = repository.findLastDisplayOrder();
+
+        if (removedDisplayOrder < lastDisplayOrder) {
+            List<Category> affected = repository.findByDisplayOrderRange(removedDisplayOrder + 1, lastDisplayOrder);
+            affected.forEach(c -> c.setDisplayOrder(c.getDisplayOrder() - 1));
+            repository.saveAll(affected);
+        }
+    }
+
+    private List<Category> removeCurrentCategoryFromAffectedList(List<Category> affectedList, UUID currentCategoryId) {
+        return affectedList.stream()
+                .filter(c -> !c.getId().equals(currentCategoryId))
+                .toList();
     }
 }

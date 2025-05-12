@@ -20,9 +20,13 @@ public class CategoryEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    public CategoryEntity(UUID id, String name) {
+    @Column(name = "displayOrder", nullable = false)
+    private int displayOrder;
+
+    public CategoryEntity(UUID id, String name, int displayOrder) {
         this.id = id;
         this.name = name;
+        this.displayOrder = displayOrder;
     }
 
     public CategoryEntity() {
@@ -44,4 +48,11 @@ public class CategoryEntity {
         this.name = name;
     }
 
+    public int getDisplayOrder() {
+        return this.displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
+    }
 }

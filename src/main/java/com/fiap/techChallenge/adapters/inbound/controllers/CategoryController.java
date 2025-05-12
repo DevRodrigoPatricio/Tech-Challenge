@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fiap.techChallenge.adapters.outbound.repositories.category.CategoryRepositoryImpl.CategoryNotFoundException;
 import com.fiap.techChallenge.application.services.CategoryService;
 import com.fiap.techChallenge.domain.category.Category;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
@@ -62,6 +63,11 @@ public class CategoryController {
 
     @ExceptionHandler({NameAlreadyRegisteredException.class})
     public ResponseEntity<String> handleNameAlreadyRegisteredException(NameAlreadyRegisteredException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({CategoryNotFoundException.class})
+    public ResponseEntity<String> handleCategoryNotFoundException(CategoryNotFoundException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

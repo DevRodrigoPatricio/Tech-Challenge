@@ -52,7 +52,7 @@ public class CategoryAdapterTest {
     @Test
     public void shouldCallValidateNameWhenSavingCategory() {
         String name = "Lanche";
-        Category category = new Category(name);
+        Category category = new Category(name, 1);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         CategoryAdapter spyAdapter = spy(new CategoryAdapter(repository, productRepository));
@@ -64,7 +64,7 @@ public class CategoryAdapterTest {
     @Test
     public void shouldSaveCategorySuccessfully() {
         String name = "Lanche";
-        Category category = new Category(name);
+        Category category = new Category(name,1);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         when(repository.save(any(Category.class))).thenReturn(category);
@@ -76,7 +76,7 @@ public class CategoryAdapterTest {
 
     @Test
     public void shouldFindCategoryById() {
-        Category category = new Category("Lanche");
+        Category category = new Category("Lanche",1);
 
         when(repository.findById(categoryId)).thenReturn(Optional.of(category));
 
@@ -88,7 +88,7 @@ public class CategoryAdapterTest {
 
     @Test
     public void shouldListAllCategories() {
-        List<Category> categories = List.of(new Category("Lanche"), new Category("Bebida"));
+        List<Category> categories = List.of(new Category("Lanche",1), new Category("Bebida",2));
 
         when(repository.list()).thenReturn(categories);
 

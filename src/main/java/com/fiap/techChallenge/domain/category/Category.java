@@ -8,12 +8,15 @@ public class Category {
 
     private String name;
 
-    public Category(String name) {
+    private int displayOrder;
+
+    public Category(String name, int displayOrder) {
         this.name = name;
+        this.displayOrder = displayOrder;
     }
 
     public Category() {
-        
+
     }
 
     public UUID getId() {
@@ -30,6 +33,14 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getDisplayOrder() {
+        return this.displayOrder;
+    }
+
+    public void setDisplayOrder(int displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
 }

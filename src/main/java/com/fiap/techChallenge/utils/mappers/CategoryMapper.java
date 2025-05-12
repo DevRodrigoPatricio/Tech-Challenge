@@ -14,7 +14,7 @@ public class CategoryMapper {
             return null;
         }
 
-        Category domain = new Category(entity.getName());
+        Category domain = new Category(entity.getName(), entity.getDisplayOrder());
 
         domain.setId(entity.getId());
         return domain;
@@ -28,6 +28,7 @@ public class CategoryMapper {
         CategoryEntity entity = new CategoryEntity();
         entity.setId(domain.getId());
         entity.setName(domain.getName());
+        entity.setDisplayOrder(domain.getDisplayOrder());
 
         return entity;
     }
@@ -42,5 +43,17 @@ public class CategoryMapper {
         );
 
         return domainList;
+    }
+
+    public static List<CategoryEntity> toEntityList(List<Category> domainList) {
+        List<CategoryEntity> entities = new ArrayList<>();
+
+        entities.addAll(
+                domainList.stream()
+                        .map(CategoryMapper::toEntity)
+                        .collect(Collectors.toList())
+        );
+
+        return entities;
     }
 }
