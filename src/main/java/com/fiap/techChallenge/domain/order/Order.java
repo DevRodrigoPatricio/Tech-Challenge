@@ -1,118 +1,130 @@
 package com.fiap.techChallenge.domain.order;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
 
 public class Order {
 
-    private final UUID id;
-    private OrderStatus status;
-    private LocalDateTime startPreparation;
-    private LocalDateTime readySchedule;
-    private LocalDateTime deliveryTime;
-    private LocalDateTime finalizedSchedule;
+    private UUID id;
 
-    public Order(UUID id, OrderStatus status) {
-        this.id = id;
-        this.status = status;
+    private List<OrderItem> items;
+
+    //Vai ser alterado para ser a entidade cliente
+    private String clientId;
+
+    //Vai ser alterado para ser a entidade atendente
+    private String attendantId;
+
+    private BigDecimal price;
+
+    private LocalDateTime orderDt;
+
+    public Order() {
     }
 
-    public enum OrderStatus {
-        RECEIVED,
-        IN_PREPARATION,
-        READY,
-        DELIVERED,
-        FINISHED,
-        PAID,
-        NOT_PAID,
-        PAYMENT_PENDING
+    public Order(List<OrderItem> items, String clientId, String attendantId, BigDecimal price, LocalDateTime orderDt) {
+        this.items = items;
+        this.clientId = clientId;
+        this.attendantId = attendantId;
+        this.price = price;
+        this.orderDt = orderDt;
+    }
+
+    public Order(UUID id, List<OrderItem> items, String clientId, String attendantId, BigDecimal price, LocalDateTime orderDt) {
+        this.id = id;
+        this.items = items;
+        this.clientId = clientId;
+        this.attendantId = attendantId;
+        this.price = price;
+        this.orderDt = orderDt;
     }
 
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
-    public OrderStatus getStatus() {
-        return status;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
+    public List<OrderItem> getItems() {
+        return this.items;
     }
 
-    public LocalDateTime getStartPreparation() {
-        return startPreparation;
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
     }
 
-    public void setStartPreparation(LocalDateTime startPreparation) {
-        this.startPreparation = startPreparation;
+    public String getClientId() {
+        return this.clientId;
     }
 
-    public LocalDateTime getReadySchedule() {
-        return readySchedule;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public void setReadySchedule(LocalDateTime readySchedule) {
-        this.readySchedule = readySchedule;
+    public String getAttendantId() {
+        return this.attendantId;
     }
 
-    public LocalDateTime getDeliveryTime() {
-        return deliveryTime;
+    public void setAttendantId(String attendantId) {
+        this.attendantId = attendantId;
     }
 
-    public void setDeliveryTime(LocalDateTime deliveryTime) {
-        this.deliveryTime = deliveryTime;
+    public BigDecimal getPrice() {
+        return this.price;
     }
 
-    public LocalDateTime getFinalizedSchedule() {
-        return finalizedSchedule;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public void setFinalizedSchedule(LocalDateTime finalizedSchedule) {
-        this.finalizedSchedule = finalizedSchedule;
+    public LocalDateTime getOrderDt() {
+        return this.orderDt;
     }
 
-    public void preparation() {
-        if (this.status != OrderStatus.RECEIVED) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível iniciar preparo. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.RECEIVED));
-        }
-        this.status = OrderStatus.IN_PREPARATION;
-        this.startPreparation = LocalDateTime.now();
+    public void setOrderDt(LocalDateTime orderDt) {
+        this.orderDt = orderDt;
     }
 
-    public void ready() {
-        if (this.status != OrderStatus.IN_PREPARATION) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível marcar como pronto. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.IN_PREPARATION));
-        }
-        this.status = OrderStatus.READY;
-        this.readySchedule = LocalDateTime.now();
-    }
-
-    public void delivered() {
-        if (this.status != OrderStatus.READY) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível marcar como entregue. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.READY));
-        }
-        this.status = OrderStatus.DELIVERED;
-        this.deliveryTime = LocalDateTime.now();
-    }
-
-    public void finished() {
-        if (this.status != OrderStatus.DELIVERED) {
-            throw new InvalidOrderStatusTransitionException(
-                    String.format("Não é possível finalizar. Status atual: %s (Requerido: %s)",
-                            this.status, OrderStatus.DELIVERED));
-        }
-        this.status = OrderStatus.FINISHED;
-        this.finalizedSchedule = LocalDateTime.now();
-    }
-
+    // public void preparation() {
+    //     if (this.status != OrderStatus.RECEIVED) {
+    //         throw new InvalidOrderStatusTransitionException(
+    //                 String.format("Não é possível iniciar preparo. Status atual: %s (Requerido: %s)",
+    //                         this.status, OrderStatus.RECEIVED));
+    //     }
+    //     this.status = OrderStatus.IN_PREPARATION;
+    //     this.preparationDt = LocalDateTime.now();
+    // }
+    // public void ready() {
+    //     if (this.status != OrderStatus.IN_PREPARATION) {
+    //         throw new InvalidOrderStatusTransitionException(
+    //                 String.format("Não é possível marcar como pronto. Status atual: %s (Requerido: %s)",
+    //                         this.status, OrderStatus.IN_PREPARATION));
+    //     }
+    //     this.status = OrderStatus.READY;
+    //     this.readyDt = LocalDateTime.now();
+    // }
+    // public void delivered() {
+    //     if (this.status != OrderStatus.READY) {
+    //         throw new InvalidOrderStatusTransitionException(
+    //                 String.format("Não é possível marcar como entregue. Status atual: %s (Requerido: %s)",
+    //                         this.status, OrderStatus.READY));
+    //     }
+    //     this.status = OrderStatus.DELIVERED;
+    //     this.deliveryDt = LocalDateTime.now();
+    // }
+    // public void finished() {
+    //     if (this.status != OrderStatus.DELIVERED) {
+    //         throw new InvalidOrderStatusTransitionException(
+    //                 String.format("Não é possível finalizar. Status atual: %s (Requerido: %s)",
+    //                         this.status, OrderStatus.DELIVERED));
+    //     }
+    //     this.status = OrderStatus.FINISHED;
+    //     this.finishedDt = LocalDateTime.now();
+    // }
 
 }

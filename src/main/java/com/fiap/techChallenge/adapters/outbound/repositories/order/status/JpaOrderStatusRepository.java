@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.adapters.outbound.repositories.order;
+package com.fiap.techChallenge.adapters.outbound.repositories.order.status;
 
 import java.util.UUID;
 
@@ -9,4 +9,5 @@ import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
 
 @Repository
 public interface JpaOrderStatusRepository extends JpaRepository<OrderEntity, UUID> {
+
 }

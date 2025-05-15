@@ -27,7 +27,7 @@ public class OrderStatusService implements OrderStatusUseCase {
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.preparation();
+            //order.preparation();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -41,7 +41,7 @@ public class OrderStatusService implements OrderStatusUseCase {
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.ready();
+            //order.ready();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -55,7 +55,7 @@ public class OrderStatusService implements OrderStatusUseCase {
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.delivered();
+            //order.delivered();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -69,7 +69,7 @@ public class OrderStatusService implements OrderStatusUseCase {
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            order.finished();
+            //order.finished();
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
             return savedOrder;
@@ -88,13 +88,13 @@ public class OrderStatusService implements OrderStatusUseCase {
                 .orElseThrow(() -> new OrderNotFoundException(orderId));
 
         try {
-            switch (Order.OrderStatus.valueOf(status)) {
-                case IN_PREPARATION -> order.preparation();
-                case READY -> order.ready();
-                case DELIVERED -> order.delivered();
-                case FINISHED -> order.finished();
-                default -> throw new IllegalArgumentException("Invalid status: " + status);
-            }
+            // switch (Order.OrderStatus.valueOf(status)) {
+            //     case IN_PREPARATION -> order.preparation();
+            //     case READY -> order.ready();
+            //     case DELIVERED -> order.delivered();
+            //     case FINISHED -> order.finished();
+            //     default -> throw new IllegalArgumentException("Invalid status: " + status);
+            // }
 
             Order savedOrder = repository.save(order);
             notificationPort.notifyStatusChange(savedOrder);
