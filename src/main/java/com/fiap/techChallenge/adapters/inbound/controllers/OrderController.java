@@ -43,7 +43,7 @@ public class OrderController {
     @PostMapping("/add-item/{orderId}/{productId}/{quantity}")
     @Operation(summary = "Add Item",
             description = "Adiciona um Produto ao Pedido")
-    public ResponseEntity<Order> addItem(@PathVariable UUID orderId, UUID productId, int quantity) {
+    public ResponseEntity<Order> addItem(@PathVariable UUID orderId,@PathVariable UUID productId,@PathVariable int quantity) {
         return ResponseEntity.ok(service.addItem(orderId, productId, quantity));
     }
 
