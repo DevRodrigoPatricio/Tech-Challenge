@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fiap.techChallenge.application.services.ProductService;
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
@@ -49,6 +50,13 @@ public class ProductController {
         return ResponseEntity.ok(service.findByName(name));
     }
 
+    @GetMapping("/list-avaiables-categorys")
+    @Operation(summary = "List Avaiables Categorys",
+            description = "Lista todas as categorias com produtos disponiveis")
+    public ResponseEntity<List<Category>> listAvaiableCategorys() {
+        return ResponseEntity.ok(service.listAvaiableCategorys());
+    }
+
     @GetMapping("/list")
     @Operation(summary = "List",
             description = "Lista todos os produtos")
@@ -63,18 +71,18 @@ public class ProductController {
         return ResponseEntity.ok(service.listAvaiables());
     }
 
-    @GetMapping("/list-by-category/{categoryId}")
+    @GetMapping("/list-by-category/{category}")
     @Operation(summary = "List By Category",
             description = "Lista todos os produtos da categoria informada")
-    public ResponseEntity<List<Product>> listByCategory(@PathVariable UUID categoryId) {
-        return ResponseEntity.ok(service.listByCategory(categoryId));
+    public ResponseEntity<List<Product>> listByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(service.listByCategory(Category.valueOf(category)));
     }
 
-    @GetMapping("/list-avaiables-by-category/{categoryId}")
+    @GetMapping("/list-avaiables-by-category/{category}")
     @Operation(summary = "List Avaiables",
             description = "Lista todos os produtos disponiveis da categoria informada")
-    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable UUID categoryId) {
-        return ResponseEntity.ok(service.listAvaiablesByCategory(categoryId));
+    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(service.listAvaiablesByCategory(Category.valueOf(category)));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -85,11 +93,11 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/delete-by-category-id/{categoryId}")
-    @Operation(summary = "Delete By Category ID",
+    @DeleteMapping("/delete-by-category-id/{category}")
+    @Operation(summary = "Delete By Category",
             description = "Deleta os produtos da categoria informada")
-    public ResponseEntity<Optional<Product>> deleteByCategoryId(@PathVariable UUID categoryId) {
-        service.deleteByCategoryId(categoryId);
+    public ResponseEntity<Optional<Product>> deleteByCategory(@PathVariable String category) {
+        service.deleteByCategory(Category.valueOf(category));
         return ResponseEntity.noContent().build();
     }
 

@@ -16,6 +16,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
@@ -50,7 +51,7 @@ public class ProductAdapterTest {
     public void shouldCallValidateNameWhenSavingCategory() {
         String name = "X Tudo";
         Product product = new Product(name, "Lanche completo",
-                new BigDecimal(20.0), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.jpg");
+                new BigDecimal(20.0), Category.LANCHE, ProductStatus.DISPONIVEL, "image.jpg");
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         ProductAdapter spyAdapter = spy(new ProductAdapter(repository));
@@ -64,12 +65,12 @@ public class ProductAdapterTest {
         String name = "X Tudo";
         String description = "Lanche completo";
         BigDecimal price = new BigDecimal(20.0);
-        UUID categoryId = UUID.randomUUID();
+        Category category = Category.LANCHE;
         ProductStatus status = ProductStatus.DISPONIVEL;
         String image = "image.jpg";
 
-        Product product = new Product(name, description, price, categoryId, status, image);
-        Product newProduct = new Product(name, description, price, categoryId, status, image);
+        Product product = new Product(name, description, price, category, status, image);
+        Product newProduct = new Product(name, description, price, category, status, image);
 
         when(repository.findByName(name)).thenReturn(Optional.empty());
         when(repository.save(any(Product.class))).thenReturn(newProduct);
@@ -82,7 +83,7 @@ public class ProductAdapterTest {
     public void shouldFindProductById() {
         String name = "X Tudo";
 
-        Product product = new Product(name, "Lanche completo", new BigDecimal(20.0), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.png");
+        Product product = new Product(name, "Lanche completo", new BigDecimal(20.0), Category.LANCHE, ProductStatus.DISPONIVEL, "image.png");
 
         when(repository.findById(productId)).thenReturn(Optional.of(product));
 
@@ -94,8 +95,8 @@ public class ProductAdapterTest {
 
     @Test
     public void shouldListAllProducts() {
-        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.png");
-        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.png");
+        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), Category.LANCHE, ProductStatus.DISPONIVEL, "image.png");
+        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), Category.LANCHE, ProductStatus.DISPONIVEL, "image.png");
         List<Product> products = List.of(firstProduct, secondProduct);
 
         when(repository.list()).thenReturn(products);
@@ -110,8 +111,8 @@ public class ProductAdapterTest {
     public void shouldListAllAvaiableProducts() {
         ProductStatus avaiableStatus = ProductStatus.DISPONIVEL;
 
-        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.png");
-        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), UUID.randomUUID(), ProductStatus.DISPONIVEL, "image.png");
+        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), Category.LANCHE, ProductStatus.DISPONIVEL, "image.png");
+        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), Category.LANCHE, ProductStatus.DISPONIVEL, "image.png");
         List<Product> products = List.of(firstProduct, secondProduct);
 
         when(repository.listByStatus(avaiableStatus)).thenReturn(products);
@@ -122,32 +123,32 @@ public class ProductAdapterTest {
     }
 
     @Test
-    public void shouldListProductsByCategoryId() {
-        UUID categoryId = UUID.randomUUID();
-        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), categoryId, ProductStatus.DISPONIVEL, "image.png");
-        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), categoryId, ProductStatus.DISPONIVEL, "image.png");
+    public void shouldListProductsByCategory() {
+        Category category = Category.LANCHE;
+        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), category, ProductStatus.DISPONIVEL, "image.png");
+        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), category, ProductStatus.DISPONIVEL, "image.png");
         List<Product> products = List.of(firstProduct, secondProduct);
 
-        when(repository.listByCategory(categoryId)).thenReturn(products);
+        when(repository.listByCategory(category)).thenReturn(products);
 
-        List<Product> result = adapter.listByCategory(categoryId);
+        List<Product> result = adapter.listByCategory(category);
 
         assertEquals(2, result.size());
     }
 
     @Test
-    public void shouldListAllAvaiableProductsByCategoryId() {
-        UUID categoryId = UUID.randomUUID();
+    public void shouldListAllAvaiableProductsByCategory() {
+        Category category = Category.LANCHE;
         ProductStatus avaiableStatus = ProductStatus.DISPONIVEL;
 
-        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), categoryId, ProductStatus.DISPONIVEL, "image.png");
-        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), categoryId, ProductStatus.DISPONIVEL, "image.png");
-        Product thirdProduct = new Product("X Salada", "Lanche de Salada", new BigDecimal(13.5), categoryId, ProductStatus.DISPONIVEL, "image.png");
+        Product firstProduct = new Product("X Tudo", "Lanche completo", new BigDecimal(20.0), category, ProductStatus.DISPONIVEL, "image.png");
+        Product secondProduct = new Product("X Bacon", "Lanche de Bacon", new BigDecimal(15.5), category, ProductStatus.DISPONIVEL, "image.png");
+        Product thirdProduct = new Product("X Salada", "Lanche de Salada", new BigDecimal(13.5), category, ProductStatus.DISPONIVEL, "image.png");
         List<Product> products = List.of(firstProduct, secondProduct, thirdProduct);
 
-        when(repository.listByStatusAndCategory(avaiableStatus, categoryId)).thenReturn(products);
+        when(repository.listByStatusAndCategory(avaiableStatus, category)).thenReturn(products);
 
-        List<Product> result = adapter.listAvaiablesByCategory(categoryId);
+        List<Product> result = adapter.listAvaiablesByCategory(category);
 
         assertEquals(3, result.size());
     }
@@ -160,10 +161,9 @@ public class ProductAdapterTest {
     }
 
     @Test
-    void shouldDeleteProductByCategoryId() {
-        UUID categoryId = UUID.randomUUID();
-        adapter.deleteByCategoryId(categoryId);
-
-        verify(repository).deleteByCategoryId(categoryId);
+    void shouldDeleteProductByCategory() {
+        Category category = Category.LANCHE;
+        adapter.deleteByCategory(category);
+        verify(repository).deleteByCategory(category);
     }
 }

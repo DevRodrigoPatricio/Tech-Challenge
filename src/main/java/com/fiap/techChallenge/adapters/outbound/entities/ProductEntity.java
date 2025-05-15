@@ -3,17 +3,15 @@ package com.fiap.techChallenge.adapters.outbound.entities;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -34,9 +32,9 @@ public class ProductEntity {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private CategoryEntity category;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -45,7 +43,7 @@ public class ProductEntity {
     @Column(name = "image", nullable = false)
     private String image;
 
-    public ProductEntity(UUID id, String name, String description, BigDecimal price, CategoryEntity category, ProductStatus status, String image) {
+    public ProductEntity(UUID id, String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -91,11 +89,11 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public CategoryEntity getCategory() {
+    public Category getCategory() {
         return this.category;
     }
 
-    public void setCategory(CategoryEntity category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

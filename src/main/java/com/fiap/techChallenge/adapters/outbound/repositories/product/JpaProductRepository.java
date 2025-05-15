@@ -6,9 +6,12 @@ import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
 public interface JpaProductRepository extends JpaRepository<ProductEntity, UUID> {
@@ -17,12 +20,15 @@ public interface JpaProductRepository extends JpaRepository<ProductEntity, UUID>
 
     List<ProductEntity> findByStatus(ProductStatus status);
 
-    List<ProductEntity> findByCategory_Id(UUID categoryId);
+    List<ProductEntity> findByCategory(Category category);
 
-    List<ProductEntity> findByStatusAndCategory_Id(ProductStatus status, UUID categoryId);
+    List<ProductEntity> findByStatusAndCategory(ProductStatus status, Category category);
+
+    @Query("SELECT DISTINCT p.category FROM ProductEntity p WHERE p.status = :status")
+    List<Category> listCategorysByProductStatus(@Param("status") ProductStatus status);
 
     @Transactional
     @Modifying
-    void deleteByCategory_Id(UUID categoryId);
+    void deleteByCategory(Category category);
 
 }

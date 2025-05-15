@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.adapters.outbound.storage.product.ProductPort;
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
 @Service
@@ -30,6 +31,10 @@ public class ProductService {
         return port.findById(id);
     }
 
+    public List<Category> listAvaiableCategorys() {
+        return port.listAvaiableCategorys();
+    }
+
     public List<Product> list() {
         return port.list();
     }
@@ -38,20 +43,20 @@ public class ProductService {
         return port.listAvaiables();
     }
 
-    public List<Product> listByCategory(UUID categoryId) {
-        return port.listByCategory(categoryId);
+    public List<Product> listByCategory(Category category) {
+        return port.listByCategory(category);
     }
 
-    public List<Product> listAvaiablesByCategory(UUID categoryId) {
-        return port.listAvaiablesByCategory(categoryId);
+    public List<Product> listAvaiablesByCategory(Category category) {
+        return port.listAvaiablesByCategory(category);
     }
 
     public void delete(UUID id) {
         port.delete(id);
     }
 
-    public void deleteByCategoryId(UUID categoryId) {
-        port.deleteByCategoryId(categoryId);
+    public void deleteByCategory(Category category) {
+        port.deleteByCategory(category);
     }
 
 }

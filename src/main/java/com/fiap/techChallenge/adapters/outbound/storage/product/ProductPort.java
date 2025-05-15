@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
 public interface ProductPort {
@@ -14,16 +15,18 @@ public interface ProductPort {
 
     Optional<Product> findByName(String name);
 
+    List<Category> listAvaiableCategorys();
+
     List<Product> list();
 
     List<Product> listAvaiables();
 
-    List<Product> listByCategory(UUID categoryId);
+    List<Product> listByCategory(Category category);
 
-    List<Product> listAvaiablesByCategory(UUID categoryId);
+    List<Product> listAvaiablesByCategory(Category category);
 
     void delete(UUID id);
 
-    void deleteByCategoryId(UUID categoryId);
+    void deleteByCategory(Category category);
 
 }

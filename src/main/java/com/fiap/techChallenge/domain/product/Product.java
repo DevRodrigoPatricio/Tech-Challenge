@@ -3,6 +3,7 @@ package com.fiap.techChallenge.domain.product;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
 public class Product {
@@ -15,31 +16,31 @@ public class Product {
 
     private BigDecimal price;
 
-    private UUID categoriaId;
+    private Category category;
 
     private ProductStatus status;
 
     private String image;
 
     public Product() {
-        
+
     }
 
-    public Product(UUID id,String name, String description, BigDecimal price, UUID categoriaId, ProductStatus status, String image) {
+    public Product(UUID id, String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.categoriaId = categoriaId;
+        this.category = category;
         this.status = status;
         this.image = image;
     }
 
-    public Product(String name, String description, BigDecimal price, UUID categoriaId, ProductStatus status, String image) {
+    public Product(String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
         this.name = name;
         this.description = description;
         this.price = price;
-        this.categoriaId = categoriaId;
+        this.category = category;
         this.status = status;
         this.image = image;
     }
@@ -76,12 +77,12 @@ public class Product {
         this.price = price;
     }
 
-    public UUID getCategoryId() {
-        return this.categoriaId;
+    public Category getCategory() {
+        return this.category;
     }
 
-    public void setCategoryId(UUID categoriaId) {
-        this.categoriaId = categoriaId;
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public ProductStatus getStatus() {

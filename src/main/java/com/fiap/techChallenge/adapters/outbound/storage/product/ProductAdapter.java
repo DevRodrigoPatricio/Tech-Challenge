@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
@@ -54,13 +55,13 @@ public class ProductAdapter implements ProductPort {
     }
 
     @Override
-    public List<Product> listByCategory(UUID categoryId) {
-        return repository.listByCategory(categoryId);
+    public List<Product> listByCategory(Category category) {
+        return repository.listByCategory(category);
     }
 
     @Override
-    public List<Product> listAvaiablesByCategory(UUID categoryId) {
-        return repository.listByStatusAndCategory(ProductStatus.DISPONIVEL, categoryId);
+    public List<Product> listAvaiablesByCategory(Category category) {
+        return repository.listByStatusAndCategory(ProductStatus.DISPONIVEL, category);
     }
 
     @Override
@@ -69,8 +70,8 @@ public class ProductAdapter implements ProductPort {
     }
 
     @Override
-    public void deleteByCategoryId(UUID categoryId) {
-        repository.deleteByCategoryId(categoryId);
+    public void deleteByCategory(Category category) {
+        repository.deleteByCategory(category);
     }
 
     public void validateName(String name) {
@@ -87,5 +88,10 @@ public class ProductAdapter implements ProductPort {
         if (existingProduct.isPresent() && !existingProduct.get().getId().equals(product.getId())) {
             throw new NameAlreadyRegisteredException(product.getName());
         }
+    }
+
+    @Override
+    public List<Category> listAvaiableCategorys() {
+        return repository.listAvaiableCategorys();
     }
 }

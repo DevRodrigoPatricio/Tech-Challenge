@@ -11,6 +11,6 @@ public class OrderStatusNotificationAdapter implements OrderStatusNotificationPo
     @Override
     public void notifyStatusChange(Order order) {
         System.out.println("Notificação: Pedido " + order.getId() +
-                " agora está " + order.getStatus());
+                " agora está " + "order.getStatus()");
     }
 }
