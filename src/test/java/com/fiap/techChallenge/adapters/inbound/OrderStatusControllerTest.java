@@ -1,7 +1,6 @@
 package com.fiap.techChallenge.adapters.inbound;
 
 import com.fiap.techChallenge.adapters.inbound.controllers.OrderStatusController;
-import com.fiap.techChallenge.application.services.OrderStatusService;
 import com.fiap.techChallenge.domain.order.Order;
 
 import org.junit.jupiter.api.Test;

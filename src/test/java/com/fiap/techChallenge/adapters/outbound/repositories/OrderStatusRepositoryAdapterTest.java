@@ -1,8 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.repositories;
 
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.adapters.outbound.repositories.order.status.JpaOrderStatusRepository;
-import com.fiap.techChallenge.adapters.outbound.repositories.order.status.OrderStatusRepositoryImpl;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.utils.mappers.OrderMapper;
 

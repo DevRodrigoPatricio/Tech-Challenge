@@ -1,8 +1,7 @@
 package com.fiap.techChallenge.application.services;
 
-import com.fiap.techChallenge.adapters.outbound.storage.order.status.OrderStatusNotificationPort;
+import com.fiap.techChallenge.adapters.outbound.storage.order.status.notification.OrderStatusNotificationPort;
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.status.OrderStatusRepository;
 import com.fiap.techChallenge.utils.exceptions.OrderNotFoundException;
 
 import org.junit.jupiter.api.Test;

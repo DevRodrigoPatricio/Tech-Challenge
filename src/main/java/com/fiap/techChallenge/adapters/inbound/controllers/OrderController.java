@@ -24,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/order")
-@Tag(name = "Order", description = "APIs relacionadas ao Pedido")
+@Tag(name = "Order", description = "APIs relacionadas aos Pedidos")
 public class OrderController {
 
     private final OrderService service;
@@ -73,6 +73,14 @@ public class OrderController {
             description = "Encontra um pedido pelo periodo informado")
     public ResponseEntity<List<Order>> listByPeriod(@PathVariable LocalDateTime initialDt, LocalDateTime finalDt) {
         return ResponseEntity.ok(service.listByPeriod(initialDt, finalDt));
+    }
+
+    @PostMapping("/cancel-order/{id}")
+    @Operation(summary = "Cancel Order",
+            description = "Cancela um Pedido")
+    public ResponseEntity<Optional<Order>> cancelOrder(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
     @ExceptionHandler({WrongCategoryOrderException.class})

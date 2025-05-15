@@ -21,10 +21,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
+
 class OrderAdapterTest {
 
     private OrderRepository orderRepository;
     private ProductRepository productRepository;
+    private OrderStatusHistoryRepository orderStatusHistoryRepository;
     private OrderAdapter orderAdapter;
 
     @BeforeEach
@@ -32,7 +35,8 @@ class OrderAdapterTest {
     void setup() {
         orderRepository = mock(OrderRepository.class);
         productRepository = mock(ProductRepository.class);
-        orderAdapter = new OrderAdapter(orderRepository, productRepository);
+        orderStatusHistoryRepository = mock(OrderStatusHistoryRepository.class);
+        orderAdapter = new OrderAdapter(orderRepository, productRepository, orderStatusHistoryRepository);
     }
 
     @Test

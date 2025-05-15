@@ -11,10 +11,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.OrderRequest;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
@@ -25,10 +28,12 @@ public class OrderAdapter implements OrderPort {
 
     private final OrderRepository repository;
     private final ProductRepository productRepository;
+    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository) {
+    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository orderStatusHistoryRepository) {
         this.repository = repository;
         this.productRepository = productRepository;
+        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
     }
 
     @Override
@@ -37,18 +42,19 @@ public class OrderAdapter implements OrderPort {
         BigDecimal price = new BigDecimal(0);
 
         for (OrderItem item : items) {
-            price = calculateNewOrderValue(price, item.getUnitPrice(), item.getQuantity());
+            price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
         }
 
-        //LÓGICA PARA SALVAR STATUS DE PEDIDO RECEBIDO
-        //Chamar repository de status
         Order order = new Order();
         order.setItems(request.getItems());
         order.setClientId(request.getClientId());
         order.setPrice(price);
         order.setOrderDt(LocalDateTime.now());
+        order = repository.save(order);
 
-        return repository.save(order);
+        this.insertStatus(order.getId(), OrderStatus.RECEIVED);
+
+        return order;
     }
 
     @Override
@@ -71,7 +77,7 @@ public class OrderAdapter implements OrderPort {
             throw new WrongCategoryOrderException(categoryList);
         }
 
-        order.setPrice(this.calculateNewOrderValue(order.getPrice(), product.getPrice(), quantity));
+        order.setPrice(this.calculatePrice(order.getPrice(), product.getPrice(), quantity));
         return repository.save(order);
     }
 
@@ -119,7 +125,8 @@ public class OrderAdapter implements OrderPort {
 
     @Override
     public void delete(UUID id) {
-        //ADICIONAR LÓGICA PARA ALTERAR STATUS PARA CANCELADO
+        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        this.insertStatus(order.getId(), OrderStatus.CANCELED);
     }
 
     public boolean canAddItem(List<OrderItem> items, OrderItem newItem) {
@@ -145,11 +152,21 @@ public class OrderAdapter implements OrderPort {
         return newIndex <= maxUsedIndex || newIndex == maxUsedIndex + 1;
     }
 
-    public BigDecimal calculateNewOrderValue(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
+    public BigDecimal calculatePrice(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
         if (productPrice != null && productPrice.compareTo(new BigDecimal(0)) != 0) {
             productPrice = productPrice.multiply(BigDecimal.valueOf(quantity));
         }
 
         return currentOrderValue.add(productPrice);
+    }
+
+    private void insertStatus(UUID orderId, OrderStatus status) {
+        OrderStatusHistory history = new OrderStatusHistory(
+                orderId,
+                status,
+                LocalDateTime.now()
+        );
+
+        orderStatusHistoryRepository.save(history);
     }
 }

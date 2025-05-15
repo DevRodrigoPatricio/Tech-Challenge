@@ -1,6 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.notification;
 
-import com.fiap.techChallenge.adapters.outbound.storage.order.status.OrderStatusNotificationAdapter;
+import com.fiap.techChallenge.adapters.outbound.storage.order.status.notification.OrderStatusNotificationAdapter;
 import com.fiap.techChallenge.domain.order.Order;
 
 import org.junit.jupiter.api.Test;

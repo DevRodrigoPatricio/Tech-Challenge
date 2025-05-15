@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
 import com.fiap.techChallenge.domain.order.Order;
@@ -13,7 +13,7 @@ import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.utils.exceptions.DomainException;
 import com.fiap.techChallenge.utils.mappers.OrderMapper;
 
-@Component
+@Repository
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final JpaOrderRepository repository;

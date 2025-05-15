@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order.status;
+package com.fiap.techChallenge.adapters.outbound.storage.order.status.notification;
 
 import org.springframework.stereotype.Component;
 
