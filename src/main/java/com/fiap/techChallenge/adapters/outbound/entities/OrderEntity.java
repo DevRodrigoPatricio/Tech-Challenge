@@ -31,7 +31,7 @@ public class OrderEntity {
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "orderDt")
+    @Column(name = "orderDt", nullable = false)
     private LocalDateTime orderDt;
 
     public OrderEntity() {

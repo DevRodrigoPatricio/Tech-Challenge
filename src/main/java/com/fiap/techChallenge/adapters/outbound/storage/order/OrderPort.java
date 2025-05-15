@@ -6,10 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderRequest;
 
 public interface OrderPort {
 
-    Order save(Order order);
+    Order save(OrderRequest order);
 
     Order addItem(UUID id, UUID productId, int quantity);
 

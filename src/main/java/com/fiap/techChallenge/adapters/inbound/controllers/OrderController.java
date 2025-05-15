@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fiap.techChallenge.application.services.OrderService;
 import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderRequest;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +36,7 @@ public class OrderController {
     @PostMapping("/save")
     @Operation(summary = "Save",
             description = "Salva um Pedido")
-    public ResponseEntity<Order> save(@RequestBody Order order) {
+    public ResponseEntity<Order> save(@RequestBody OrderRequest order) {
         return ResponseEntity.ok(service.save(order));
     }
 

@@ -14,6 +14,7 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.order.OrderRepository;
+import com.fiap.techChallenge.domain.order.OrderRequest;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
@@ -31,11 +32,22 @@ public class OrderAdapter implements OrderPort {
     }
 
     @Override
-    public Order save(Order order) {
-        order.setOrderDt(LocalDateTime.now());
+    public Order save(OrderRequest request) {
+        List<OrderItem> items = request.getItems();
+        BigDecimal price = new BigDecimal(0);
+
+        for (OrderItem item : items) {
+            price = calculateNewOrderValue(price, item.getUnitPrice(), item.getQuantity());
+        }
 
         //LÓGICA PARA SALVAR STATUS DE PEDIDO RECEBIDO
         //Chamar repository de status
+        Order order = new Order();
+        order.setItems(request.getItems());
+        order.setClientId(request.getClientId());
+        order.setPrice(price);
+        order.setOrderDt(LocalDateTime.now());
+
         return repository.save(order);
     }
 
@@ -52,11 +64,11 @@ public class OrderAdapter implements OrderPort {
             items.add(newItem);
 
         } else {
-            String categoriasList = Arrays.stream(Category.values())
+            String categoryList = Arrays.stream(Category.values())
                     .map(Enum::name)
                     .collect(Collectors.joining(", "));
 
-            throw new WrongCategoryOrderException(categoriasList);
+            throw new WrongCategoryOrderException(categoryList);
         }
 
         order.setPrice(this.calculateNewOrderValue(order.getPrice(), product.getPrice(), quantity));
@@ -79,6 +91,7 @@ public class OrderAdapter implements OrderPort {
             items.remove(existingItem);
 
         } else {
+            quantity = quantity < 0 ? 0 : quantity;
             existingItem.setQuantity(existingItem.getQuantity() - quantity);
         }
 
@@ -109,7 +122,7 @@ public class OrderAdapter implements OrderPort {
         //ADICIONAR LÓGICA PARA ALTERAR STATUS PARA CANCELADO
     }
 
-    private boolean canAddItem(List<OrderItem> items, OrderItem newItem) {
+    public boolean canAddItem(List<OrderItem> items, OrderItem newItem) {
         List<Category> avaiablesCategorys = productRepository.listAvaiableCategorys();
         avaiablesCategorys = List.of(Category.values()).stream()
                 .filter(avaiablesCategorys::contains)
@@ -132,9 +145,9 @@ public class OrderAdapter implements OrderPort {
         return newIndex <= maxUsedIndex || newIndex == maxUsedIndex + 1;
     }
 
-    private BigDecimal calculateNewOrderValue(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
-        if (productPrice != null && productPrice.compareTo(new BigDecimal(0)) == 0) {
-            productPrice = (productPrice.multiply(new BigDecimal(quantity)));
+    public BigDecimal calculateNewOrderValue(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
+        if (productPrice != null && productPrice.compareTo(new BigDecimal(0)) != 0) {
+            productPrice = productPrice.multiply(BigDecimal.valueOf(quantity));
         }
 
         return currentOrderValue.add(productPrice);

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-
 public class Order {
 
     private UUID id;
@@ -126,5 +125,4 @@ public class Order {
     //     this.status = OrderStatus.FINISHED;
     //     this.finishedDt = LocalDateTime.now();
     // }
-
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.adapters.outbound.storage.order.OrderPort;
 import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderRequest;
 
 @Service
 public class OrderService {
@@ -19,7 +20,7 @@ public class OrderService {
         this.port = port;
     }
 
-    public Order save(Order order) {
+    public Order save(OrderRequest order) {
         return port.save(order);
     }
 
