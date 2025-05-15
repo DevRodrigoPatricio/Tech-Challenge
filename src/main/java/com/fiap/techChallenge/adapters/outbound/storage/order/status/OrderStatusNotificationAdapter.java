@@ -3,7 +3,6 @@ package com.fiap.techChallenge.adapters.outbound.storage.order.status;
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.status.OrderStatusNotificationPort;
 
 @Component
 public class OrderStatusNotificationAdapter implements OrderStatusNotificationPort {
