@@ -1,24 +1,26 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.annotation.*;
+
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fiap.techChallenge.application.services.ProductService;
+import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.utils.mappers.ProductMapper;
+import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/produto")
-@Tag(name = "Produto", description = "APIs relacionadas ao Produto")
+@RequestMapping("/api/product")
+@Tag(name = "Product", description = "APIs relacionadas ao Produto")
 public class ProductController {
 
     private final ProductService service;
@@ -28,11 +30,99 @@ public class ProductController {
     }
 
     @PostMapping("/save")
-    @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Save",
-            description = "Cria um novo produto")
-    public ProductEntity save(@RequestBody @Valid Product product) {
-        return ProductMapper.toEntity(service.save(product));
+            description = "Salva um produto")
+    public ResponseEntity<Product> save(@RequestBody Product product) {
+        return ResponseEntity.ok(service.save(product));
     }
 
+    @GetMapping("/find-by-id/{id}")
+    @Operation(summary = "Find By ID",
+            description = "Encontra um produto pelo ID Informado")
+    public ResponseEntity<Optional<Product>> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.findById(id));
+    }
+
+    @GetMapping("/find-by-name/{name}")
+    @Operation(summary = "Find By Name",
+            description = "Encontra um produto pelo Nome Informado")
+    public ResponseEntity<Optional<Product>> findByName(@PathVariable String name) {
+        return ResponseEntity.ok(service.findByName(name));
+    }
+
+    @GetMapping("/list-avaiables-categorys")
+    @Operation(summary = "List Avaiables Categorys",
+            description = "Lista todas as categorias com produtos disponiveis")
+    public ResponseEntity<List<Category>> listAvaiableCategorys() {
+        return ResponseEntity.ok(service.listAvaiableCategorys());
+    }
+
+    @GetMapping("/list")
+    @Operation(summary = "List",
+            description = "Lista todos os produtos")
+    public ResponseEntity<List<Product>> list() {
+        return ResponseEntity.ok(service.list());
+    }
+
+    @GetMapping("/list-avaiables")
+    @Operation(summary = "List Avaiables",
+            description = "Lista todos os produtos disponiveis")
+    public ResponseEntity<List<Product>> listAvaiables() {
+        return ResponseEntity.ok(service.listAvaiables());
+    }
+
+    @GetMapping("/list-by-category/{category}")
+    @Operation(summary = "List By Category",
+            description = "Lista todos os produtos da categoria informada")
+    public ResponseEntity<List<Product>> listByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(service.listByCategory(Category.valueOf(category)));
+    }
+
+    @GetMapping("/list-avaiables-by-category/{category}")
+    @Operation(summary = "List Avaiables",
+            description = "Lista todos os produtos disponiveis da categoria informada")
+    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable String category) {
+        return ResponseEntity.ok(service.listAvaiablesByCategory(Category.valueOf(category)));
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Operation(summary = "Delete",
+            description = "Deleta um produto")
+    public ResponseEntity<Optional<Product>> delete(@PathVariable UUID id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/delete-by-category-id/{category}")
+    @Operation(summary = "Delete By Category",
+            description = "Deleta os produtos da categoria informada")
+    public ResponseEntity<Optional<Product>> deleteByCategory(@PathVariable String category) {
+        service.deleteByCategory(Category.valueOf(category));
+        return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
+        String message = e.getMessage();
+
+        if (e.getCause() instanceof InvalidFormatException formatEx && formatEx.getTargetType().isEnum()) {
+            Class<?> enumClass = formatEx.getTargetType();
+            Object[] constants = enumClass.getEnumConstants();
+            String correctValues = Arrays.toString(constants);
+            String field = formatEx.getPath().get(0).getFieldName();
+
+            message = String.format(
+                    "Valor inválido para o campo '%s'. Valores aceitos: %s",
+                    field,
+                    correctValues
+            );
+        }
+
+        return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler({NameAlreadyRegisteredException.class})
+    public ResponseEntity<String> handleNameAlreadyRegisteredException(NameAlreadyRegisteredException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
 }

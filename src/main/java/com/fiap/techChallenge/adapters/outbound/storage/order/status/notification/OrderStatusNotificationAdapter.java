@@ -1,9 +1,8 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order.status;
+package com.fiap.techChallenge.adapters.outbound.storage.order.status.notification;
 
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.status.OrderStatusNotificationPort;
 
 @Component
 public class OrderStatusNotificationAdapter implements OrderStatusNotificationPort {
@@ -11,6 +10,6 @@ public class OrderStatusNotificationAdapter implements OrderStatusNotificationPo
     @Override
     public void notifyStatusChange(Order order) {
         System.out.println("Notificação: Pedido " + order.getId() +
-                " agora está " + order.getStatus());
+                " agora está " + "order.getStatus()");
     }
 }

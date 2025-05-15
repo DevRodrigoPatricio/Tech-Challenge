@@ -1,7 +1,13 @@
 package com.fiap.techChallenge.utils.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.OrderItemEmbeddable;
 import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderItem;
 
 public class OrderMapper {
 
@@ -10,13 +16,16 @@ public class OrderMapper {
             return null;
         }
 
-        Order order = new Order(entity.getId(),
-                Order.OrderStatus.valueOf(entity.getStatus().name()));
+        List<OrderItem> items = entity.getItems().stream().map(i -> new OrderItem(
+                i.getProductId(), i.getProductName(),
+                i.getQuantity(),
+                i.getUnitPrice(),
+                i.getCategory()
+        )).collect(Collectors.toList());
 
-        order.setStartPreparation(entity.getStartPreparation());
-        order.setReadySchedule(entity.getReadySchedule());
-        order.setDeliveryTime(entity.getDeliveryTime());
-        order.setFinalizedSchedule(entity.getFinalizedSchedule());
+        Order order = new Order(entity.getId(),
+                items, entity.getClientId(), entity.getAttendantId(),
+                entity.getPrice(), entity.getOrderDt());
 
         return order;
     }
@@ -26,14 +35,35 @@ public class OrderMapper {
             return null;
         }
 
+        List<OrderItemEmbeddable> embeddables = domain.getItems().stream()
+                .map(i -> new OrderItemEmbeddable(
+                i.getProductId(),
+                i.getProductName(),
+                i.getQuantity(),
+                i.getUnitPrice(),
+                i.getCategory()
+        )).collect(Collectors.toList());
+
         OrderEntity entity = new OrderEntity();
         entity.setId(domain.getId());
-        entity.setStatus(OrderEntity.OrderStatus.valueOf(domain.getStatus().name()));
-        entity.setStartPreparation(domain.getStartPreparation());
-        entity.setReadySchedule(domain.getReadySchedule());
-        entity.setDeliveryTime(domain.getDeliveryTime());
-        entity.setFinalizedSchedule(domain.getFinalizedSchedule());
+        entity.setItems(embeddables);
+        entity.setClientId(domain.getClientId());
+        entity.setAttendantId(domain.getAttendantId());
+        entity.setPrice(domain.getPrice());
+        entity.setOrderDt(domain.getOrderDt());
 
         return entity;
+    }
+
+    public static List<Order> toDomainList(List<OrderEntity> entities) {
+        List<Order> domainList = new ArrayList<>();
+
+        domainList.addAll(
+                entities.stream()
+                        .map(OrderMapper::toDomain)
+                        .collect(Collectors.toList())
+        );
+
+        return domainList;
     }
 }

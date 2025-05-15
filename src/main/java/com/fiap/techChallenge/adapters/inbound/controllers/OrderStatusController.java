@@ -1,60 +1,62 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
-import com.fiap.techChallenge.application.services.OrderStatusService;
-import com.fiap.techChallenge.domain.order.Order;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 import com.fiap.techChallenge.utils.exceptions.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fiap.techChallenge.application.services.OrderStatusHistoryService;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
+
 @RestController
-@RequestMapping("/api/pedidos")
-@Tag(name = "Status de Pedidos", description = "Endpoints para gerenciamento do status de pedidos")
+@RequestMapping("/api/order-status")
+@Tag(name = "Historico dos Status de Pedidos", description = "APIs referentes ao Histórico de Status de Pedidos")
 public class OrderStatusController {
 
-    private final OrderStatusService orderStatusService;
+    private final OrderStatusHistoryService service;
 
-    public OrderStatusController(OrderStatusService orderStatusService) {
-        this.orderStatusService = orderStatusService;
+    public OrderStatusController(OrderStatusHistoryService service) {
+        this.service = service;
     }
 
-    @PatchMapping("/{orderId}/preparar")
-    @Operation(summary = "Iniciar preparação do pedido",
+    @PostMapping("/save")
+    @Operation(summary = "Cria um novo Status Para o Pedido informado",
             description = "Muda o status para EM_PREPARACAO (requer status RECEBIDO)")
-    public ResponseEntity<Order> prepareOrder(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.preparation(orderId));
+    public ResponseEntity<OrderStatusHistory> save(@RequestBody OrderStatusHistoryRequest request) {
+        return ResponseEntity.ok(service.save(request));
     }
 
-    @PatchMapping("/{orderId}/pronto")
-    @Operation(summary = "Marcar pedido como pronto",
-            description = "Muda o status para PRONTO (requer status EM_PREPARACAO)")
-    public ResponseEntity<Order> markAsReady(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.ready(orderId));
+    @GetMapping("/find-by-id/{id}")
+    @Operation(summary = "Find By ID",
+            description = "Encontra um Status History pelo ID")
+    public ResponseEntity<Optional<OrderStatusHistory>> findById(@PathVariable UUID id) {
+        return ResponseEntity.ok(service.findById(id));
     }
 
-    @PatchMapping("/{orderId}/entregue")
-    @Operation(summary = "Marcar pedido como entregue",
-            description = "Muda o status para ENTREGUE (requer status PRONTO)")
-    public ResponseEntity<Order> markAsDelivered(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.delivered(orderId));
+    @GetMapping("/find-last-status/{orderId}")
+    @Operation(summary = "Find Last Status",
+            description = "Encontra o ultimo Status  do pedido informado")
+    public ResponseEntity<Optional<OrderStatusHistory>> findLast(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(service.findLast(orderId));
     }
 
-    @PatchMapping("/{orderId}/finalizar")
-    @Operation(summary = "Finalizar pedido",
-            description = "Muda status para FINALIZADO (requer status ENTREGUE)")
-    public ResponseEntity<Order> finalizeOrder(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.finished(orderId));
-    }
-
-    @GetMapping("/{orderId}")
-    @Operation(summary = "Consultar status do pedido",
-            description = "Retorna o status atual do pedido")
-    public ResponseEntity<Order> checkStatus(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(orderStatusService.getStatus(orderId));
+    @GetMapping("/list/{orderId}")
+    @Operation(summary = "List",
+            description = "Encontra a lista dos status de um pedido")
+    public ResponseEntity<List<OrderStatusHistory>> listByPeriod(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(service.list(orderId));
     }
 
     @ExceptionHandler({OrderNotFoundException.class})
@@ -65,5 +67,30 @@ public class OrderStatusController {
     @ExceptionHandler({InvalidOrderStatusTransitionException.class})
     public ResponseEntity<String> handleBadRequest(Exception e) {
         return ResponseEntity.status(400).body(e.getMessage());
+    }
+
+    @ExceptionHandler({IllegalArgumentException.class})
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
+        String message = e.getMessage();
+
+        if (e.getCause() instanceof InvalidFormatException formatEx && formatEx.getTargetType().isEnum()) {
+            Class<?> enumClass = formatEx.getTargetType();
+            Object[] constants = enumClass.getEnumConstants();
+            String correctValues = Arrays.toString(constants);
+            String field = formatEx.getPath().get(0).getFieldName();
+
+            message = String.format(
+                    "Valor inválido para o campo '%s'. Valores aceitos: %s",
+                    field,
+                    correctValues
+            );
+        }
+
+        return ResponseEntity.badRequest().body(message);
     }
 }

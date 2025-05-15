@@ -1,13 +1,13 @@
-package com.fiap.techChallenge.domain.product;
+package com.fiap.techChallenge.adapters.outbound.storage.product;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.product.Product;
 
-public interface ProductRepository {
+public interface ProductPort {
 
     Product save(Product product);
 
@@ -19,13 +19,14 @@ public interface ProductRepository {
 
     List<Product> list();
 
+    List<Product> listAvaiables();
+
     List<Product> listByCategory(Category category);
 
-    List<Product> listByStatusAndCategory(ProductStatus status, Category category);
-
-    List<Product> listByStatus(ProductStatus status);
+    List<Product> listAvaiablesByCategory(Category category);
 
     void delete(UUID id);
 
     void deleteByCategory(Category category);
+
 }

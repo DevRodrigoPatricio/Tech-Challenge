@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.order.status;
+package com.fiap.techChallenge.adapters.outbound.storage.order.status.notification;
 
 import com.fiap.techChallenge.domain.order.Order;
 

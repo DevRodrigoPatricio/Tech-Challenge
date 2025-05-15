@@ -3,6 +3,9 @@ package com.fiap.techChallenge.domain.product;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.enums.ProductStatus;
+
 public class Product {
 
     private UUID id;
@@ -13,18 +16,32 @@ public class Product {
 
     private BigDecimal price;
 
-    private BigDecimal amount;
+    private Category category;
 
-    private String category;
+    private ProductStatus status;
 
     private String image;
 
-    public Product(String name, String description, BigDecimal price, BigDecimal amount, String category, String image) {
+    public Product() {
+
+    }
+
+    public Product(UUID id, String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.amount = amount;
         this.category = category;
+        this.status = status;
+        this.image = image;
+    }
+
+    public Product(String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.status = status;
         this.image = image;
     }
 
@@ -37,7 +54,7 @@ public class Product {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -45,7 +62,7 @@ public class Product {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -53,31 +70,31 @@ public class Product {
     }
 
     public BigDecimal getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Category getCategory() {
+        return this.category;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
+    public ProductStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
+
     public String getImage() {
-        return image;
+        return this.image;
     }
 
     public void setImage(String image) {

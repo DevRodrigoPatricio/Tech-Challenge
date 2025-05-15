@@ -3,12 +3,14 @@ package com.fiap.techChallenge.adapters.outbound.entities;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import com.fiap.techChallenge.domain.product.Product;
+import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.enums.ProductStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -17,45 +19,38 @@ import jakarta.persistence.Table;
 public class ProductEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue
+    @Column(name = "id", updatable = false, nullable = false)
     private UUID id;
 
-    @Column(name = "nome")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "descricao")
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "preco")
+    @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "quantidade")
-    private BigDecimal amount;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Category category;
 
-    @Column(name = "categoria")
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
 
-    @Column(name = "imagem")
+    @Column(name = "image", nullable = false)
     private String image;
 
-    public ProductEntity(UUID id, String name, String description, BigDecimal price, BigDecimal amount, String category, String image) {
+    public ProductEntity(UUID id, String name, String description, BigDecimal price, Category category, ProductStatus status, String image) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
-        this.amount = amount;
         this.category = category;
+        this.status = status;
         this.image = image;
-    }
-
-    public ProductEntity(Product product) {
-        this.id = product.getId();
-        this.name = product.getName();
-        this.description = product.getDescription();
-        this.price = product.getPrice();
-        this.amount = product.getAmount();
-        this.category = product.getCategory();
-        this.image = product.getImage();
     }
 
     public ProductEntity() {
@@ -70,7 +65,7 @@ public class ProductEntity {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -78,7 +73,7 @@ public class ProductEntity {
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setDescription(String description) {
@@ -86,31 +81,32 @@ public class ProductEntity {
     }
 
     public BigDecimal getPrice() {
-        return price;
+
+        return this.price;
     }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Category getCategory() {
+        return this.category;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
+    public ProductStatus getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(ProductStatus status) {
+        this.status = status;
+    }
+
     public String getImage() {
-        return image;
+        return this.image;
     }
 
     public void setImage(String image) {
