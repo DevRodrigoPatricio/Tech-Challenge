@@ -1,24 +1,23 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import com.fiap.techChallenge.utils.exceptions.*;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.UUID;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.fiap.techChallenge.application.services.OrderStatusHistoryService;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/order-status")
@@ -59,38 +58,4 @@ public class OrderStatusController {
         return ResponseEntity.ok(service.list(orderId));
     }
 
-    @ExceptionHandler({OrderNotFoundException.class})
-    public ResponseEntity<String> handleNotFound(Exception e) {
-        return ResponseEntity.status(404).body(e.getMessage());
-    }
-
-    @ExceptionHandler({InvalidOrderStatusTransitionException.class})
-    public ResponseEntity<String> handleBadRequest(Exception e) {
-        return ResponseEntity.status(400).body(e.getMessage());
-    }
-
-    @ExceptionHandler({IllegalArgumentException.class})
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
-    @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
-        String message = e.getMessage();
-
-        if (e.getCause() instanceof InvalidFormatException formatEx && formatEx.getTargetType().isEnum()) {
-            Class<?> enumClass = formatEx.getTargetType();
-            Object[] constants = enumClass.getEnumConstants();
-            String correctValues = Arrays.toString(constants);
-            String field = formatEx.getPath().get(0).getFieldName();
-
-            message = String.format(
-                    "Valor inválido para o campo '%s'. Valores aceitos: %s",
-                    field,
-                    correctValues
-            );
-        }
-
-        return ResponseEntity.badRequest().body(message);
-    }
 }

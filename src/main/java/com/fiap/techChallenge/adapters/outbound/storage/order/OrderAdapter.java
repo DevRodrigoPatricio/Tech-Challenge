@@ -2,6 +2,7 @@ package com.fiap.techChallenge.adapters.outbound.storage.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -38,21 +39,17 @@ public class OrderAdapter implements OrderPort {
 
     @Override
     public Order save(OrderRequest request) {
-        List<OrderItem> items = request.getItems();
+        List<OrderItem> items = new ArrayList<>();
         BigDecimal price = new BigDecimal(0);
 
-        for (OrderItem item : items) {
-            price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
-        }
-
         Order order = new Order();
-        order.setItems(request.getItems());
         order.setClientId(request.getClientId());
         order.setPrice(price);
+        order.setItems(items);
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
 
-        this.insertStatus(order.getId(), OrderStatus.RECEIVED);
+        this.insertStatus(order.getId(), OrderStatus.INICIADO);
 
         return order;
     }
@@ -126,7 +123,7 @@ public class OrderAdapter implements OrderPort {
     @Override
     public void delete(UUID id) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
-        this.insertStatus(order.getId(), OrderStatus.CANCELED);
+        this.insertStatus(order.getId(), OrderStatus.CANCELADO);
     }
 
     public boolean canAddItem(List<OrderItem> items, OrderItem newItem) {

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.utils.exceptions.DomainException;
+import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.mappers.OrderMapper;
 
 @Repository
@@ -38,7 +38,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Order validate(UUID id) {
         return OrderMapper.toDomain(repository.findById(id)
-                .orElseThrow(() -> new OrderNotFoundException("Pedido não encontrado pelo ID: " + id)));
+                .orElseThrow(() -> new EntityNotFoundException("Pedido")));
     }
 
     @Override
@@ -51,10 +51,4 @@ public class OrderRepositoryImpl implements OrderRepository {
         return OrderMapper.toDomainList(repository.findAllByOrderDtBetween(initialDt, finalDt));
     }
 
-    public class OrderNotFoundException extends DomainException {
-
-        public OrderNotFoundException(String message) {
-            super(message);
-        }
-    }
 }

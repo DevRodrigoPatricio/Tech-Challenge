@@ -1,19 +1,15 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fiap.techChallenge.application.services.ProductService;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -101,28 +97,4 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler({HttpMessageNotReadableException.class})
-    public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
-        String message = e.getMessage();
-
-        if (e.getCause() instanceof InvalidFormatException formatEx && formatEx.getTargetType().isEnum()) {
-            Class<?> enumClass = formatEx.getTargetType();
-            Object[] constants = enumClass.getEnumConstants();
-            String correctValues = Arrays.toString(constants);
-            String field = formatEx.getPath().get(0).getFieldName();
-
-            message = String.format(
-                    "Valor inválido para o campo '%s'. Valores aceitos: %s",
-                    field,
-                    correctValues
-            );
-        }
-
-        return ResponseEntity.badRequest().body(message);
-    }
-
-    @ExceptionHandler({NameAlreadyRegisteredException.class})
-    public ResponseEntity<String> handleNameAlreadyRegisteredException(NameAlreadyRegisteredException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
 }
