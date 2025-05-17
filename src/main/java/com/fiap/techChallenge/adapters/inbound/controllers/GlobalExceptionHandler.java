@@ -12,6 +12,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
@@ -99,7 +100,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({EntityNotFoundException.class})
-    public ResponseEntity<String> handleEntityNotFoundExceptionException(EntityNotFoundException e) {
+    public ResponseEntity<String> handleEntityNotFoundException(EntityNotFoundException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({InvalidOrderStatusException.class})
+    public ResponseEntity<String> handleInvalidOrderStatusException(InvalidOrderStatusException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({NullPointerException.class})
+    public ResponseEntity<String> handleNullPointerException(NullPointerException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

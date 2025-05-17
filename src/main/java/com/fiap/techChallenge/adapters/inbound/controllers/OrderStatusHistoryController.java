@@ -32,8 +32,8 @@ public class OrderStatusHistoryController {
     }
 
     @PostMapping("/save")
-    @Operation(summary = "Cria um novo Status Para o Pedido informado",
-            description = "Muda o status para EM_PREPARACAO (requer status RECEBIDO)")
+    @Operation(summary = "Save",
+            description = "Cria um novo Status Para o Pedido informado")
     public ResponseEntity<OrderStatusHistory> save(@RequestBody @Valid OrderStatusHistoryRequest request) {
         return ResponseEntity.ok(service.save(request));
     }
