@@ -20,7 +20,7 @@ public class OrderStatusHistoryEntity {
     private UUID orderId;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false)
     private OrderStatus status;
 
     @Column(name = "date", nullable = false)

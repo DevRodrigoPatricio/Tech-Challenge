@@ -63,4 +63,7 @@ public class OrderStatusHistory {
         this.date = date;
     }
 
+    public static OrderStatusHistory empty() {
+        return new OrderStatusHistory();
+    }
 }

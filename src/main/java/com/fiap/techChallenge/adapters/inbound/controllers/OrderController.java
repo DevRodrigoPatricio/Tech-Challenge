@@ -2,9 +2,9 @@ package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +19,7 @@ import com.fiap.techChallenge.domain.order.OrderRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/order")
@@ -34,14 +35,14 @@ public class OrderController {
     @PostMapping("/save")
     @Operation(summary = "Save",
             description = "Salva um Pedido")
-    public ResponseEntity<Order> save(@RequestBody OrderRequest order) {
+    public ResponseEntity<Order> save(@RequestBody @Valid OrderRequest order) {
         return ResponseEntity.ok(service.save(order));
     }
 
     @PostMapping("/add-item/{orderId}/{productId}/{quantity}")
     @Operation(summary = "Add Item",
             description = "Adiciona um Produto ao Pedido")
-    public ResponseEntity<Order> addItem(@PathVariable UUID orderId,@PathVariable UUID productId,@PathVariable int quantity) {
+    public ResponseEntity<Order> addItem(@PathVariable UUID orderId, @PathVariable UUID productId, @PathVariable int quantity) {
         return ResponseEntity.ok(service.addItem(orderId, productId, quantity));
     }
 
@@ -55,8 +56,10 @@ public class OrderController {
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
             description = "Encontra um pedido pelo ID")
-    public ResponseEntity<Optional<Order>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<Order> findById(@PathVariable UUID id) {
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Order.empty()));
     }
 
     @GetMapping("/list-by-client/{clientId}")
@@ -76,9 +79,9 @@ public class OrderController {
     @PostMapping("/cancel-order/{id}")
     @Operation(summary = "Cancel Order",
             description = "Cancela um Pedido")
-    public ResponseEntity<Optional<Order>> cancelOrder(@PathVariable UUID id) {
+    public ResponseEntity<String> cancelOrder(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Pedido cancelado com sucesso");
     }
 
 }

@@ -1,13 +1,17 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.util.Arrays;
+import java.util.UUID;
 
+import org.hibernate.PropertyValueException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
@@ -35,6 +39,44 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(message);
     }
 
+    @SuppressWarnings("null")
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleEnumPathVariableException(MethodArgumentTypeMismatchException e) {
+        if (e.getRequiredType() != null) {
+            Class<?> targetType = e.getRequiredType();
+            String field = e.getName();
+            String invalidValue = String.valueOf(e.getValue());
+
+            if (targetType.isEnum()) {
+                Object[] constants = targetType.getEnumConstants();
+                String correctValues = Arrays.toString(constants);
+                String message = String.format(
+                        "Valor inválido '%s' para o campo '%s'. Valores aceitos: %s",
+                        invalidValue,
+                        field,
+                        correctValues
+                );
+                return ResponseEntity.badRequest().body(message);
+
+            } else if (UUID.class.equals(targetType)) {
+                String message = String.format(
+                        "Valor inválido '%s' para o campo '%s'. Deve ser um UUID válido.",
+                        invalidValue,
+                        field
+                );
+                return ResponseEntity.badRequest().body(message);
+            }
+        }
+
+        return ResponseEntity.badRequest().body("Parâmetro inválido.");
+    }
+
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<String> handlePropertyValueException(PropertyValueException e) {
+        return ResponseEntity.badRequest()
+                .body(String.format("O campo '%s' é obrigatório.", e.getPropertyName()));
+    }
+
     @ExceptionHandler(WrongCategoryOrderException.class)
     public ResponseEntity<String> handleWrongCategoryOrderException(
             WrongCategoryOrderException e) {
@@ -53,6 +95,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NameAlreadyRegisteredException.class})
     public ResponseEntity<String> handleNameAlreadyRegisteredException(NameAlreadyRegisteredException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({EntityNotFoundException.class})
+    public ResponseEntity<String> handleEntityNotFoundExceptionException(EntityNotFoundException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

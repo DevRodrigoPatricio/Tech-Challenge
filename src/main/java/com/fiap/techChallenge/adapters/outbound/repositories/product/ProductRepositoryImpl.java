@@ -42,7 +42,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public List<Product> list() {
-        return ProductMapper.toDomainList(repository.findAll());
+        return ProductMapper.toDomainList(repository.findAllByOrderByCategoryAsc());
     }
 
     @Override

@@ -100,4 +100,9 @@ public class Product {
     public void setImage(String image) {
         this.image = image;
     }
+
+    public static Product empty() {
+        return new Product();
+    }
+
 }

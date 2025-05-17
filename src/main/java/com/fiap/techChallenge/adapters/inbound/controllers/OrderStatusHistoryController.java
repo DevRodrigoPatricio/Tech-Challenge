@@ -1,9 +1,9 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,37 +18,42 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/order-status")
 @Tag(name = "Historico dos Status de Pedidos", description = "APIs referentes ao Histórico de Status de Pedidos")
-public class OrderStatusController {
+public class OrderStatusHistoryController {
 
     private final OrderStatusHistoryService service;
 
-    public OrderStatusController(OrderStatusHistoryService service) {
+    public OrderStatusHistoryController(OrderStatusHistoryService service) {
         this.service = service;
     }
 
     @PostMapping("/save")
     @Operation(summary = "Cria um novo Status Para o Pedido informado",
             description = "Muda o status para EM_PREPARACAO (requer status RECEBIDO)")
-    public ResponseEntity<OrderStatusHistory> save(@RequestBody OrderStatusHistoryRequest request) {
+    public ResponseEntity<OrderStatusHistory> save(@RequestBody @Valid OrderStatusHistoryRequest request) {
         return ResponseEntity.ok(service.save(request));
     }
 
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
             description = "Encontra um Status History pelo ID")
-    public ResponseEntity<Optional<OrderStatusHistory>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<OrderStatusHistory> findById(@PathVariable UUID id) {
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(OrderStatusHistory.empty()));
     }
 
     @GetMapping("/find-last-status/{orderId}")
     @Operation(summary = "Find Last Status",
             description = "Encontra o ultimo Status  do pedido informado")
-    public ResponseEntity<Optional<OrderStatusHistory>> findLast(@PathVariable UUID orderId) {
-        return ResponseEntity.ok(service.findLast(orderId));
+    public ResponseEntity<OrderStatusHistory> findLast(@PathVariable UUID orderId) {
+        return service.findLast(orderId)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(OrderStatusHistory.empty()));
     }
 
     @GetMapping("/list/{orderId}")

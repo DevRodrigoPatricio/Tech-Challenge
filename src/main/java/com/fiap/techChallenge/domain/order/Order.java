@@ -89,40 +89,7 @@ public class Order {
         this.orderDt = orderDt;
     }
 
-    // public void preparation() {
-    //     if (this.status != OrderStatus.RECEIVED) {
-    //         throw new InvalidOrderStatusTransitionException(
-    //                 String.format("Não é possível iniciar preparo. Status atual: %s (Requerido: %s)",
-    //                         this.status, OrderStatus.RECEIVED));
-    //     }
-    //     this.status = OrderStatus.IN_PREPARATION;
-    //     this.preparationDt = LocalDateTime.now();
-    // }
-    // public void ready() {
-    //     if (this.status != OrderStatus.IN_PREPARATION) {
-    //         throw new InvalidOrderStatusTransitionException(
-    //                 String.format("Não é possível marcar como pronto. Status atual: %s (Requerido: %s)",
-    //                         this.status, OrderStatus.IN_PREPARATION));
-    //     }
-    //     this.status = OrderStatus.READY;
-    //     this.readyDt = LocalDateTime.now();
-    // }
-    // public void delivered() {
-    //     if (this.status != OrderStatus.READY) {
-    //         throw new InvalidOrderStatusTransitionException(
-    //                 String.format("Não é possível marcar como entregue. Status atual: %s (Requerido: %s)",
-    //                         this.status, OrderStatus.READY));
-    //     }
-    //     this.status = OrderStatus.DELIVERED;
-    //     this.deliveryDt = LocalDateTime.now();
-    // }
-    // public void finished() {
-    //     if (this.status != OrderStatus.DELIVERED) {
-    //         throw new InvalidOrderStatusTransitionException(
-    //                 String.format("Não é possível finalizar. Status atual: %s (Requerido: %s)",
-    //                         this.status, OrderStatus.DELIVERED));
-    //     }
-    //     this.status = OrderStatus.FINISHED;
-    //     this.finishedDt = LocalDateTime.now();
-    // }
+    public static Order empty() {
+        return new Order();
+    }
 }

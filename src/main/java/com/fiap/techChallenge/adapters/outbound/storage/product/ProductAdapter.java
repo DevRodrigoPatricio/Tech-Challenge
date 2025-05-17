@@ -10,6 +10,7 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
 @Component
@@ -85,7 +86,11 @@ public class ProductAdapter implements ProductPort {
     public void validateUpdate(Product product) {
         Optional<Product> existingProduct = repository.findByName(product.getName());
 
-        if (existingProduct.isPresent() && !existingProduct.get().getId().equals(product.getId())) {
+        if (!existingProduct.isPresent()) {
+            throw new EntityNotFoundException("Produto");
+        }
+
+        if (!existingProduct.get().getId().equals(product.getId())) {
             throw new NameAlreadyRegisteredException(product.getName());
         }
     }

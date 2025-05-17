@@ -1,9 +1,9 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +13,7 @@ import com.fiap.techChallenge.domain.product.Product;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/product")
@@ -28,22 +29,25 @@ public class ProductController {
     @PostMapping("/save")
     @Operation(summary = "Save",
             description = "Salva um produto")
-    public ResponseEntity<Product> save(@RequestBody Product product) {
+    public ResponseEntity<Product> save(@RequestBody @Valid Product product) {
         return ResponseEntity.ok(service.save(product));
     }
 
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
             description = "Encontra um produto pelo ID Informado")
-    public ResponseEntity<Optional<Product>> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.findById(id));
+    public ResponseEntity<Product> findById(@PathVariable UUID id) {
+        return service.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Product.empty()));
     }
 
     @GetMapping("/find-by-name/{name}")
-    @Operation(summary = "Find By Name",
-            description = "Encontra um produto pelo Nome Informado")
-    public ResponseEntity<Optional<Product>> findByName(@PathVariable String name) {
-        return ResponseEntity.ok(service.findByName(name));
+    @Operation(summary = "Find By Name", description = "Encontra um produto pelo Nome Informado")
+    public ResponseEntity<Product> findByName(@PathVariable String name) {
+        return service.findByName(name)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Product.empty()));
     }
 
     @GetMapping("/list-avaiables-categorys")
@@ -68,33 +72,34 @@ public class ProductController {
     }
 
     @GetMapping("/list-by-category/{category}")
-    @Operation(summary = "List By Category",
-            description = "Lista todos os produtos da categoria informada")
-    public ResponseEntity<List<Product>> listByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(service.listByCategory(Category.valueOf(category)));
+    @Operation(summary = "List By Category", description = "Lista todos os produtos da categoria informada")
+    public ResponseEntity<List<Product>> listByCategory(@PathVariable Category category
+    ) {
+        return ResponseEntity.ok(service.listByCategory(category));
     }
 
     @GetMapping("/list-avaiables-by-category/{category}")
     @Operation(summary = "List Avaiables",
             description = "Lista todos os produtos disponiveis da categoria informada")
-    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(service.listAvaiablesByCategory(Category.valueOf(category)));
+    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable Category category
+    ) {
+        return ResponseEntity.ok(service.listAvaiablesByCategory(category));
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "Delete",
             description = "Deleta um produto")
-    public ResponseEntity<Optional<Product>> delete(@PathVariable UUID id) {
+    public ResponseEntity<String> delete(@PathVariable UUID id) {
         service.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Produto deletado com sucesso");
     }
 
     @DeleteMapping("/delete-by-category-id/{category}")
     @Operation(summary = "Delete By Category",
             description = "Deleta os produtos da categoria informada")
-    public ResponseEntity<Optional<Product>> deleteByCategory(@PathVariable String category) {
-        service.deleteByCategory(Category.valueOf(category));
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteByCategory(@PathVariable Category category) {
+        service.deleteByCategory(category);
+        return ResponseEntity.ok("Produtos deletados com sucesso");
     }
 
 }
