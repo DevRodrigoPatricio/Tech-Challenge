@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fiap.techChallenge.application.services.OrderService;
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.enums.Category;
@@ -29,11 +32,15 @@ public class OrderAdapter implements OrderPort {
     private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final NotificationStatusUseCase notificationStatusUseCase;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository orderStatusHistoryRepository) {
+    public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
+                        OrderStatusHistoryRepository orderStatusHistoryRepository,
+                        NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+        this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
     @Override
@@ -53,7 +60,7 @@ public class OrderAdapter implements OrderPort {
         order = repository.save(order);
 
         this.insertStatus(order.getId(), OrderStatus.RECEIVED);
-
+        notificationStatusUseCase.notifyStatus("rodrigopatricio19@gmail.com",order.getId(),"Pedido recebido com sucesso.");
         return order;
     }
 
