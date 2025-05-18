@@ -22,6 +22,7 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 @Component
@@ -29,12 +30,12 @@ public class OrderAdapter implements OrderPort {
 
     private final OrderRepository repository;
     private final ProductRepository productRepository;
-    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final OrderStatusHistoryRepository statusHistoryRepository;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository orderStatusHistoryRepository) {
+    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository statusHistoryRepository) {
         this.repository = repository;
         this.productRepository = productRepository;
-        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+        this.statusHistoryRepository = statusHistoryRepository;
     }
 
     @Override
@@ -57,10 +58,15 @@ public class OrderAdapter implements OrderPort {
     @Override
     public Order addItem(UUID id, UUID productId, int quantity) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        OrderStatusHistory status = statusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+
+        if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
+                || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
+            throw new InvalidOrderStatusException("Não é possivel adicionar um item ao pedido, pois ele está " + status.getStatus());
+        }
+
         Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
-
         OrderItem newItem = new OrderItem(product, quantity);
-
         List<OrderItem> items = order.getItems();
 
         if (this.canAddItem(items, newItem)) {
@@ -81,6 +87,13 @@ public class OrderAdapter implements OrderPort {
     @Override
     public Order removeItem(UUID id, UUID productId, int quantity) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        OrderStatusHistory status = statusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+
+        if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
+                || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
+            throw new InvalidOrderStatusException("Não é possivel remover um item do pedido, pois ele está " + status.getStatus());
+        }
+
         Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
 
         List<OrderItem> items = order.getItems();
@@ -164,6 +177,6 @@ public class OrderAdapter implements OrderPort {
                 LocalDateTime.now()
         );
 
-        orderStatusHistoryRepository.save(history);
+        statusHistoryRepository.save(history);
     }
 }
