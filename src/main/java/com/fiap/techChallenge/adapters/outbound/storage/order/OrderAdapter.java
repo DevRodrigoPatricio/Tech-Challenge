@@ -39,7 +39,7 @@ public class OrderAdapter implements OrderPort {
 
     public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
                         OrderStatusHistoryRepository orderStatusHistoryRepository,
-                        CustomerRepository customerRepository
+                        CustomerRepository customerRepository,
                         NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
         this.productRepository = productRepository;

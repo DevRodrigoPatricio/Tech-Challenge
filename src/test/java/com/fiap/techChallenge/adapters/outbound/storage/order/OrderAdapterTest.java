@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.storage.order;
 
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.order.Order;
@@ -33,6 +34,7 @@ class OrderAdapterTest {
     private OrderStatusHistoryRepository orderStatusHistoryRepository;
     private OrderAdapter orderAdapter;
     private CustomerRepository customerRepository;
+    private NotificationStatusUseCase notificationStatusUseCase;
 
     @BeforeEach
     @SuppressWarnings("unused")
@@ -41,7 +43,8 @@ class OrderAdapterTest {
         productRepository = mock(ProductRepository.class);
         orderStatusHistoryRepository = mock(OrderStatusHistoryRepository.class);
         customerRepository  = mock(CustomerRepository.class);
-        orderAdapter = new OrderAdapter(orderRepository, productRepository, orderStatusHistoryRepository, customerRepository);
+        notificationStatusUseCase = mock(NotificationStatusUseCase.class);
+        orderAdapter = new OrderAdapter(orderRepository, productRepository, orderStatusHistoryRepository, customerRepository, notificationStatusUseCase);
     }
 
     @Test
