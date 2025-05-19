@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import com.fiap.techChallenge.application.services.OrderService;
 import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
 import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.enums.Category;
@@ -32,14 +34,17 @@ public class OrderAdapter implements OrderPort {
     private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final CustomerRepository customerRepository;
     private final NotificationStatusUseCase notificationStatusUseCase;
 
     public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
                         OrderStatusHistoryRepository orderStatusHistoryRepository,
+                        CustomerRepository customerRepository
                         NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+        this.customerRepository = customerRepository;
         this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
@@ -52,9 +57,15 @@ public class OrderAdapter implements OrderPort {
             price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
         }
 
+        Optional<Customer> customer = customerRepository.findById(request.getCustomerId());
+
+        if (customer.isEmpty()) {
+            throw new EntityNotFoundException("Customer");
+        }
+
         Order order = new Order();
         order.setItems(request.getItems());
-        order.setClientId(request.getClientId());
+        order.setCustomer(customer.get());
         order.setPrice(price);
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
@@ -121,7 +132,7 @@ public class OrderAdapter implements OrderPort {
     }
 
     @Override
-    public List<Order> listByClient(String clientId) {
+    public List<Order> listByClient(UUID clientId) {
         return repository.listByClient(clientId);
     }
 
