@@ -1,11 +1,12 @@
 package com.fiap.techChallenge.application.services;
 
 import com.fiap.techChallenge.application.useCases.CustomerUseCase;
-import com.fiap.techChallenge.domain.customer.Customer;
-import com.fiap.techChallenge.domain.customer.CustomerRepository;
-import com.fiap.techChallenge.domain.customer.CustomerRequestDTO;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
+import com.fiap.techChallenge.domain.user.customer.CustomerRequestDTO;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.UserAlreadyExistsException;
+import com.fiap.techChallenge.utils.mappers.CustomerMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,36 +16,24 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerUseCase {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Override
     public Customer createCustomer(CustomerRequestDTO customer) {
-        Optional<Customer> optCustomer = customerRepository.findByCPF(customer.cpf());
+        Customer customerToDomain = customerMapper.toDomain(customer);
 
-        System.out.println(customer);
+        Optional<Customer> optCustomer = customerRepository.findByCPF(customer.cpf());
 
         if (optCustomer.isPresent()) {
             throw new UserAlreadyExistsException();
         }
 
-        Customer toDomain = new Customer();
-
-        if (customer.anonymous()) {
-            toDomain.setName(null);
-            toDomain.setCpf(null);
-            toDomain.setEmail(null);
-            toDomain.setAnonymous(true);
-        } else {
-            toDomain.setName(customer.name());
-            toDomain.setCpf(customer.cpf());
-            toDomain.setEmail(customer.email());
-            toDomain.setAnonymous(false);
-        }
-
-        return customerRepository.save(toDomain);
+        return customerRepository.save(customerToDomain);
     }
 
     @Override

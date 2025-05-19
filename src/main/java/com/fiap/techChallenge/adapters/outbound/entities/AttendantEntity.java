@@ -1,6 +1,5 @@
 package com.fiap.techChallenge.adapters.outbound.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -9,24 +8,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_customer")
-public class CustomerEntity extends UserEntity {
+@Table(name = "user_attendant")
+public class AttendantEntity extends UserEntity {
 
-    @OneToMany(mappedBy = "customer")
-    private List<OrderEntity> orders;
-
-    @Column(nullable = false)
-    private boolean anonymous;
-
-    public CustomerEntity() {}
-
-    public boolean isAnonymous() {
-        return anonymous;
-    }
-
-    public void setAnonymous(boolean anonymous) {
-        this.anonymous = anonymous;
-    }
+    @OneToMany(mappedBy = "attendant")
+    private List<OrderEntity> managedOrders;
 
     public UUID getId() {
         return super.getId();

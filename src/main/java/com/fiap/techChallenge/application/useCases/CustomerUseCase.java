@@ -1,7 +1,7 @@
 package com.fiap.techChallenge.application.useCases;
 
-import com.fiap.techChallenge.domain.customer.Customer;
-import com.fiap.techChallenge.domain.customer.CustomerRequestDTO;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRequestDTO;
 
 import java.util.UUID;
 
