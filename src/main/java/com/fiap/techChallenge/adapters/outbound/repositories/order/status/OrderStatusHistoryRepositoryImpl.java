@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.repositories.order.status;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,6 +11,7 @@ import com.fiap.techChallenge.adapters.outbound.entities.OrderStatusHistoryEntit
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
+import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 import com.fiap.techChallenge.utils.mappers.OrderStatusHistoryMapper;
 
 @Repository
@@ -49,4 +51,21 @@ public class OrderStatusHistoryRepositoryImpl implements OrderStatusHistoryRepos
     public boolean existsByOrderIdAndStatus(UUID orderId, OrderStatus status) {
         return repository.existsByOrderIdAndStatus(orderId, status);
     }
+
+    @Override
+    public List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus(List<String> statusList, int finalizedMinutes) {
+        List<Object[]> results = repository.findTodayOrderStatus(statusList, finalizedMinutes);
+
+        return results.stream()
+                .map(row -> new OrderStatusWithClientAndWaitTimeDTO(
+                UUID.fromString((String) row[0]),
+                OrderStatus.valueOf((String) row[1]),
+                ((Timestamp) row[2]).toLocalDateTime(),
+                (String) row[3],
+                ((Timestamp) row[4]).toLocalDateTime(),
+                ((Number) row[5]).intValue()
+        ))
+                .toList();
+    }
+
 }

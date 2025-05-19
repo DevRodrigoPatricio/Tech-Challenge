@@ -10,6 +10,7 @@ import java.util.UUID;
 import com.fiap.techChallenge.adapters.outbound.storage.order.status.history.OrderStatusHistoryPort;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
+import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 
 @Service
 public class OrderStatusHistoryService {
@@ -30,6 +31,10 @@ public class OrderStatusHistoryService {
 
     public List<OrderStatusHistory> list(UUID orderId) {
         return port.list(orderId);
+    }
+
+    public List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus() {
+        return port.listTodayOrderStatus();
     }
 
     public Optional<OrderStatusHistory> findLast(UUID orderId) {

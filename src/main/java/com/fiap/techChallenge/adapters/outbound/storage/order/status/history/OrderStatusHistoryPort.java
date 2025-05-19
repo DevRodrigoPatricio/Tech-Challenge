@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
+import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 
 public interface OrderStatusHistoryPort {
 
@@ -16,4 +17,6 @@ public interface OrderStatusHistoryPort {
     List<OrderStatusHistory> list(UUID orderId);
 
     Optional<OrderStatusHistory> findLast(UUID orderId);
+
+    List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus();
 }
