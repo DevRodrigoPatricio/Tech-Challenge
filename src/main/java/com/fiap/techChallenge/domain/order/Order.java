@@ -1,5 +1,9 @@
 package com.fiap.techChallenge.domain.order;
 
+import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
+import com.fiap.techChallenge.domain.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,11 +15,9 @@ public class Order {
 
     private List<OrderItem> items;
 
-    //Vai ser alterado para ser a entidade cliente
-    private String clientId;
+    private Customer customer;
 
-    //Vai ser alterado para ser a entidade atendente
-    private String attendantId;
+    private Attendant attendant;
 
     private BigDecimal price;
 
@@ -24,21 +26,27 @@ public class Order {
     public Order() {
     }
 
-    public Order(List<OrderItem> items, String clientId, String attendantId, BigDecimal price, LocalDateTime orderDt) {
+    public Order(List<OrderItem> items, Customer customer, Attendant attendant, BigDecimal price, LocalDateTime orderDt) {
         this.items = items;
-        this.clientId = clientId;
-        this.attendantId = attendantId;
+        this.customer = customer;
+        this.attendant = attendant;
         this.price = price;
         this.orderDt = orderDt;
     }
 
-    public Order(UUID id, List<OrderItem> items, String clientId, String attendantId, BigDecimal price, LocalDateTime orderDt) {
+    public Order(UUID id, List<OrderItem> items, Customer customer, Attendant attendant, BigDecimal price, LocalDateTime orderDt) {
         this.id = id;
         this.items = items;
-        this.clientId = clientId;
-        this.attendantId = attendantId;
+        this.customer = customer;
+        this.attendant = attendant;
         this.price = price;
         this.orderDt = orderDt;
+    }
+
+    public Order(OrderEntity orderEntity) {
+        this.id = orderEntity.getId();
+        this.price = orderEntity.getPrice();
+        this.orderDt = orderEntity.getOrderDt();
     }
 
     public UUID getId() {
@@ -57,22 +65,6 @@ public class Order {
         this.items = items;
     }
 
-    public String getClientId() {
-        return this.clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getAttendantId() {
-        return this.attendantId;
-    }
-
-    public void setAttendantId(String attendantId) {
-        this.attendantId = attendantId;
-    }
-
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -87,6 +79,22 @@ public class Order {
 
     public void setOrderDt(LocalDateTime orderDt) {
         this.orderDt = orderDt;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public Attendant getAttendant() {
+        return attendant;
+    }
+
+    public void setAttendant(Attendant attendant) {
+        this.attendant = attendant;
     }
 
     // public void preparation() {

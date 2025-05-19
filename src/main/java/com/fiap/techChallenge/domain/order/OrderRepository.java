@@ -13,7 +13,7 @@ public interface OrderRepository {
 
     Order validate(UUID id);
 
-    List<Order> listByClient(String clientId);
+    List<Order> listByClient(UUID customerId);
 
     List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
 

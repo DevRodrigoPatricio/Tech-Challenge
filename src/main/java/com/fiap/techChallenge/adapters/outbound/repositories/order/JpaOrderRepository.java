@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
 
-    List<OrderEntity> findAllByClientId(String clientId);
+    List<OrderEntity> findAllByCustomerId(UUID id);
 
     List<OrderEntity> findAllByOrderDtBetween(LocalDateTime startDate, LocalDateTime endDate);
 

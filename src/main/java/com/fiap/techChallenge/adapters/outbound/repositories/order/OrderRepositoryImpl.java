@@ -42,8 +42,8 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> listByClient(String clientId) {
-        return OrderMapper.toDomainList(repository.findAllByClientId(clientId));
+    public List<Order> listByClient(UUID customerId) {
+        return OrderMapper.toDomainList(repository.findAllByCustomerId(customerId));
     }
 
     @Override

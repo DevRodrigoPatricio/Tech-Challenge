@@ -20,13 +20,11 @@ public class OrderEntity {
     @CollectionTable(name = "orderItems", joinColumns = @JoinColumn(name = "order_id"))
     private List<OrderItemEmbeddable> items;
 
-    //Vai ser alterado para ser a entidade cliente
-    @Column(name = "clientId", nullable = false)
-    private String clientId;
+    @ManyToOne
+    private CustomerEntity customer;
 
-    //Vai ser alterado para ser a entidade atendente
-    @Column(name = "attendantId")
-    private String attendantId;
+    @ManyToOne
+    private AttendantEntity attendant;
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
@@ -37,11 +35,11 @@ public class OrderEntity {
     public OrderEntity() {
     }
 
-    public OrderEntity(UUID id, List<OrderItemEmbeddable> items, String clientId, String attendantId, BigDecimal price, LocalDateTime orderDt) {
+    public OrderEntity(UUID id, List<OrderItemEmbeddable> items, CustomerEntity customer, AttendantEntity attendant, BigDecimal price, LocalDateTime orderDt) {
         this.id = id;
         this.items = items;
-        this.clientId = clientId;
-        this.attendantId = attendantId;
+        this.customer = customer;
+        this.attendant = attendant;
         this.price = price;
         this.orderDt = orderDt;
     }
@@ -62,22 +60,6 @@ public class OrderEntity {
         this.items = items;
     }
 
-    public String getClientId() {
-        return this.clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getAttendantId() {
-        return this.attendantId;
-    }
-
-    public void setAttendantId(String attendantId) {
-        this.attendantId = attendantId;
-    }
-
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -92,5 +74,21 @@ public class OrderEntity {
 
     public void setOrderDt(LocalDateTime orderDt) {
         this.orderDt = orderDt;
+    }
+
+    public CustomerEntity getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerEntity customerId) {
+        this.customer = customerId;
+    }
+
+    public AttendantEntity getAttendant() {
+        return attendant;
+    }
+
+    public void setAttendant(AttendantEntity attendantId) {
+        this.attendant = attendantId;
     }
 }

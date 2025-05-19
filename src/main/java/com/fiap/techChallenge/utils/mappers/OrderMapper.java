@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fiap.techChallenge.adapters.outbound.entities.AttendantEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.CustomerEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.OrderItemEmbeddable;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.domain.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.user.customer.Customer;
 
 public class OrderMapper {
 
@@ -23,9 +27,20 @@ public class OrderMapper {
                 i.getCategory()
         )).collect(Collectors.toList());
 
-        Order order = new Order(entity.getId(),
-                items, entity.getClientId(), entity.getAttendantId(),
-                entity.getPrice(), entity.getOrderDt());
+        var customerMapper = new CustomerMapper();
+        Customer customer = customerMapper.toDomain(entity.getCustomer());
+
+        var attendantMapper = new AttendantMapper();
+        Attendant attendant = attendantMapper.toDomain(entity.getAttendant());
+
+        Order order = new Order(
+                entity.getId(),
+                items,
+                customer,
+                attendant,
+                entity.getPrice(),
+                entity.getOrderDt()
+        );
 
         return order;
     }
@@ -44,11 +59,17 @@ public class OrderMapper {
                 i.getCategory()
         )).collect(Collectors.toList());
 
+        var customerMapper = new CustomerMapper();
+        CustomerEntity customer = customerMapper.toEntity(domain.getCustomer());
+
+        var attendantMapper = new AttendantMapper();
+        AttendantEntity attendant = attendantMapper.toEntity(domain.getAttendant());
+
         OrderEntity entity = new OrderEntity();
         entity.setId(domain.getId());
         entity.setItems(embeddables);
-        entity.setClientId(domain.getClientId());
-        entity.setAttendantId(domain.getAttendantId());
+        entity.setCustomer(customer);
+        entity.setAttendant(attendant);
         entity.setPrice(domain.getPrice());
         entity.setOrderDt(domain.getOrderDt());
 
@@ -61,7 +82,7 @@ public class OrderMapper {
         domainList.addAll(
                 entities.stream()
                         .map(OrderMapper::toDomain)
-                        .collect(Collectors.toList())
+                        .toList()
         );
 
         return domainList;
