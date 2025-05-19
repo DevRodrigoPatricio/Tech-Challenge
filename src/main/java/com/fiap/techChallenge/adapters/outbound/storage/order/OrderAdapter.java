@@ -8,6 +8,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import com.fiap.techChallenge.application.services.OrderService;
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import org.springframework.stereotype.Component;
@@ -32,12 +35,17 @@ public class OrderAdapter implements OrderPort {
     private final ProductRepository productRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final CustomerRepository customerRepository;
+    private final NotificationStatusUseCase notificationStatusUseCase;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository orderStatusHistoryRepository, CustomerRepository customerRepository) {
+    public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
+                        OrderStatusHistoryRepository orderStatusHistoryRepository,
+                        CustomerRepository customerRepository
+                        NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
         this.customerRepository = customerRepository;
+        this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class OrderAdapter implements OrderPort {
         order = repository.save(order);
 
         this.insertStatus(order.getId(), OrderStatus.RECEIVED);
-
+        notificationStatusUseCase.notifyStatus("rodrigopatricio19@gmail.com",order.getId(),"Pedido recebido com sucesso.");
         return order;
     }
 
