@@ -29,6 +29,7 @@ public class AttendantMapper {
         if (attendant == null) return null;
 
         AttendantEntity entity = new AttendantEntity();
+        entity.setId(attendant.getId());
         entity.setName(attendant.getName());
         entity.setEmail(attendant.getEmail());
         entity.setCpf(attendant.getCpf());

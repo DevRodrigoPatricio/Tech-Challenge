@@ -31,6 +31,7 @@ public class CustomerMapper {
         if (customer == null) return null;
 
         CustomerEntity entity = new CustomerEntity();
+        entity.setId(customer.getId());
         entity.setName(customer.getName());
         entity.setEmail(customer.getEmail());
         entity.setCpf(customer.getCpf());
