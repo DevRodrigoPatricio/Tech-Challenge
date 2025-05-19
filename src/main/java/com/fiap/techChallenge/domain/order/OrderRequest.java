@@ -3,14 +3,14 @@ package com.fiap.techChallenge.domain.order;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public class OrderRequest {
 
     @Column(name = "id", nullable = false)
     private List<OrderItem> items;
 
-    @Column(name = "clientId", nullable = false)
-    private String clientId;
+    private UUID customerId;
 
     public List<OrderItem> getItems() {
         return this.items;
@@ -20,12 +20,12 @@ public class OrderRequest {
         this.items = items;
     }
 
-    public String getClientId() {
-        return this.clientId;
+    public UUID getCustomerId() {
+        return this.customerId;
     }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
+    public void setCustomerId(UUID clientId) {
+        this.customerId = clientId;
     }
 
 }
