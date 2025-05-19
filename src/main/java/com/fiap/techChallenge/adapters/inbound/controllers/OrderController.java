@@ -20,6 +20,7 @@ import com.fiap.techChallenge.domain.order.OrderRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 
 @RestController
 @RequestMapping("/api/order")
@@ -42,7 +43,9 @@ public class OrderController {
     @PostMapping("/add-item/{orderId}/{productId}/{quantity}")
     @Operation(summary = "Add Item",
             description = "Adiciona um Produto ao Pedido")
-    public ResponseEntity<Order> addItem(@PathVariable UUID orderId, @PathVariable UUID productId, @PathVariable int quantity) {
+    public ResponseEntity<Order> addItem(@PathVariable UUID orderId,
+            @PathVariable UUID productId,
+            @PathVariable @Min(value = 1, message = "A quantidade deve ser maior que zero") int quantity) {
         return ResponseEntity.ok(service.addItem(orderId, productId, quantity));
     }
 

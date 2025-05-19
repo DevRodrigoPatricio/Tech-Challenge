@@ -15,6 +15,7 @@ import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusTransitionException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
+import com.fiap.techChallenge.utils.exceptions.ProductNotAvaiableException;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 @ControllerAdvice
@@ -111,6 +112,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NullPointerException.class})
     public ResponseEntity<String> handleNullPointerException(NullPointerException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
+    @ExceptionHandler({ProductNotAvaiableException.class})
+    public ResponseEntity<String> handleProductNotAvaiableException(ProductNotAvaiableException e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 

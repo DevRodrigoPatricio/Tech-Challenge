@@ -3,11 +3,9 @@ package com.fiap.techChallenge.adapters.outbound.storage.order;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
 
@@ -65,7 +63,7 @@ public class OrderAdapter implements OrderPort {
             throw new InvalidOrderStatusException("Não é possivel adicionar um item ao pedido, pois ele está " + status.getStatus());
         }
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
+        Product product = productRepository.findAvaiableProductById(productId);
         OrderItem newItem = new OrderItem(product, quantity);
         List<OrderItem> items = order.getItems();
 
@@ -73,11 +71,7 @@ public class OrderAdapter implements OrderPort {
             items.add(newItem);
 
         } else {
-            String categoryList = Arrays.stream(Category.values())
-                    .map(Enum::name)
-                    .collect(Collectors.joining(", "));
-
-            throw new WrongCategoryOrderException(categoryList);
+            throw new WrongCategoryOrderException();
         }
 
         order.setPrice(this.calculatePrice(order.getPrice(), product.getPrice(), quantity));
