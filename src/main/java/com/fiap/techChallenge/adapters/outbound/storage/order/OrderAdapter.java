@@ -8,9 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import com.fiap.techChallenge.application.services.OrderService;
 import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
-import com.fiap.techChallenge.application.useCases.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import org.springframework.stereotype.Component;
@@ -71,7 +69,11 @@ public class OrderAdapter implements OrderPort {
         order = repository.save(order);
 
         this.insertStatus(order.getId(), OrderStatus.RECEIVED);
-        notificationStatusUseCase.notifyStatus("rodrigopatricio19@gmail.com",order.getId(),"Pedido recebido com sucesso.");
+
+        if(customer.get().getEmail() != null){
+            notificationStatusUseCase.notifyStatus(customer.get().getEmail(),order.getId(),"Pedido recebido com sucesso.");
+        }
+
         return order;
     }
 
