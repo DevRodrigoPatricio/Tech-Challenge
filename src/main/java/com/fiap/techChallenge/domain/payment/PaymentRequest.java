@@ -5,14 +5,11 @@ import java.util.UUID;
 
 public class PaymentRequest {
     private UUID orderId;
-    private BigDecimal amount;
-
 
     public PaymentRequest(){}
 
-    public PaymentRequest(UUID orderId, BigDecimal amount) {
+    public PaymentRequest(UUID orderId) {
         this.orderId = orderId;
-        this.amount = amount;
     }
 
     public UUID getOrderId() {
@@ -21,13 +18,5 @@ public class PaymentRequest {
 
     public void setOrderId(UUID orderId) {
         this.orderId = orderId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 }

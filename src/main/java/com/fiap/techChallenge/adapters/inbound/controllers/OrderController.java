@@ -52,7 +52,7 @@ public class OrderController {
     @PostMapping("/remove-item/{orderId}/{productId}/{quantity}")
     @Operation(summary = "Remove Item",
             description = "Remove um Produto do Pedido")
-    public ResponseEntity<Order> removeItem(@PathVariable UUID orderId, UUID productId, int quantity) {
+    public ResponseEntity<Order> removeItem(@PathVariable UUID orderId, @PathVariable UUID productId, @PathVariable int quantity) {
         return ResponseEntity.ok(service.removeItem(orderId, productId, quantity));
     }
 
@@ -65,17 +65,17 @@ public class OrderController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Order.empty()));
     }
 
-    @GetMapping("/list-by-client/{clientId}")
+    @GetMapping("/list-by-client/{consumerId}")
     @Operation(summary = "List By Client",
             description = "Encontra um pedido pelo ID do cliente")
-    public ResponseEntity<List<Order>> listByClient(@PathVariable String clientId) {
-        return ResponseEntity.ok(service.listByClient(clientId));
+    public ResponseEntity<List<Order>> listByClient(@PathVariable UUID consumerId) {
+        return ResponseEntity.ok(service.listByClient(consumerId));
     }
 
     @GetMapping("/list-by-period/{initialDt}/{finalDt}")
     @Operation(summary = "List By Period",
             description = "Encontra um pedido pelo periodo informado")
-    public ResponseEntity<List<Order>> listByPeriod(@PathVariable LocalDateTime initialDt, LocalDateTime finalDt) {
+    public ResponseEntity<List<Order>> listByPeriod(@PathVariable LocalDateTime initialDt, @PathVariable LocalDateTime finalDt) {
         return ResponseEntity.ok(service.listByPeriod(initialDt, finalDt));
     }
 

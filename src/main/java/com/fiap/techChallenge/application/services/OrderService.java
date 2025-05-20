@@ -36,8 +36,8 @@ public class OrderService {
         return port.findById(id);
     }
 
-    public List<Order> listByClient(String clientId) {
-        return port.listByClient(clientId);
+    public List<Order> listByClient(UUID customerId) {
+        return port.listByClient(customerId);
     }
 
     public List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {

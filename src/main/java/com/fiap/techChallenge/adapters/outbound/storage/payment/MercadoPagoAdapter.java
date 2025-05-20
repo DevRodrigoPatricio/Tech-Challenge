@@ -1,17 +1,19 @@
 package com.fiap.techChallenge.adapters.outbound.storage.payment;
 
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.payment.PaymentRequest;
 import com.fiap.techChallenge.domain.payment.PaymentResponse;
+import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.PaymentException;
-
 import org.springframework.http.*;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+
 import java.util.*;
+
 import org.springframework.beans.factory.annotation.Value;
 
 @Component
@@ -20,6 +22,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     private final String accessToken;
     private final String collectorId;
     private final String posId;
+    private final OrderRepository repository;
 
 
     private static final String QR_URL_TEMPLATE =
@@ -30,27 +33,28 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     public MercadoPagoAdapter(
             @Value("${mercado.pago.access-token}") String accessToken,
             @Value("${mercado.pago.collector-id}") String collectorId,
-            @Value("${mercado.pago.pos-id}") String posId
+            @Value("${mercado.pago.pos-id}") String posId,
+            OrderRepository repository
     ) {
         this.accessToken = accessToken;
         this.collectorId = collectorId;
         this.posId = posId;
+        this.repository = repository;
     }
 
 
     @Override
-    @Retryable(
-            value = { Exception.class },
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 1000, multiplier = 2)
-    )
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
+
+            Order order = repository.findById(request.getOrderId())
+                    .orElseThrow(() -> new EntityNotFoundException("Ordem "));
+
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(accessToken);
 
-            Map<String, Object> payload = buildPayload(request);
+            Map<String, Object> payload = buildPayload(request, order);
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(payload, headers);
 
             String url = QR_URL_TEMPLATE
@@ -69,7 +73,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
                 String qrData = (String) body.get("qr_data");
                 String externalRef = (String) body.get("external_reference");
 
-                return new PaymentResponse("PENDING",request.getOrderId(), qrData);
+                return new PaymentResponse("PENDING", request.getOrderId(), qrData);
             } else {
                 throw new PaymentException("Erro ao gerar QR Code Mercado Pago: status " + response.getStatusCode());
             }
@@ -79,23 +83,23 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         }
     }
 
-    private Map<String, Object> buildPayload(PaymentRequest request) {
+    private Map<String, Object> buildPayload(PaymentRequest request, Order order) {
         Map<String, Object> payload = new HashMap<>();
 
         payload.put("external_reference", request.getOrderId());
         payload.put("title", "Pedido " + request.getOrderId());
         payload.put("description", "Compra no tech challenge ");
-        payload.put("total_amount", request.getAmount());
+        payload.put("total_amount", order.getPrice());
 
         Map<String, Object> item = new HashMap<>();
         item.put("sku_number", "A123K9191938");
         item.put("category", "marketplace");
         item.put("title", "Compra no tech challenge");
         item.put("description", "Pedido realizado no tech challenge");
-        item.put("unit_price", request.getAmount());
+        item.put("unit_price", order.getPrice());
         item.put("quantity", 1);
         item.put("unit_measure", "unit");
-        item.put("total_amount", request.getAmount());
+        item.put("total_amount", order.getPrice());
 
         payload.put("items", List.of(item));
 
@@ -161,11 +165,4 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         };
     }
 
-
-    @Recover
-    public PaymentResponse recoverProcessPayment(Exception e, PaymentRequest request) {
-        System.err.println("Todas as tentativas falharam. Retornando fallback");
-        return new PaymentResponse("FAILED",
-                request.getOrderId(), null);
-    }
 }

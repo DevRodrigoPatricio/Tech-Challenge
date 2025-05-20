@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.storage.order;
 
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.order.Order;
@@ -7,6 +8,9 @@ import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.domain.user.CPF;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +33,8 @@ class OrderAdapterTest {
     private ProductRepository productRepository;
     private OrderStatusHistoryRepository orderStatusHistoryRepository;
     private OrderAdapter orderAdapter;
+    private CustomerRepository customerRepository;
+    private NotificationStatusUseCase notificationStatusUseCase;
 
     @BeforeEach
     @SuppressWarnings("unused")
@@ -36,18 +42,20 @@ class OrderAdapterTest {
         orderRepository = mock(OrderRepository.class);
         productRepository = mock(ProductRepository.class);
         orderStatusHistoryRepository = mock(OrderStatusHistoryRepository.class);
-        orderAdapter = new OrderAdapter(orderRepository, productRepository, orderStatusHistoryRepository);
+        customerRepository  = mock(CustomerRepository.class);
+        notificationStatusUseCase = mock(NotificationStatusUseCase.class);
+        orderAdapter = new OrderAdapter(orderRepository, productRepository, orderStatusHistoryRepository, customerRepository, notificationStatusUseCase);
     }
 
     @Test
     void shouldAddItemSuccessfully() {
         UUID orderId = UUID.randomUUID();
         UUID productId = UUID.randomUUID();
-        String clientId = "ID_CLIENTE";
+        Customer customer = new Customer(UUID.randomUUID(), "Cliente Teste", "cliente@teste.com", new CPF("12345678900"), false);
         List<OrderItem> items = new ArrayList<>();
 
         Product product = new Product(productId, "Lanche X", "X", new BigDecimal(10), Category.LANCHE, ProductStatus.DISPONIVEL, "img.jpg");
-        Order order = new Order(items, clientId, null, BigDecimal.ZERO, LocalDateTime.now());
+        Order order = new Order(items, customer, null, BigDecimal.ZERO, LocalDateTime.now());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -64,11 +72,11 @@ class OrderAdapterTest {
     void shouldThrowExceptionWhenAddItemWithWrongCategoryOrder() {
         UUID orderId = UUID.randomUUID();
         UUID productId = UUID.randomUUID();
-        String clientId = "ID_CLIENTE";
+        Customer customer = new Customer(UUID.randomUUID(), "Cliente Teste", "cliente@teste.com", new CPF("12345678900"), false);
         List<OrderItem> items = new ArrayList<>();
 
         Product product = new Product(productId, "Batata Frita", "Batata", BigDecimal.TEN, Category.ACOMPANHAMENTO, ProductStatus.DISPONIVEL, "img.jpg");
-        Order order = new Order(items, clientId, null, BigDecimal.ZERO, LocalDateTime.now());
+        Order order = new Order(items, customer, null, BigDecimal.ZERO, LocalDateTime.now());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -90,7 +98,7 @@ class OrderAdapterTest {
     void shouldRemoveItemPartially() {
         UUID orderId = UUID.randomUUID();
         UUID productId = UUID.randomUUID();
-        String clientId = "ID_CLIENTE";
+        Customer customer = new Customer(UUID.randomUUID(), "Cliente Teste", "cliente@teste.com", new CPF("12345678900"), false);
         List<OrderItem> items = new ArrayList<>();
 
         Product product = new Product(productId, "Batata Frita", "Batata", BigDecimal.valueOf(5), Category.ACOMPANHAMENTO, ProductStatus.DISPONIVEL, "img.jpg");
@@ -98,7 +106,7 @@ class OrderAdapterTest {
         OrderItem item = new OrderItem(product, 3);
         items.add(item);
 
-        Order order = new Order(items, clientId, null, BigDecimal.valueOf(15), LocalDateTime.now());
+        Order order = new Order(items, customer, null, BigDecimal.valueOf(15), LocalDateTime.now());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));
@@ -115,7 +123,7 @@ class OrderAdapterTest {
     void shouldRemoveItemCompletely() {
         UUID orderId = UUID.randomUUID();
         UUID productId = UUID.randomUUID();
-        String clientId = "ID_CLIENTE";
+        Customer customer = new Customer(UUID.randomUUID(), "Cliente Teste", "cliente@teste.com", new CPF("12345678900"), false);
         List<OrderItem> items = new ArrayList<>();
 
         Product product = new Product(productId, "Bebida Z", "Refrigerante", BigDecimal.valueOf(5), Category.BEBIDA, ProductStatus.DISPONIVEL, "img.jpg");
@@ -123,7 +131,7 @@ class OrderAdapterTest {
         OrderItem item = new OrderItem(product, 2);
         items.add(item);
 
-        Order order = new Order(items, clientId, null, BigDecimal.valueOf(10), LocalDateTime.now());
+        Order order = new Order(items, customer, null, BigDecimal.valueOf(10), LocalDateTime.now());
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(order));
         when(productRepository.findById(productId)).thenReturn(Optional.of(product));

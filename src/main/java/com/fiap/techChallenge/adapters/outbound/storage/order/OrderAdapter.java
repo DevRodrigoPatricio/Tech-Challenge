@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import org.springframework.stereotype.Component;
 
 import com.fiap.techChallenge.domain.enums.Category;
@@ -28,12 +31,19 @@ public class OrderAdapter implements OrderPort {
 
     private final OrderRepository repository;
     private final ProductRepository productRepository;
-    private final OrderStatusHistoryRepository statusHistoryRepository;
+    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
+    private final CustomerRepository customerRepository;
+    private final NotificationStatusUseCase notificationStatusUseCase;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository, OrderStatusHistoryRepository statusHistoryRepository) {
+    public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
+            OrderStatusHistoryRepository orderStatusHistoryRepository,
+            CustomerRepository customerRepository,
+            NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
         this.productRepository = productRepository;
-        this.statusHistoryRepository = statusHistoryRepository;
+        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
+        this.customerRepository = customerRepository;
+        this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
     @Override
@@ -41,14 +51,32 @@ public class OrderAdapter implements OrderPort {
         List<OrderItem> items = new ArrayList<>();
         BigDecimal price = new BigDecimal(0);
 
+        for (OrderItem item : request.getItems()) {
+            if (this.canAddItem(items, item)) {
+                items.add(item);
+
+            } else {
+                throw new WrongCategoryOrderException();
+            }
+
+            price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
+        }
+
+        Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Cliente"));
+
         Order order = new Order();
-        order.setClientId(request.getClientId());
+        order.setItems(request.getItems());
+        order.setCustomer(customer);
         order.setPrice(price);
         order.setItems(items);
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
 
-        this.insertStatus(order.getId(), OrderStatus.INICIADO);
+        this.insertStatus(order.getId(), OrderStatus.RECEBIDO);
+
+        if (customer.getEmail() != null) {
+            notificationStatusUseCase.notifyStatus(customer.getEmail(), order.getId(), "Pedido recebido com sucesso.");
+        }
 
         return order;
     }
@@ -56,7 +84,7 @@ public class OrderAdapter implements OrderPort {
     @Override
     public Order addItem(UUID id, UUID productId, int quantity) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
-        OrderStatusHistory status = statusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+        OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
                 || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
@@ -81,7 +109,7 @@ public class OrderAdapter implements OrderPort {
     @Override
     public Order removeItem(UUID id, UUID productId, int quantity) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
-        OrderStatusHistory status = statusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+        OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
                 || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
@@ -118,7 +146,7 @@ public class OrderAdapter implements OrderPort {
     }
 
     @Override
-    public List<Order> listByClient(String clientId) {
+    public List<Order> listByClient(UUID clientId) {
         return repository.listByClient(clientId);
     }
 
@@ -171,6 +199,6 @@ public class OrderAdapter implements OrderPort {
                 LocalDateTime.now()
         );
 
-        statusHistoryRepository.save(history);
+        orderStatusHistoryRepository.save(history);
     }
 }
