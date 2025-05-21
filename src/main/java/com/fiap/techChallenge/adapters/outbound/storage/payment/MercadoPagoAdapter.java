@@ -44,11 +44,11 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
 
 
     @Override
+    @SuppressWarnings("unused")
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
-
             Order order = repository.findById(request.getOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("Ordem "));
+                    .orElseThrow(() -> new EntityNotFoundException("Pedido "));
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

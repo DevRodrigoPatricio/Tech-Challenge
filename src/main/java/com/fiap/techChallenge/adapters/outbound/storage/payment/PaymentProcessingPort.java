@@ -7,6 +7,7 @@ import com.fiap.techChallenge.domain.payment.PaymentResponse;
 import java.util.UUID;
 
 public interface PaymentProcessingPort {
+    @SuppressWarnings("unused")
     PaymentResponse processPayment(PaymentRequest request);
     PaymentStatus checkStatus(UUID paymentId);
 }

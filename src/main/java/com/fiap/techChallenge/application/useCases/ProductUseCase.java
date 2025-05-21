@@ -1,19 +1,18 @@
-package com.fiap.techChallenge.adapters.outbound.storage.product;
+package com.fiap.techChallenge.application.useCases;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
-public interface ProductPort {
-
+public interface ProductUseCase {
+    
     Product save(Product product);
 
-    Optional<Product> findById(UUID id);
+    Product findByName(String name);
 
-    Optional<Product> findByName(String name);
+    Product findById(UUID id);
 
     List<Category> listAvaiableCategorys();
 
@@ -28,5 +27,4 @@ public interface ProductPort {
     void delete(UUID id);
 
     void deleteByCategory(Category category);
-
 }

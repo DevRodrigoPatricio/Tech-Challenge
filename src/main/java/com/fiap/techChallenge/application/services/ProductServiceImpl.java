@@ -1,11 +1,12 @@
-package com.fiap.techChallenge.adapters.outbound.storage.product;
+package com.fiap.techChallenge.application.services;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.fiap.techChallenge.application.useCases.ProductUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
@@ -13,12 +14,12 @@ import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.NameAlreadyRegisteredException;
 
-@Component
-public class ProductAdapter implements ProductPort {
+@Service
+public class ProductServiceImpl implements ProductUseCase {
 
     private final ProductRepository repository;
 
-    public ProductAdapter(ProductRepository repository) {
+    public ProductServiceImpl(ProductRepository repository) {
         this.repository = repository;
     }
 
@@ -36,13 +37,13 @@ public class ProductAdapter implements ProductPort {
     }
 
     @Override
-    public Optional<Product> findById(UUID id) {
-        return repository.findById(id);
+    public Product findById(UUID id) {
+        return repository.findById(id).orElse(Product.empty());
     }
 
     @Override
-    public Optional<Product> findByName(String name) {
-        return repository.findByName(name);
+    public Product findByName(String name) {
+        return repository.findByName(name).orElse(Product.empty());
     }
 
     @Override

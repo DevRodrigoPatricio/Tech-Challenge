@@ -1,12 +1,13 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order.status.history;
+package com.fiap.techChallenge.application.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
+import org.springframework.stereotype.Service;
+
 import java.util.UUID;
 
-import org.springframework.stereotype.Component;
-
+import com.fiap.techChallenge.application.useCases.OrderStatusHistoryUseCase;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRepository;
@@ -17,13 +18,13 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTi
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 
-@Component
-public class OrderStatusHistoryAdapter implements OrderStatusHistoryPort {
+@Service
+public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase {
 
     private final OrderStatusHistoryRepository repository;
     private final OrderRepository orderRepository;
 
-    public OrderStatusHistoryAdapter(OrderStatusHistoryRepository repository, OrderRepository orderRepository) {
+    public OrderStatusHistoryServiceImpl(OrderStatusHistoryRepository repository, OrderRepository orderRepository) {
         this.repository = repository;
         this.orderRepository = orderRepository;
     }
@@ -46,8 +47,8 @@ public class OrderStatusHistoryAdapter implements OrderStatusHistoryPort {
     }
 
     @Override
-    public Optional<OrderStatusHistory> findById(UUID orderStatusHistoryId) {
-        return repository.findById(orderStatusHistoryId);
+    public OrderStatusHistory findById(UUID orderStatusHistoryId) {
+        return repository.findById(orderStatusHistoryId).orElse(OrderStatusHistory.empty());
     }
 
     @Override
@@ -58,13 +59,13 @@ public class OrderStatusHistoryAdapter implements OrderStatusHistoryPort {
                 OrderStatus.PRONTO.name(),
                 OrderStatus.FINALIZADO.name()
         );
-        
+
         return repository.listTodayOrderStatus(statusList, 5);
     }
 
     @Override
-    public Optional<OrderStatusHistory> findLast(UUID orderId) {
-        return repository.findLast(orderId);
+    public OrderStatusHistory findLast(UUID orderId) {
+        return repository.findLast(orderId).orElse(OrderStatusHistory.empty());
     }
 
     public boolean validateIfStatusAlreadyExists(UUID orderId, OrderStatus status) {
@@ -157,7 +158,13 @@ public class OrderStatusHistoryAdapter implements OrderStatusHistoryPort {
     }
 
     private OrderStatusHistory findLastStatusOrThrow(UUID orderId, String message) {
-        return this.findLast(orderId).orElseThrow(() -> new EntityNotFoundException(message));
+        OrderStatusHistory lastStatus = this.findLast(orderId);
+
+        if(lastStatus.getId() == null) {
+            throw new EntityNotFoundException(message);
+        }
+
+        return lastStatus;
     }
 
     private void validateStatus(OrderStatus newStatus, OrderStatus currentStatus, OrderStatus... requiredStatusList) {

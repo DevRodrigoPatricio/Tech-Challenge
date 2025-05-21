@@ -1,19 +1,21 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order.status.notification;
+package com.fiap.techChallenge.application.services;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Component
+@Service
 @RequiredArgsConstructor
-public class JavaMailNotifierAdapter implements NotifierPort {
+public class NotificationServiceImpl implements NotificationStatusUseCase {
 
     private final JavaMailSender mailSender;
 
@@ -21,7 +23,7 @@ public class JavaMailNotifierAdapter implements NotifierPort {
     private String from;
 
     @Override
-    public void sendStatus(String toEmail, UUID orderId, String status) {
+    public void notifyStatus(String toEmail, UUID orderId, String status) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
@@ -37,7 +39,6 @@ public class JavaMailNotifierAdapter implements NotifierPort {
         } catch (MessagingException e) {
             // Em produção: logue isso com logger, não use printStackTrace
             System.err.println("Erro ao enviar e-mail: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 

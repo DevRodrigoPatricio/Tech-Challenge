@@ -3,11 +3,10 @@ package com.fiap.techChallenge.adapters.inbound.controllers;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fiap.techChallenge.application.services.ProductService;
+import com.fiap.techChallenge.application.services.ProductServiceImpl;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
@@ -20,9 +19,9 @@ import jakarta.validation.Valid;
 @Tag(name = "Product", description = "APIs relacionadas ao Produto")
 public class ProductController {
 
-    private final ProductService service;
+    private final ProductServiceImpl service;
 
-    public ProductController(ProductService service) {
+    public ProductController(ProductServiceImpl service) {
         this.service = service;
     }
 
@@ -32,22 +31,18 @@ public class ProductController {
     public ResponseEntity<Product> save(@RequestBody @Valid Product product) {
         return ResponseEntity.ok(service.save(product));
     }
-
+    
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
-            description = "Encontra um produto pelo ID Informado")
+    description = "Encontra um produto pelo ID Informado")
     public ResponseEntity<Product> findById(@PathVariable UUID id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Product.empty()));
+        return ResponseEntity.ok(service.findById(id));
     }
-
+    
     @GetMapping("/find-by-name/{name}")
     @Operation(summary = "Find By Name", description = "Encontra um produto pelo Nome Informado")
     public ResponseEntity<Product> findByName(@PathVariable String name) {
-        return service.findByName(name)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Product.empty()));
+        return ResponseEntity.ok(service.findByName(name));
     }
 
     @GetMapping("/list-avaiables-categorys")

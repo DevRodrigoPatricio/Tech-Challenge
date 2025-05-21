@@ -96,4 +96,8 @@ public class Order {
     public void setAttendant(Attendant attendant) {
         this.attendant = attendant;
     }
+
+    public static Order empty() {
+        return new Order();
+    }
 }

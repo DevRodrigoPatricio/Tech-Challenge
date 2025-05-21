@@ -1,22 +1,22 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order.status.history;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+package com.fiap.techChallenge.application.useCases;
 
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
 import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 
-public interface OrderStatusHistoryPort {
+import java.util.List;
+import java.util.UUID;
+
+public interface OrderStatusHistoryUseCase {
 
     OrderStatusHistory save(OrderStatusHistoryRequest request);
 
-    Optional<OrderStatusHistory> findById(UUID orderStatusHistoryId);
+    OrderStatusHistory findById(UUID id);
 
     List<OrderStatusHistory> list(UUID orderId);
 
-    Optional<OrderStatusHistory> findLast(UUID orderId);
-
     List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus();
+
+    OrderStatusHistory findLast(UUID orderId);
+
 }

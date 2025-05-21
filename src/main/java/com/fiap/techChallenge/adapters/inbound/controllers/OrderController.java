@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fiap.techChallenge.application.services.OrderService;
+import com.fiap.techChallenge.application.services.OrderServiceImpl;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRequest;
 
@@ -27,9 +26,9 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Order", description = "APIs relacionadas aos Pedidos")
 public class OrderController {
 
-    private final OrderService service;
+    private final OrderServiceImpl service;
 
-    public OrderController(OrderService service) {
+    public OrderController(OrderServiceImpl service) {
         this.service = service;
     }
 
@@ -60,9 +59,7 @@ public class OrderController {
     @Operation(summary = "Find By ID",
             description = "Encontra um pedido pelo ID")
     public ResponseEntity<Order> findById(@PathVariable UUID id) {
-        return service.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(Order.empty()));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @GetMapping("/list-by-client/{consumerId}")

@@ -1,6 +1,5 @@
 package com.fiap.techChallenge.domain.payment;
 
-import java.math.BigDecimal;
 import java.util.UUID;
 
 public class PaymentRequest {

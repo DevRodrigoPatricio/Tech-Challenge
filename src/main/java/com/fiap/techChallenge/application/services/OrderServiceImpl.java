@@ -1,17 +1,16 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order;
+package com.fiap.techChallenge.application.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
-import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
-import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.OrderUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
@@ -22,30 +21,35 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 
-@Component
-public class OrderAdapter implements OrderPort {
+@Service
+public class OrderServiceImpl  implements OrderUseCase {
 
-    private final OrderRepository repository;
+
+        private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final CustomerRepository customerRepository;
     private final NotificationStatusUseCase notificationStatusUseCase;
 
-    public OrderAdapter(OrderRepository repository, ProductRepository productRepository,
+
+    public OrderServiceImpl(OrderRepository repository, ProductRepository productRepository,
             OrderStatusHistoryRepository orderStatusHistoryRepository,
             CustomerRepository customerRepository,
             NotificationStatusUseCase notificationStatusUseCase) {
-        this.repository = repository;
+    this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
         this.customerRepository = customerRepository;
         this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
+    
     @Override
     public Order save(OrderRequest request) {
         List<OrderItem> items = new ArrayList<>();
@@ -141,8 +145,8 @@ public class OrderAdapter implements OrderPort {
     }
 
     @Override
-    public Optional<Order> findById(UUID id) {
-        return repository.findById(id);
+    public Order findById(UUID id) {
+        return repository.findById(id).orElse(Order.empty());
     }
 
     @Override
@@ -161,27 +165,38 @@ public class OrderAdapter implements OrderPort {
         this.insertStatus(order.getId(), OrderStatus.CANCELADO);
     }
 
-    public boolean canAddItem(List<OrderItem> items, OrderItem newItem) {
-        List<Category> avaiablesCategorys = productRepository.listAvaiableCategorys();
-        avaiablesCategorys = List.of(Category.values()).stream()
-                .filter(avaiablesCategorys::contains)
+    public boolean canAddItem(List<OrderItem> currentItems, OrderItem newItem) {
+        List<Category> availableCategories = productRepository.listAvaiableCategorys();
+
+        List<Category> orderedCategories = Arrays.stream(Category.values())
+                .filter(availableCategories::contains)
                 .toList();
 
-        Category newItemCategory = newItem.getCategory();
+        Category newCategory = newItem.getCategory();
+        int newIndex = orderedCategories.indexOf(newCategory);
 
-        if (items.isEmpty()) {
-            return avaiablesCategorys.contains(newItemCategory);
+        if (newIndex == -1) {
+            return false;
         }
 
-        int maxUsedIndex = items.stream()
+        if (currentItems.isEmpty()) {
+            return true;
+        }
+
+        List<Integer> usedIndexes = currentItems.stream()
                 .map(OrderItem::getCategory)
-                .mapToInt(avaiablesCategorys::indexOf)
+                .map(orderedCategories::indexOf)
+                .distinct()
+                .toList();
+
+        int maxUsedIndex = usedIndexes.stream()
+                .mapToInt(i -> i)
                 .max()
                 .orElse(-1);
 
-        int newIndex = avaiablesCategorys.indexOf(newItemCategory);
+        boolean isCategoryOutOfOrder = newIndex < maxUsedIndex && !usedIndexes.contains(newIndex);
 
-        return newIndex <= maxUsedIndex || newIndex == maxUsedIndex + 1;
+        return !isCategoryOutOfOrder;
     }
 
     public BigDecimal calculatePrice(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {

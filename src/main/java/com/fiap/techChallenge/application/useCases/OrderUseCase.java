@@ -1,14 +1,13 @@
-package com.fiap.techChallenge.adapters.outbound.storage.order;
+package com.fiap.techChallenge.application.useCases;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRequest;
 
-public interface OrderPort {
+public interface OrderUseCase {
 
     Order save(OrderRequest order);
 
@@ -16,7 +15,7 @@ public interface OrderPort {
 
     Order removeItem(UUID id, UUID productId, int quantity);
 
-    Optional<Order> findById(UUID id);
+    Order findById(UUID id);
 
     List<Order> listByClient(UUID customerId);
 
