@@ -45,11 +45,11 @@ public class ProductController {
         return ResponseEntity.ok(service.findByName(name));
     }
 
-    @GetMapping("/list-avaiables-categorys")
-    @Operation(summary = "List Avaiables Categorys",
+    @GetMapping("/list-availables-categorys")
+    @Operation(summary = "List Availables Categorys",
             description = "Lista todas as categorias com produtos disponiveis")
     public ResponseEntity<List<Category>> listAvaiableCategorys() {
-        return ResponseEntity.ok(service.listAvaiableCategorys());
+        return ResponseEntity.ok(service.listAvailableCategorys());
     }
 
     @GetMapping("/list")
@@ -59,11 +59,11 @@ public class ProductController {
         return ResponseEntity.ok(service.list());
     }
 
-    @GetMapping("/list-avaiables")
-    @Operation(summary = "List Avaiables",
+    @GetMapping("/list-availables")
+    @Operation(summary = "List Availables",
             description = "Lista todos os produtos disponiveis")
     public ResponseEntity<List<Product>> listAvaiables() {
-        return ResponseEntity.ok(service.listAvaiables());
+        return ResponseEntity.ok(service.listAvailables());
     }
 
     @GetMapping("/list-by-category/{category}")
@@ -73,12 +73,12 @@ public class ProductController {
         return ResponseEntity.ok(service.listByCategory(category));
     }
 
-    @GetMapping("/list-avaiables-by-category/{category}")
-    @Operation(summary = "List Avaiables",
+    @GetMapping("/list-availables-by-category/{category}")
+    @Operation(summary = "List Availables",
             description = "Lista todos os produtos disponiveis da categoria informada")
     public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable Category category
     ) {
-        return ResponseEntity.ok(service.listAvaiablesByCategory(category));
+        return ResponseEntity.ok(service.listAvailablesByCategory(category));
     }
 
     @DeleteMapping("/delete/{id}")

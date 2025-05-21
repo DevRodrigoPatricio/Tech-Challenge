@@ -14,15 +14,15 @@ public interface ProductUseCase {
 
     Product findById(UUID id);
 
-    List<Category> listAvaiableCategorys();
+    List<Category> listAvailableCategorys();
 
     List<Product> list();
 
-    List<Product> listAvaiables();
+    List<Product> listAvailables();
 
     List<Product> listByCategory(Category category);
 
-    List<Product> listAvaiablesByCategory(Category category);
+    List<Product> listAvailablesByCategory(Category category);
 
     void delete(UUID id);
 
