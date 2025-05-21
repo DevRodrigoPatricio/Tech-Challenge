@@ -24,9 +24,8 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     private final String posId;
     private final OrderRepository repository;
 
-
-    private static final String QR_URL_TEMPLATE =
-            "https://api.mercadopago.com/instore/orders/qr/seller/collectors/{collector_id}/pos/{pos_id}/qrs";
+    private static final String QR_URL_TEMPLATE
+            = "https://api.mercadopago.com/instore/orders/qr/seller/collectors/{collector_id}/pos/{pos_id}/qrs";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -42,9 +41,8 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         this.repository = repository;
     }
 
-
     @Override
-    @SuppressWarnings("unused")
+    @SuppressWarnings({"null", "UseSpecificCatch", "unused"})
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
             Order order = repository.findById(request.getOrderId())
@@ -115,6 +113,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     }
 
     @Override
+    @SuppressWarnings({"null", "UseSpecificCatch"})
     public PaymentStatus checkStatus(UUID orderId) {
         try {
             String url = "https://api.mercadopago.com/merchant_orders/search?external_reference=" + orderId;
@@ -156,12 +155,14 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         }
     }
 
-
     private PaymentStatus mapStatus(String mpStatus) {
         return switch (mpStatus) {
-            case "approved" -> PaymentStatus.APPROVED;
-            case "rejected", "cancelled" -> PaymentStatus.REJECTED;
-            default -> PaymentStatus.PENDING;
+            case "approved" ->
+                PaymentStatus.APPROVED;
+            case "rejected", "cancelled" ->
+                PaymentStatus.REJECTED;
+            default ->
+                PaymentStatus.PENDING;
         };
     }
 

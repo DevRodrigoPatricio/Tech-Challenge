@@ -1,20 +1,14 @@
 package com.fiap.techChallenge.domain.user.attendant;
 
-import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.user.CPF;
 import com.fiap.techChallenge.domain.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Attendant extends User {
 
-    private List<Order> managedOrders;
-
     public Attendant(UUID id, String name, String email, CPF cpf) {
         super(id, name, email, cpf);
-        this.managedOrders = new ArrayList<>();
     }
 
     public static Attendant create(UUID id, String name, String email, String cpfNumber) {

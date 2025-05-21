@@ -1,22 +1,17 @@
 package com.fiap.techChallenge.domain.user.customer;
 
-import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.user.CPF;
 import com.fiap.techChallenge.domain.user.User;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class Customer extends User {
 
     private final boolean anonymous;
-    private List<Order> orders;
 
     public Customer(UUID id, String name, String email, CPF cpf, boolean anonymous) {
         super(id, name, email, cpf);
         this.anonymous = anonymous;
-        this.orders = new ArrayList<>();
     }
 
     public static Customer create(UUID id, String name, String email, String cpfNumber, boolean anonymous) {
@@ -74,9 +69,9 @@ public class Customer extends User {
         return super.getCpf();
     }
 
-        @Override
-    
+    @Override
+
     public void setCpf(String cpfNumber) {
-       super.setCpf(cpfNumber);
+        super.setCpf(cpfNumber);
     }
 }
