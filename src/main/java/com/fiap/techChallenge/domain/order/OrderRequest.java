@@ -7,16 +7,17 @@ import jakarta.persistence.Column;
 
 public class OrderRequest {
 
-    @Column(name = "id", nullable = false)
-    private List<OrderItem> items;
+    @Column(name = "items", nullable = false)
+    private List<OrderItemRequest> items;
 
+    @Column(name = "customerId", nullable = false)
     private UUID customerId;
 
-    public List<OrderItem> getItems() {
+    public List<OrderItemRequest> getItems() {
         return this.items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    public void setItems(List<OrderItemRequest> items) {
         this.items = items;
     }
 

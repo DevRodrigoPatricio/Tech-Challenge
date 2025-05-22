@@ -9,7 +9,8 @@ public record OrderStatusWithClientAndWaitTimeDTO(
         UUID orderId,
         OrderStatus status,
         LocalDateTime statusDate,
-        String clientId,
+        UUID customerId,
+        String costumerName,
         LocalDateTime orderDate,
         int waitTimeMinutes
         ) {

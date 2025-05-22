@@ -26,16 +26,24 @@ public interface JpaOrderStatusHistoryRepository extends JpaRepository<OrderStat
         BIN_TO_UUID(history.order_id),
         history.status,
         history.date,
-        o.client_id,
+        BIN_TO_UUID(o.customer_id),
+        u.name,
         o.order_dt,
         TIMESTAMPDIFF(MINUTE, o.order_dt, NOW()) AS wait_time_minutes
     FROM order_status_history history
+
     INNER JOIN (
         SELECT order_id, MAX(date) AS latest_date
         FROM order_status_history
         GROUP BY order_id
     ) latest ON history.order_id = latest.order_id AND history.date = latest.latest_date
-    INNER JOIN `order` o ON o.id = history.order_id
+
+    INNER JOIN `order` o
+    ON o.id = history.order_id
+
+    INNER JOIN user u
+    ON u.id = o.customer_id
+
     WHERE history.status IN (:statusList)
       AND DATE(history.date) = CURDATE()
       AND (

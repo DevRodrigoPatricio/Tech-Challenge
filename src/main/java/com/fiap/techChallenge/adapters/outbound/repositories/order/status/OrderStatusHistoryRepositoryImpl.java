@@ -61,9 +61,10 @@ public class OrderStatusHistoryRepositoryImpl implements OrderStatusHistoryRepos
                 UUID.fromString((String) row[0]),
                 OrderStatus.valueOf((String) row[1]),
                 ((Timestamp) row[2]).toLocalDateTime(),
-                (String) row[3],
-                ((Timestamp) row[4]).toLocalDateTime(),
-                ((Number) row[5]).intValue()
+                UUID.fromString((String) row[3]),
+                (String) row[4],
+                ((Timestamp) row[5]).toLocalDateTime(),
+                ((Number) row[6]).intValue()
         ))
                 .toList();
     }

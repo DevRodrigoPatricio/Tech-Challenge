@@ -21,7 +21,8 @@ public class OrderMapper {
         }
 
         List<OrderItem> items = entity.getItems().stream().map(i -> new OrderItem(
-                i.getProductId(), i.getProductName(),
+                i.getProductId(),
+                i.getProductName(),
                 i.getQuantity(),
                 i.getUnitPrice(),
                 i.getCategory()

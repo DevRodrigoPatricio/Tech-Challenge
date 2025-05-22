@@ -15,6 +15,7 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.domain.order.OrderItemRequest;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.OrderRequest;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
@@ -24,52 +25,51 @@ import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
+import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 @Service
-public class OrderServiceImpl  implements OrderUseCase {
+public class OrderServiceImpl implements OrderUseCase {
 
-
-        private final OrderRepository repository;
+    private final OrderRepository repository;
     private final ProductRepository productRepository;
     private final OrderStatusHistoryRepository orderStatusHistoryRepository;
     private final CustomerRepository customerRepository;
     private final NotificationStatusUseCase notificationStatusUseCase;
 
-
     public OrderServiceImpl(OrderRepository repository, ProductRepository productRepository,
             OrderStatusHistoryRepository orderStatusHistoryRepository,
             CustomerRepository customerRepository,
             NotificationStatusUseCase notificationStatusUseCase) {
-    this.repository = repository;
+        this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
         this.customerRepository = customerRepository;
         this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
-    
     @Override
     public Order save(OrderRequest request) {
         List<OrderItem> items = new ArrayList<>();
         BigDecimal price = new BigDecimal(0);
 
-        for (OrderItem item : request.getItems()) {
+        for (OrderItemRequest itemRequest : request.getItems()) {
+            Product product = productRepository.findAvailableProductById(itemRequest.getProductId());
+            OrderItem item = new OrderItem(product, itemRequest.getQuantity());
+
             if (this.canAddItem(items, item)) {
+                price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
                 items.add(item);
 
             } else {
                 throw new WrongCategoryOrderException();
             }
 
-            price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
         }
 
         Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Cliente"));
 
         Order order = new Order();
-        order.setItems(request.getItems());
         order.setCustomer(customer);
         order.setPrice(price);
         order.setItems(items);
@@ -95,7 +95,7 @@ public class OrderServiceImpl  implements OrderUseCase {
             throw new InvalidOrderStatusException("Não é possivel adicionar um item ao pedido, pois ele está " + status.getStatus());
         }
 
-        Product product = productRepository.findAvaiableProductById(productId);
+        Product product = productRepository.findAvailableProductById(productId);
         OrderItem newItem = new OrderItem(product, quantity);
         List<OrderItem> items = order.getItems();
 
