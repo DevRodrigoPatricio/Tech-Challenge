@@ -4,5 +4,6 @@ import java.util.UUID;
 
 public record CustomerResponseAnonymDTO(
         UUID id,
+        String name,
         boolean anonymous
 ) {}

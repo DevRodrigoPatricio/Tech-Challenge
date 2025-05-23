@@ -57,6 +57,7 @@ public class CustomerMapper {
 
         return new CustomerResponseAnonymDTO(
                 entity.getId(),
+                entity.getName(),
                 entity.isAnonymous()
         );
     }
