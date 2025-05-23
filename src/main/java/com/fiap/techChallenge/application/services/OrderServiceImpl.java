@@ -18,6 +18,7 @@ import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.order.OrderItemRequest;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.OrderRequest;
+import com.fiap.techChallenge.domain.order.OrderWithStatusDTO;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
@@ -156,6 +157,18 @@ public class OrderServiceImpl implements OrderUseCase {
     public void delete(UUID id) {
         Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
         this.insertStatus(order.getId(), OrderStatus.CANCELADO);
+    }
+
+    @Override
+    public List<OrderWithStatusDTO> listTodayOrders() {
+        List<String> statusList = List.of(
+                OrderStatus.RECEBIDO.name(),
+                OrderStatus.EM_PREPARACAO.name(),
+                OrderStatus.PRONTO.name(),
+                OrderStatus.FINALIZADO.name()
+        );
+
+        return repository.listTodayOrders(statusList, 5);
     }
 
     public boolean isCategoryOutOfOrder(List<OrderItem> currentItems, OrderItem newItem) {

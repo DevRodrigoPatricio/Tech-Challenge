@@ -14,7 +14,6 @@ import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
-import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 
@@ -49,18 +48,6 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
     @Override
     public OrderStatusHistory findById(UUID orderStatusHistoryId) {
         return repository.findById(orderStatusHistoryId).orElse(OrderStatusHistory.empty());
-    }
-
-    @Override
-    public List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus() {
-        List<String> statusList = List.of(
-                OrderStatus.RECEBIDO.name(),
-                OrderStatus.EM_PREPARACAO.name(),
-                OrderStatus.PRONTO.name(),
-                OrderStatus.FINALIZADO.name()
-        );
-
-        return repository.listTodayOrderStatus(statusList, 5);
     }
 
     @Override

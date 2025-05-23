@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRequest;
+import com.fiap.techChallenge.domain.order.OrderWithStatusDTO;
 
 public interface OrderUseCase {
 
@@ -20,6 +21,8 @@ public interface OrderUseCase {
     List<Order> listByClient(UUID customerId);
 
     List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
+
+    List<OrderWithStatusDTO> listTodayOrders();
 
     void delete(UUID id);
 }

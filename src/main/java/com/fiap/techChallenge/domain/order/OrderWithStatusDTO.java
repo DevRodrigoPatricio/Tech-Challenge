@@ -1,17 +1,17 @@
-package com.fiap.techChallenge.domain.order.status;
+package com.fiap.techChallenge.domain.order;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 
-public record OrderStatusWithClientAndWaitTimeDTO(
+public record OrderWithStatusDTO(
         UUID orderId,
         OrderStatus status,
-        LocalDateTime statusDate,
+        LocalDateTime statusDt,
         UUID customerId,
         String customerName,
-        LocalDateTime orderDate,
+        LocalDateTime orderDt,
         int waitTimeMinutes
         ) {
 

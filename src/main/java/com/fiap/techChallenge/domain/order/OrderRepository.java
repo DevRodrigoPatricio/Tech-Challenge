@@ -17,4 +17,5 @@ public interface OrderRepository {
 
     List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
 
+    List<OrderWithStatusDTO> listTodayOrders(List<String> statusList, int finalizedMinutes);
 }

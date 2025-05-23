@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fiap.techChallenge.application.services.OrderServiceImpl;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRequest;
+import com.fiap.techChallenge.domain.order.OrderWithStatusDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -74,6 +75,13 @@ public class OrderController {
             description = "Encontra um pedido pelo periodo informado")
     public ResponseEntity<List<Order>> listByPeriod(@PathVariable LocalDateTime initialDt, @PathVariable LocalDateTime finalDt) {
         return ResponseEntity.ok(service.listByPeriod(initialDt, finalDt));
+    }
+
+    @GetMapping("/list-today-orders")
+    @Operation(summary = "List Today Order",
+            description = "Lista os pedidos em Andamento")
+    public ResponseEntity<List<OrderWithStatusDTO>> listTodayOrders() {
+        return ResponseEntity.ok(service.listTodayOrders());
     }
 
     @PostMapping("/cancel-order/{id}")
