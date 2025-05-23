@@ -51,27 +51,29 @@ public class OrderServiceImpl implements OrderUseCase {
     @Override
     public Order save(OrderRequest request) {
         List<OrderItem> items = new ArrayList<>();
-        BigDecimal price = new BigDecimal(0);
 
         for (OrderItemRequest itemRequest : request.getItems()) {
             Product product = productRepository.findAvailableProductById(itemRequest.getProductId());
             OrderItem item = new OrderItem(product, itemRequest.getQuantity());
 
-            if (this.canAddItem(items, item)) {
-                price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
-                items.add(item);
+            if (!this.isCategoryOutOfOrder(items, item)) {
+                if (!this.isItemInAlreadyOrder(items, item)) {
+                    items.add(item);
+
+                } else {
+                    this.increaseItemQuantity(items, item);
+                }
 
             } else {
                 throw new WrongCategoryOrderException();
             }
-
         }
 
         Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Cliente"));
 
         Order order = new Order();
         order.setCustomer(customer);
-        order.setPrice(price);
+        order.setPrice(this.calculatePrice(items));
         order.setItems(items);
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
@@ -96,15 +98,6 @@ public class OrderServiceImpl implements OrderUseCase {
         }
 
         Product product = productRepository.findAvailableProductById(productId);
-        OrderItem newItem = new OrderItem(product, quantity);
-        List<OrderItem> items = order.getItems();
-
-        if (this.canAddItem(items, newItem)) {
-            items.add(newItem);
-
-        } else {
-            throw new WrongCategoryOrderException();
-        }
 
         order.setPrice(this.calculatePrice(order.getPrice(), product.getPrice(), quantity));
         return repository.save(order);
@@ -165,7 +158,7 @@ public class OrderServiceImpl implements OrderUseCase {
         this.insertStatus(order.getId(), OrderStatus.CANCELADO);
     }
 
-    public boolean canAddItem(List<OrderItem> currentItems, OrderItem newItem) {
+    public boolean isCategoryOutOfOrder(List<OrderItem> currentItems, OrderItem newItem) {
         List<Category> availableCategories = productRepository.listAvaiableCategorys();
 
         List<Category> orderedCategories = Arrays.stream(Category.values())
@@ -176,11 +169,11 @@ public class OrderServiceImpl implements OrderUseCase {
         int newIndex = orderedCategories.indexOf(newCategory);
 
         if (newIndex == -1) {
-            return false;
+            return true;
         }
 
         if (currentItems.isEmpty()) {
-            return true;
+            return false;
         }
 
         List<Integer> usedIndexes = currentItems.stream()
@@ -194,9 +187,8 @@ public class OrderServiceImpl implements OrderUseCase {
                 .max()
                 .orElse(-1);
 
-        boolean isCategoryOutOfOrder = newIndex < maxUsedIndex && !usedIndexes.contains(newIndex);
-
-        return !isCategoryOutOfOrder;
+        boolean isCategoryOutOfOrder = newIndex < maxUsedIndex;
+        return isCategoryOutOfOrder;
     }
 
     public BigDecimal calculatePrice(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
@@ -205,6 +197,39 @@ public class OrderServiceImpl implements OrderUseCase {
         }
 
         return currentOrderValue.add(productPrice);
+    }
+
+    public BigDecimal calculatePrice(List<OrderItem> items) {
+        BigDecimal price = new BigDecimal(0);
+        for (OrderItem item : items) {
+            price = this.calculatePrice(price, item.getUnitPrice(), item.getQuantity());
+        }
+
+        return price;
+    }
+
+    public void increaseItemQuantity(List<OrderItem> currentItems, OrderItem newItem) {
+        for (OrderItem item : currentItems) {
+            if (item.getProductId() == newItem.getProductId()) {
+                int index = currentItems.indexOf(item);
+                OrderItem itemWithNewQuantity = currentItems.get(index);
+                itemWithNewQuantity.setQuantity(itemWithNewQuantity.getQuantity() + newItem.getQuantity());
+                currentItems.set(index, itemWithNewQuantity);
+            }
+        }
+    }
+
+    public boolean isItemInAlreadyOrder(List<OrderItem> currentItems, OrderItem newItem) {
+        boolean isItemInOrder = false;
+
+        for (OrderItem item : currentItems) {
+            if (item.getProductId() == newItem.getProductId()) {
+                isItemInOrder = true;
+                break;
+            }
+        }
+
+        return isItemInOrder;
     }
 
     private void insertStatus(UUID orderId, OrderStatus status) {
