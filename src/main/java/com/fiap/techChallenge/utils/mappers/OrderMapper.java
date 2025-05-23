@@ -1,17 +1,17 @@
 package com.fiap.techChallenge.utils.mappers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.fiap.techChallenge.adapters.outbound.entities.AttendantEntity;
-import com.fiap.techChallenge.adapters.outbound.entities.CustomerEntity;
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.adapters.outbound.entities.OrderItemEmbeddable;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderItemEmbeddable;
+import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.customer.Customer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OrderMapper {
 

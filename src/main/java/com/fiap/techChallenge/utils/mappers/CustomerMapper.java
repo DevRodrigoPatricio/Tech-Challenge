@@ -1,10 +1,10 @@
 package com.fiap.techChallenge.utils.mappers;
 
-import com.fiap.techChallenge.adapters.outbound.entities.CustomerEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRequestDTO;
-import com.fiap.techChallenge.domain.user.customer.CustomerResponseAnonymDTO;
-import com.fiap.techChallenge.domain.user.customer.CustomerResponseDTO;
+import com.fiap.techChallenge.application.dto.user.CustomerRequestDTO;
+import com.fiap.techChallenge.application.dto.user.CustomerResponseAnonymDTO;
+import com.fiap.techChallenge.application.dto.user.CustomerResponseFullDTO;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,10 +40,10 @@ public class CustomerMapper {
         return entity;
     }
 
-    public CustomerResponseDTO toDTO(Customer entity) {
+    public CustomerResponseFullDTO toDTO(Customer entity) {
         if (entity == null) return null;
 
-        return new CustomerResponseDTO(
+        return new CustomerResponseFullDTO(
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),

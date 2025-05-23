@@ -1,20 +1,52 @@
 package com.fiap.techChallenge.adapters.inbound.controllers.errorHandler;
 
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.UserAlreadyExistsException;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
+import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusTransitionException;
+import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
+import com.fiap.techChallenge.domain.exceptions.product.NameAlreadyRegisteredException;
+import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
+import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
+import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
+
+    @ExceptionHandler({
+            EntityNotFoundException.class,
+            IllegalArgumentException.class,
+            UserAlreadyExistsException.class,
+            NameAlreadyRegisteredException.class,
+            InvalidOrderStatusException.class,
+            NullPointerException.class,
+            ProductNotAvaiableException.class,
+            InvalidOrderStatusTransitionException.class,
+            WrongCategoryOrderException.class,
+            SQLIntegrityConstraintViolationException.class,
+    })
+    public ResponseEntity<ErrorResponse> handleExceptions(EntityNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<HashMap<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
@@ -39,43 +71,60 @@ public class GlobalHandlerException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleEntityNotFound(EntityNotFoundException ex) {
-        ErrorResponse response = new ErrorResponse(
-                HttpStatus.NOT_FOUND,
-                ex.getMessage()
-        );
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleInvalidEnumValueException(HttpMessageNotReadableException e) {
+        String message = e.getMessage();
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        if (e.getCause() instanceof InvalidFormatException formatEx && formatEx.getTargetType().isEnum()) {
+            Class<?> enumClass = formatEx.getTargetType();
+            Object[] constants = enumClass.getEnumConstants();
+            String correctValues = Arrays.toString(constants);
+            String field = formatEx.getPath().get(0).getFieldName();
+
+            message = String.format(
+                    "Valor inválido para o campo '%s'. Valores aceitos: %s",
+                    field,
+                    correctValues
+            );
+        }
+
+        return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
-    public ResponseEntity<ErrorResponse> handleUserAlreadyExists(UserAlreadyExistsException ex) {
-        ErrorResponse response = new ErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleEnumPathVariableException(MethodArgumentTypeMismatchException e) {
+        if (e.getRequiredType() != null) {
+            Class<?> targetType = e.getRequiredType();
+            String field = e.getName();
+            String invalidValue = String.valueOf(e.getValue());
 
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            if (targetType.isEnum()) {
+                Object[] constants = targetType.getEnumConstants();
+                String correctValues = Arrays.toString(constants);
+                String message = String.format(
+                        "Valor inválido '%s' para o campo '%s'. Valores aceitos: %s",
+                        invalidValue,
+                        field,
+                        correctValues
+                );
+                return ResponseEntity.badRequest().body(message);
+
+            } else if (UUID.class.equals(targetType)) {
+                String message = String.format(
+                        "Valor inválido '%s' para o campo '%s'. Deve ser um UUID válido.",
+                        invalidValue,
+                        field
+                );
+                return ResponseEntity.badRequest().body(message);
+            }
+        }
+
+        return ResponseEntity.badRequest().body("Parâmetro inválido.");
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException ex) {
-        ErrorResponse response = new ErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-    }
-
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleSqlConstraintViolation(SQLIntegrityConstraintViolationException ex) {
-        ErrorResponse response = new ErrorResponse(
-                HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    @ExceptionHandler(PropertyValueException.class)
+    public ResponseEntity<String> handlePropertyValueException(PropertyValueException e) {
+        return ResponseEntity.badRequest()
+                .body(String.format("O campo '%s' é obrigatório.", e.getPropertyName()));
     }
 }

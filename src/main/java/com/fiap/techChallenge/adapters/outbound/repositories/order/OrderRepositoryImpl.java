@@ -7,10 +7,10 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.mappers.OrderMapper;
 
 @Repository

@@ -3,10 +3,10 @@ package com.fiap.techChallenge.adapters.outbound.storage.payment;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.payment.PaymentRequest;
-import com.fiap.techChallenge.domain.payment.PaymentResponse;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.PaymentException;
+import com.fiap.techChallenge.application.dto.payment.PaymentRequestDTO;
+import com.fiap.techChallenge.application.dto.payment.PaymentResponseDTO;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.payment.PaymentException;
 import org.springframework.http.*;
 
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
 
     @Override
     @SuppressWarnings({"null", "UseSpecificCatch", "unused"})
-    public PaymentResponse processPayment(PaymentRequest request) {
+    public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
         try {
             Order order = repository.findById(request.getOrderId())
                     .orElseThrow(() -> new EntityNotFoundException("Pedido "));
@@ -71,7 +71,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
                 String qrData = (String) body.get("qr_data");
                 String externalRef = (String) body.get("external_reference");
 
-                return new PaymentResponse("PENDING", request.getOrderId(), qrData);
+                return new PaymentResponseDTO("PENDING", request.getOrderId(), qrData);
             } else {
                 throw new PaymentException("Erro ao gerar QR Code Mercado Pago: status " + response.getStatusCode());
             }
@@ -81,7 +81,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
         }
     }
 
-    private Map<String, Object> buildPayload(PaymentRequest request, Order order) {
+    private Map<String, Object> buildPayload(PaymentRequestDTO request, Order order) {
         Map<String, Object> payload = new HashMap<>();
 
         payload.put("external_reference", request.getOrderId());

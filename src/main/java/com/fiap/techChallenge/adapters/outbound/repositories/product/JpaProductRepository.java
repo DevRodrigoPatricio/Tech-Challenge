@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.product.ProductEntity;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 

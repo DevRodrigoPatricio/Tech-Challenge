@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fiap.techChallenge.adapters.outbound.entities.OrderStatusHistoryEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderStatusHistoryEntity;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 
 public class OrderStatusHistoryMapper {

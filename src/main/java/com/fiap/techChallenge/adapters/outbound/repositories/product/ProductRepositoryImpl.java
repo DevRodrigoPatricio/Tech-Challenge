@@ -6,13 +6,13 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Repository;
 
-import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.product.ProductEntity;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.ProductNotAvaiableException;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
 import com.fiap.techChallenge.utils.mappers.ProductMapper;
 
 @Repository
