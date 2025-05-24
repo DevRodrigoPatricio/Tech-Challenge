@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.application.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class ProductServiceImpl implements ProductUseCase {
     }
 
     @Override
-    public List<Product> listAvaiables() {
+    public List<Product> listAvailables() {
         return repository.listByStatus(ProductStatus.DISPONIVEL);
     }
 
@@ -62,7 +63,7 @@ public class ProductServiceImpl implements ProductUseCase {
     }
 
     @Override
-    public List<Product> listAvaiablesByCategory(Category category) {
+    public List<Product> listAvailablesByCategory(Category category) {
         return repository.listByStatusAndCategory(ProductStatus.DISPONIVEL, category);
     }
 
@@ -74,6 +75,17 @@ public class ProductServiceImpl implements ProductUseCase {
     @Override
     public void deleteByCategory(Category category) {
         repository.deleteByCategory(category);
+    }
+
+    @Override
+    public List<Category> listAvailableCategorys() {
+        List<Category> availableCategories = repository.listAvaiableCategorys();
+
+        List<Category> orderedCategories = Arrays.stream(Category.values())
+                .filter(availableCategories::contains)
+                .toList();
+
+        return orderedCategories;
     }
 
     public void validateName(String name) {
@@ -96,8 +108,4 @@ public class ProductServiceImpl implements ProductUseCase {
         }
     }
 
-    @Override
-    public List<Category> listAvaiableCategorys() {
-        return repository.listAvaiableCategorys();
-    }
 }

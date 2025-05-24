@@ -37,4 +37,10 @@ public class AttendantController {
         Attendant attendant = attendantService.searchAttendant(id);
         return ResponseEntity.ok(attendantMapper.toDto(attendant));
     }
+
+    @GetMapping("/cpf/{cpf}")
+    public ResponseEntity<AttendantResponseDTO> findByCpf(@PathVariable("cpf") String cpf) {
+        Attendant attendant = attendantService.searchAttendant(cpf);
+        return ResponseEntity.ok(attendantMapper.toDto(attendant));
+    }
 }

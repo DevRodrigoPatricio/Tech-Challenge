@@ -18,6 +18,4 @@ public interface OrderStatusHistoryRepository {
 
     boolean existsByOrderIdAndStatus(UUID orderId, OrderStatus status);
 
-    List<OrderStatusWithClientAndWaitTimeDTO> listTodayOrderStatus(List<String> statusList, int finalizedMinutes);
-
 }

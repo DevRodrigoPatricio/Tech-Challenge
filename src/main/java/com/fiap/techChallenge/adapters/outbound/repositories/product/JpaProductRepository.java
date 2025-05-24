@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,7 @@ import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 
+@Repository
 public interface JpaProductRepository extends JpaRepository<ProductEntity, UUID> {
 
     Optional<ProductEntity> findByName(String name);

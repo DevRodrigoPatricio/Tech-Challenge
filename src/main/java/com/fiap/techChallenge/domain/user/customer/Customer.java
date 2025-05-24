@@ -31,7 +31,7 @@ public class Customer extends User {
 
             return new Customer(id, name, email, cpf, false);
         } else {
-            return new Customer(id, null, null, null, true);
+            return new Customer(id, name, null, null, true);
         }
     }
 

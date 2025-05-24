@@ -5,7 +5,10 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderRequest;
+import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.domain.order.request.OrderRequest;
 
 public interface OrderUseCase {
 
@@ -15,11 +18,10 @@ public interface OrderUseCase {
 
     Order removeItem(UUID id, UUID productId, int quantity);
 
-    Order findById(UUID id);
+    OrderWithItemsAndStatusDTO findById(UUID id);
 
-    List<Order> listByClient(UUID customerId);
+    List<OrderWithStatusProjection> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
 
-    List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
+    List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders();
 
-    void delete(UUID id);
 }

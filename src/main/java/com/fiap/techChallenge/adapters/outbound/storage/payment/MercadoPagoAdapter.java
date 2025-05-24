@@ -5,7 +5,6 @@ import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.payment.PaymentRequest;
 import com.fiap.techChallenge.domain.payment.PaymentResponse;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.PaymentException;
 import org.springframework.http.*;
 
@@ -45,8 +44,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     @SuppressWarnings({"null", "UseSpecificCatch", "unused"})
     public PaymentResponse processPayment(PaymentRequest request) {
         try {
-            Order order = repository.findById(request.getOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("Pedido "));
+            Order order = repository.validate(request.getOrderId());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
