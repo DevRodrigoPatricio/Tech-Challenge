@@ -15,10 +15,12 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderItemRequest;
 import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.order.OrderRequest;
-import com.fiap.techChallenge.domain.order.OrderWithStatusDTO;
+import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.domain.order.request.OrderItemRequest;
+import com.fiap.techChallenge.domain.order.request.OrderRequest;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
@@ -90,7 +92,7 @@ public class OrderServiceImpl implements OrderUseCase {
 
     @Override
     public Order addItem(UUID id, UUID productId, int quantity) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        Order order = repository.validate(id);
         OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
@@ -106,7 +108,7 @@ public class OrderServiceImpl implements OrderUseCase {
 
     @Override
     public Order removeItem(UUID id, UUID productId, int quantity) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        Order order = repository.validate(id);
         OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
@@ -139,28 +141,33 @@ public class OrderServiceImpl implements OrderUseCase {
     }
 
     @Override
-    public Order findById(UUID id) {
-        return repository.findById(id).orElse(Order.empty());
+    public OrderWithItemsAndStatusDTO findById(UUID id) {
+        return repository.findById(id).orElse(new OrderWithItemsAndStatusDTO(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                List.of()
+        )
+        );
     }
 
     @Override
-    public List<Order> listByClient(UUID clientId) {
-        return repository.listByClient(clientId);
-    }
-
-    @Override
-    public List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {
+    public List<OrderWithStatusProjection> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {
         return repository.listByPeriod(initialDt, finalDt);
     }
 
     @Override
     public void delete(UUID id) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        Order order = repository.validate(id);
         this.insertStatus(order.getId(), OrderStatus.CANCELADO);
     }
 
     @Override
-    public List<OrderWithStatusDTO> listTodayOrders() {
+    public List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders() {
         List<String> statusList = List.of(
                 OrderStatus.RECEBIDO.name(),
                 OrderStatus.EM_PREPARACAO.name(),

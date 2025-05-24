@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fiap.techChallenge.application.services.OrderServiceImpl;
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderRequest;
-import com.fiap.techChallenge.domain.order.OrderWithStatusDTO;
+import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.domain.order.request.OrderRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,28 +61,21 @@ public class OrderController {
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
             description = "Encontra um pedido pelo ID")
-    public ResponseEntity<Order> findById(@PathVariable UUID id) {
+    public ResponseEntity<OrderWithItemsAndStatusDTO> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.findById(id));
-    }
-
-    @GetMapping("/list-by-client/{consumerId}")
-    @Operation(summary = "List By Client",
-            description = "Encontra um pedido pelo ID do cliente")
-    public ResponseEntity<List<Order>> listByClient(@PathVariable UUID consumerId) {
-        return ResponseEntity.ok(service.listByClient(consumerId));
     }
 
     @GetMapping("/list-by-period/{initialDt}/{finalDt}")
     @Operation(summary = "List By Period",
             description = "Encontra um pedido pelo periodo informado")
-    public ResponseEntity<List<Order>> listByPeriod(@PathVariable LocalDateTime initialDt, @PathVariable LocalDateTime finalDt) {
+    public ResponseEntity<List<OrderWithStatusProjection>> listByPeriod(@PathVariable LocalDateTime initialDt, @PathVariable LocalDateTime finalDt) {
         return ResponseEntity.ok(service.listByPeriod(initialDt, finalDt));
     }
 
     @GetMapping("/list-today-orders")
     @Operation(summary = "List Today Order",
             description = "Lista os pedidos em Andamento")
-    public ResponseEntity<List<OrderWithStatusDTO>> listTodayOrders() {
+    public ResponseEntity<List<OrderWithStatusAndWaitMinutesProjection>> listTodayOrders() {
         return ResponseEntity.ok(service.listTodayOrders());
     }
 

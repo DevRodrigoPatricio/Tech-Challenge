@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.order;
+package com.fiap.techChallenge.domain.order.request;
 
 import java.util.List;
 import java.util.UUID;
