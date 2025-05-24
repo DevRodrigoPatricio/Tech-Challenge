@@ -1,23 +1,4 @@
-package com.fiap.techChallenge.application.services.order;
-
-import com.fiap.techChallenge.application.dto.order.OrderRequestDTO;
-import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
-import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
-import com.fiap.techChallenge.domain.enums.Category;
-import com.fiap.techChallenge.domain.enums.OrderStatus;
-import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
-import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
-import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
-import org.springframework.stereotype.Service;
+package com.fiap.techChallenge.application.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -26,8 +7,32 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.stereotype.Service;
+
+import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.OrderUseCase;
+import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.enums.OrderStatus;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.domain.order.OrderRepository;
+import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.domain.order.request.OrderItemRequest;
+import com.fiap.techChallenge.domain.order.request.OrderRequest;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
+import com.fiap.techChallenge.domain.product.Product;
+import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
+import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
+import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
+
 @Service
-public class OrderServiceImpl  implements OrderUseCase {
+public class OrderServiceImpl implements OrderUseCase {
 
     private final OrderRepository repository;
     private final ProductRepository productRepository;
@@ -35,46 +40,54 @@ public class OrderServiceImpl  implements OrderUseCase {
     private final CustomerRepository customerRepository;
     private final NotificationStatusUseCase notificationStatusUseCase;
 
-
     public OrderServiceImpl(OrderRepository repository, ProductRepository productRepository,
             OrderStatusHistoryRepository orderStatusHistoryRepository,
             CustomerRepository customerRepository,
             NotificationStatusUseCase notificationStatusUseCase) {
-    this.repository = repository;
+        this.repository = repository;
         this.productRepository = productRepository;
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
         this.customerRepository = customerRepository;
         this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
-    
     @Override
     public Order save(OrderRequestDTO request) {
         List<OrderItem> items = new ArrayList<>();
-        BigDecimal price = new BigDecimal(0);
 
-        for (OrderItem item : request.getItems()) {
-            if (this.canAddItem(items, item)) {
-                items.add(item);
+        for (OrderItemRequest itemRequest : request.getItems()) {
+            Product product = productRepository.findAvailableProductById(itemRequest.getProductId());
+            OrderItem item = new OrderItem(product, itemRequest.getQuantity());
+
+            if (!this.isCategoryOutOfOrder(items, item)) {
+                if (!this.isItemInAlreadyOrder(items, item)) {
+                    items.add(item);
+
+                } else {
+                    this.increaseItemQuantity(items, item);
+                }
 
             } else {
                 throw new WrongCategoryOrderException();
             }
-
-            price = calculatePrice(price, item.getUnitPrice(), item.getQuantity());
         }
 
         Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Cliente"));
 
         Order order = new Order();
-        order.setItems(request.getItems());
         order.setCustomer(customer);
-        order.setPrice(price);
+        order.setPrice(this.calculatePrice(items));
         order.setItems(items);
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
 
-        this.insertStatus(order.getId(), OrderStatus.RECEBIDO);
+        OrderStatusHistory history = new OrderStatusHistory(
+                order.getId(),
+                OrderStatus.RECEBIDO,
+                LocalDateTime.now()
+        );
+
+        orderStatusHistoryRepository.save(history);
 
         if (customer.getEmail() != null) {
             notificationStatusUseCase.notifyStatus(customer.getEmail(), order.getId(), "Pedido recebido com sucesso.");
@@ -85,7 +98,7 @@ public class OrderServiceImpl  implements OrderUseCase {
 
     @Override
     public Order addItem(UUID id, UUID productId, int quantity) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        Order order = repository.validate(id);
         OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
@@ -93,16 +106,7 @@ public class OrderServiceImpl  implements OrderUseCase {
             throw new InvalidOrderStatusException("Não é possivel adicionar um item ao pedido, pois ele está " + status.getStatus());
         }
 
-        Product product = productRepository.findAvaiableProductById(productId);
-        OrderItem newItem = new OrderItem(product, quantity);
-        List<OrderItem> items = order.getItems();
-
-        if (this.canAddItem(items, newItem)) {
-            items.add(newItem);
-
-        } else {
-            throw new WrongCategoryOrderException();
-        }
+        Product product = productRepository.findAvailableProductById(productId);
 
         order.setPrice(this.calculatePrice(order.getPrice(), product.getPrice(), quantity));
         return repository.save(order);
@@ -110,7 +114,7 @@ public class OrderServiceImpl  implements OrderUseCase {
 
     @Override
     public Order removeItem(UUID id, UUID productId, int quantity) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        Order order = repository.validate(id);
         OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
@@ -143,27 +147,40 @@ public class OrderServiceImpl  implements OrderUseCase {
     }
 
     @Override
-    public Order findById(UUID id) {
-        return repository.findById(id).orElse(Order.empty());
+    public OrderWithItemsAndStatusDTO findById(UUID id) {
+        return repository.findById(id).orElse(new OrderWithItemsAndStatusDTO(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                List.of()
+        )
+        );
     }
 
     @Override
-    public List<Order> listByClient(UUID clientId) {
-        return repository.listByClient(clientId);
-    }
-
-    @Override
-    public List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {
+    public List<OrderWithStatusProjection> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {
         return repository.listByPeriod(initialDt, finalDt);
     }
 
     @Override
-    public void delete(UUID id) {
-        Order order = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Pedido"));
-        this.insertStatus(order.getId(), OrderStatus.CANCELADO);
+    public List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders() {
+        List<String> statusList = List.of(
+                OrderStatus.RECEBIDO.name(),
+                OrderStatus.EM_PREPARACAO.name(),
+                OrderStatus.PRONTO.name(),
+                OrderStatus.FINALIZADO.name()
+        );
+
+        return repository.listTodayOrders(statusList, 5);
     }
 
-    public boolean canAddItem(List<OrderItem> currentItems, OrderItem newItem) {
+    public boolean isCategoryOutOfOrder(List<OrderItem> currentItems, OrderItem newItem) {
         List<Category> availableCategories = productRepository.listAvaiableCategorys();
 
         List<Category> orderedCategories = Arrays.stream(Category.values())
@@ -174,11 +191,11 @@ public class OrderServiceImpl  implements OrderUseCase {
         int newIndex = orderedCategories.indexOf(newCategory);
 
         if (newIndex == -1) {
-            return false;
+            return true;
         }
 
         if (currentItems.isEmpty()) {
-            return true;
+            return false;
         }
 
         List<Integer> usedIndexes = currentItems.stream()
@@ -192,9 +209,8 @@ public class OrderServiceImpl  implements OrderUseCase {
                 .max()
                 .orElse(-1);
 
-        boolean isCategoryOutOfOrder = newIndex < maxUsedIndex && !usedIndexes.contains(newIndex);
-
-        return !isCategoryOutOfOrder;
+        boolean isCategoryOutOfOrder = newIndex < maxUsedIndex;
+        return isCategoryOutOfOrder;
     }
 
     public BigDecimal calculatePrice(BigDecimal currentOrderValue, BigDecimal productPrice, int quantity) {
@@ -205,13 +221,36 @@ public class OrderServiceImpl  implements OrderUseCase {
         return currentOrderValue.add(productPrice);
     }
 
-    private void insertStatus(UUID orderId, OrderStatus status) {
-        OrderStatusHistory history = new OrderStatusHistory(
-                orderId,
-                status,
-                LocalDateTime.now()
-        );
+    public BigDecimal calculatePrice(List<OrderItem> items) {
+        BigDecimal price = new BigDecimal(0);
+        for (OrderItem item : items) {
+            price = this.calculatePrice(price, item.getUnitPrice(), item.getQuantity());
+        }
 
-        orderStatusHistoryRepository.save(history);
+        return price;
+    }
+
+    public void increaseItemQuantity(List<OrderItem> currentItems, OrderItem newItem) {
+        for (OrderItem item : currentItems) {
+            if (item.getProductId() == newItem.getProductId()) {
+                int index = currentItems.indexOf(item);
+                OrderItem itemWithNewQuantity = currentItems.get(index);
+                itemWithNewQuantity.setQuantity(itemWithNewQuantity.getQuantity() + newItem.getQuantity());
+                currentItems.set(index, itemWithNewQuantity);
+            }
+        }
+    }
+
+    public boolean isItemInAlreadyOrder(List<OrderItem> currentItems, OrderItem newItem) {
+        boolean isItemInOrder = false;
+
+        for (OrderItem item : currentItems) {
+            if (item.getProductId() == newItem.getProductId()) {
+                isItemInOrder = true;
+                break;
+            }
+        }
+
+        return isItemInOrder;
     }
 }
