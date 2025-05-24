@@ -22,6 +22,6 @@ public class CPF {
     }
 
     private boolean isValid(String number) {
-        return number.matches("\\d{11}");
+        return number.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
     }
 }
