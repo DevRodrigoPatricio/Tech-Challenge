@@ -1,14 +1,14 @@
 package com.fiap.techChallenge.utils.mappers;
 
-import com.fiap.techChallenge.adapters.outbound.entities.AttendantEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
+import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
+import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
-import com.fiap.techChallenge.domain.user.attendant.AttendantRequestDTO;
-import com.fiap.techChallenge.domain.user.attendant.AttendantResponseDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class AttendantMapper {
-    public Attendant toDomain(AttendantEntity entity) {
+    public Attendant toDomain(com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity entity) {
         if (entity == null) return null;
 
         return Attendant.create(

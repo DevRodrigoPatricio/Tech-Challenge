@@ -7,7 +7,7 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fiap.techChallenge.adapters.outbound.entities.OrderStatusHistoryEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderStatusHistoryEntity;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 
 @Repository

@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.fiap.techChallenge.domain.order.projection.OrderItemProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
 
 @Repository
 public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {

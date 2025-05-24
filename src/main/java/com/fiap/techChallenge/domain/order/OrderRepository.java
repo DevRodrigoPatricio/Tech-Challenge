@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
 
 public interface OrderRepository {
 

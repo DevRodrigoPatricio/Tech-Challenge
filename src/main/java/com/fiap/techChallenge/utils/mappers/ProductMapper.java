@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fiap.techChallenge.adapters.outbound.entities.ProductEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.product.ProductEntity;
 import com.fiap.techChallenge.domain.product.Product;
 
 public class ProductMapper {

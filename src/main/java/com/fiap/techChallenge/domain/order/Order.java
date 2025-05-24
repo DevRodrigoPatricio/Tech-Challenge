@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 

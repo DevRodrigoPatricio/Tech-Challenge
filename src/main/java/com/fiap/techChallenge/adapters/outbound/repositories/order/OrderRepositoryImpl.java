@@ -1,22 +1,21 @@
 package com.fiap.techChallenge.adapters.outbound.repositories.order;
 
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.domain.order.OrderRepository;
+import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.utils.mappers.OrderMapper;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
-import com.fiap.techChallenge.adapters.outbound.entities.OrderEntity;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
-import com.fiap.techChallenge.domain.order.projection.OrderItemProjection;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.mappers.OrderMapper;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
