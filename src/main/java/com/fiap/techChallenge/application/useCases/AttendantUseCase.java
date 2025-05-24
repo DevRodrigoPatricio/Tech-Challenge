@@ -8,4 +8,5 @@ import java.util.UUID;
 public interface AttendantUseCase {
     Attendant createAttendant(AttendantRequestDTO attendant);
     Attendant searchAttendant(UUID id);
+    Attendant searchAttendant(String cpf);
 }

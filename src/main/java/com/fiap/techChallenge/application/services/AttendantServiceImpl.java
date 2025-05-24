@@ -46,4 +46,15 @@ public class AttendantServiceImpl implements AttendantUseCase {
 
         return optAttendant.get();
     }
+
+    @Override
+    public Attendant searchAttendant(String cpf) {
+        Optional<Attendant> optAttendant = attendantRepository.findByCpf(cpf);
+
+        if (optAttendant.isEmpty()) {
+            throw new EntityNotFoundException("Attendant");
+        }
+
+        return optAttendant.get();
+    }
 }
