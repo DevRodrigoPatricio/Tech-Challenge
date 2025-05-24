@@ -45,8 +45,7 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
     @SuppressWarnings({"null", "UseSpecificCatch", "unused"})
     public PaymentResponseDTO processPayment(PaymentRequestDTO request) {
         try {
-            Order order = repository.findById(request.getOrderId())
-                    .orElseThrow(() -> new EntityNotFoundException("Pedido "));
+            Order order = repository.validate(request.getOrderId());
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);

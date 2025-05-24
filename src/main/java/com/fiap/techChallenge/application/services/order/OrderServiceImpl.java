@@ -1,7 +1,10 @@
 package com.fiap.techChallenge.application.services.order;
 
-
-import com.fiap.techChallenge.application.dto.order.OrderRequestDTO;
+import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
+import com.fiap.techChallenge.application.dto.order.request.OrderItemRequest;
+import com.fiap.techChallenge.application.dto.order.request.OrderRequestDTO;
 import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
@@ -18,7 +21,6 @@ import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
-import com.mercadopago.client.order.OrderItemRequest;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

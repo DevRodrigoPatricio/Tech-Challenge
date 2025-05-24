@@ -8,13 +8,16 @@ public class OrderStatusHistoryRequestDTO {
 
     private UUID orderId;
 
+    private UUID attendantId;
+
     private OrderStatus status;
 
     public OrderStatusHistoryRequestDTO() {
     }
 
-    public OrderStatusHistoryRequestDTO(UUID orderId, OrderStatus status) {
+    public OrderStatusHistoryRequestDTO(UUID orderId, UUID attendantId, OrderStatus status) {
         this.orderId = orderId;
+        this.attendantId = attendantId;
         this.status = status;
     }
 
@@ -24,6 +27,14 @@ public class OrderStatusHistoryRequestDTO {
 
     public void setOrderId(UUID orderId) {
         this.orderId = orderId;
+    }
+
+    public UUID getAttendantId() {
+        return this.attendantId;
+    }
+
+    public void setAttendantId(UUID attendantId) {
+        this.attendantId = attendantId;
     }
 
     public OrderStatus getStatus() {

@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.adapters.outbound.entities.order;
 
+
 import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import jakarta.persistence.*;

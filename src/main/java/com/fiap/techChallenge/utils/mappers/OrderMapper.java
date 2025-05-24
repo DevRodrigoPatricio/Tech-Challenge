@@ -6,6 +6,7 @@ import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 
@@ -15,13 +16,42 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
 
+    public static List<OrderItem> itemToDomainList(List<OrderItemProjection> projection) {
+        List<OrderItem> domainList = new ArrayList<>();
+
+        domainList.addAll(
+                projection.stream()
+                        .map(OrderMapper::itemToDomain)
+                        .toList()
+        );
+
+        return domainList;
+    }
+
+    public static OrderItem itemToDomain(OrderItemProjection projection) {
+        if (projection == null) {
+            return null;
+        }
+
+        OrderItem item = new OrderItem(
+                projection.getProductId(),
+                projection.getProductName(),
+                projection.getQuantity(),
+                projection.getUnitPrice(),
+                projection.getCategory()
+        );
+
+        return item;
+    }
+
     public static Order toDomain(OrderEntity entity) {
         if (entity == null) {
             return null;
         }
 
         List<OrderItem> items = entity.getItems().stream().map(i -> new OrderItem(
-                i.getProductId(), i.getProductName(),
+                i.getProductId(),
+                i.getProductName(),
                 i.getQuantity(),
                 i.getUnitPrice(),
                 i.getCategory()

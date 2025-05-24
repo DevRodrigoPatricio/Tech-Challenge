@@ -48,4 +48,15 @@ public class AttendantServiceImpl implements AttendantUseCase {
 
         return attendantMapper.toDto(optAttendant.get());
     }
+
+    @Override
+    public AttendantResponseDTO searchAttendant(String cpf) {
+        Optional<Attendant> optAttendant = attendantRepository.findByCpf(cpf);
+
+        if (optAttendant.isEmpty()) {
+            throw new EntityNotFoundException("Attendant");
+        }
+
+        return attendantMapper.toDto(optAttendant.get());
+    }
 }

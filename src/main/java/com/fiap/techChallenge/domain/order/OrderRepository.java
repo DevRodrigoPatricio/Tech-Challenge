@@ -5,16 +5,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
+import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
+
 public interface OrderRepository {
 
     Order save(Order order);
 
-    Optional<Order> findById(UUID id);
+    Optional<OrderWithItemsAndStatusDTO> findById(UUID id);
 
     Order validate(UUID id);
 
-    List<Order> listByClient(UUID customerId);
+    List<OrderItem> findItemsById(UUID id);
 
-    List<Order> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
+    List<OrderWithStatusProjection> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt);
 
+    List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders(List<String> statusList, int finalizedMinutes);
 }

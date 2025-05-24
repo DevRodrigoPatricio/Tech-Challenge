@@ -1,12 +1,13 @@
 package com.fiap.techChallenge.adapters.inbound.controllers.product;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.services.product.ProductServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fiap.techChallenge.application.services.product.ProductServiceImpl;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
@@ -31,25 +32,32 @@ public class ProductController {
     public ResponseEntity<Product> save(@RequestBody @Valid Product product) {
         return ResponseEntity.ok(service.save(product));
     }
-    
+
     @GetMapping("/find-by-id/{id}")
     @Operation(summary = "Find By ID",
-    description = "Encontra um produto pelo ID Informado")
+            description = "Encontra um produto pelo ID Informado")
     public ResponseEntity<Product> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(service.findById(id));
     }
-    
+
     @GetMapping("/find-by-name/{name}")
     @Operation(summary = "Find By Name", description = "Encontra um produto pelo Nome Informado")
     public ResponseEntity<Product> findByName(@PathVariable String name) {
         return ResponseEntity.ok(service.findByName(name));
     }
 
-    @GetMapping("/list-avaiables-categorys")
-    @Operation(summary = "List Avaiables Categorys",
+    @GetMapping("/list-categorys")
+    @Operation(summary = "List Categorys",
+            description = "Lista todas as categoriasdisponiveis")
+    public ResponseEntity<List<Category>> listCategorys() {
+        return ResponseEntity.ok(Arrays.asList(Category.values()));
+    }
+
+    @GetMapping("/list-availables-categorys")
+    @Operation(summary = "List Availables Categorys",
             description = "Lista todas as categorias com produtos disponiveis")
-    public ResponseEntity<List<Category>> listAvailableCategories() {
-        return ResponseEntity.ok(service.listAvaiableCategorys());
+    public ResponseEntity<List<Category>> listAvailableCategorys() {
+        return ResponseEntity.ok(service.listAvailableCategorys());
     }
 
     @GetMapping("/list")
@@ -59,11 +67,11 @@ public class ProductController {
         return ResponseEntity.ok(service.list());
     }
 
-    @GetMapping("/list-avaiables")
-    @Operation(summary = "List Avaiables",
+    @GetMapping("/list-availables")
+    @Operation(summary = "List Availables",
             description = "Lista todos os produtos disponiveis")
-    public ResponseEntity<List<Product>> listAvailables() {
-        return ResponseEntity.ok(service.listAvaiables());
+    public ResponseEntity<List<Product>> listAvaiables() {
+        return ResponseEntity.ok(service.listAvailables());
     }
 
     @GetMapping("/list-by-category/{category}")
@@ -73,12 +81,12 @@ public class ProductController {
         return ResponseEntity.ok(service.listByCategory(category));
     }
 
-    @GetMapping("/list-avaiables-by-category/{category}")
-    @Operation(summary = "List Avaiables",
+    @GetMapping("/list-availables-by-category/{category}")
+    @Operation(summary = "List Availables",
             description = "Lista todos os produtos disponiveis da categoria informada")
-    public ResponseEntity<List<Product>> listAvailablesByCategory(@PathVariable Category category
+    public ResponseEntity<List<Product>> listAvaiablesByCategory(@PathVariable Category category
     ) {
-        return ResponseEntity.ok(service.listAvaiablesByCategory(category));
+        return ResponseEntity.ok(service.listAvailablesByCategory(category));
     }
 
     @DeleteMapping("/delete/{id}")

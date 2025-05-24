@@ -13,7 +13,8 @@ public class CustomerEntity extends UserEntity {
     @Column(nullable = false)
     private boolean anonymous;
 
-    public CustomerEntity() {}
+    public CustomerEntity() {
+    }
 
     public boolean isAnonymous() {
         return anonymous;
@@ -23,34 +24,42 @@ public class CustomerEntity extends UserEntity {
         this.anonymous = anonymous;
     }
 
+    @Override
     public UUID getId() {
         return super.getId();
     }
 
+    @Override
     public void setId(UUID id) {
         super.setId(id);
     }
 
+    @Override
     public String getName() {
         return super.getName();
     }
 
+    @Override
     public void setName(String name) {
         super.setName(name);
     }
 
+    @Override
     public String getEmail() {
         return super.getEmail();
     }
 
+    @Override
     public void setEmail(String email) {
         super.setEmail(email);
     }
 
+    @Override
     public CPFEmbeddable getCpf() {
         return super.getCpf();
     }
 
+    @Override
     public void setCpf(String cpfNumber) {
         super.setCpf(cpfNumber);
     }

@@ -1,8 +1,9 @@
-package com.fiap.techChallenge.adapters.inbound.controllers.order;
+package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,10 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fiap.techChallenge.application.services.order.OrderStatusHistoryServiceImpl;
+import com.fiap.techChallenge.application.services.OrderStatusHistoryServiceImpl;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
-import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryRequestDTO;
-import com.fiap.techChallenge.application.dto.order.OrderStatusWithClientAndWaitTimeDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -57,13 +56,6 @@ public class OrderStatusHistoryController {
             description = "Encontra a lista dos status de um pedido")
     public ResponseEntity<List<OrderStatusHistory>> listByPeriod(@PathVariable UUID orderId) {
         return ResponseEntity.ok(service.list(orderId));
-    }
-
-    @GetMapping("/list-today-order-status/")
-    @Operation(summary = "List Today Order Status",
-            description = "Lista os pedidos em Andamento")
-    public ResponseEntity<List<OrderStatusWithClientAndWaitTimeDTO>> listTodayOrderStatus() {
-        return ResponseEntity.ok(service.listTodayOrderStatus());
     }
 
 }

@@ -43,7 +43,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product findAvaiableProductById(UUID productId) {
+    public Product findAvailableProductById(UUID productId) {
         Product product = this.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
 
         if (product.getStatus().compareTo(ProductStatus.DISPONIVEL) != 0) {
