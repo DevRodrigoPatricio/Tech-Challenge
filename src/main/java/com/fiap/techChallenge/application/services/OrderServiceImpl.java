@@ -81,7 +81,14 @@ public class OrderServiceImpl implements OrderUseCase {
         order.setOrderDt(LocalDateTime.now());
         order = repository.save(order);
 
-        this.insertStatus(order.getId(), OrderStatus.RECEBIDO);
+        OrderStatusHistory history = new OrderStatusHistory(
+                order.getId(),
+                null,
+                OrderStatus.RECEBIDO,
+                LocalDateTime.now()
+        );
+
+        orderStatusHistoryRepository.save(history);
 
         if (customer.getEmail() != null) {
             notificationStatusUseCase.notifyStatus(customer.getEmail(), order.getId(), "Pedido recebido com sucesso.");
@@ -151,6 +158,7 @@ public class OrderServiceImpl implements OrderUseCase {
                 null,
                 null,
                 null,
+                null,
                 List.of()
         )
         );
@@ -159,12 +167,6 @@ public class OrderServiceImpl implements OrderUseCase {
     @Override
     public List<OrderWithStatusProjection> listByPeriod(LocalDateTime initialDt, LocalDateTime finalDt) {
         return repository.listByPeriod(initialDt, finalDt);
-    }
-
-    @Override
-    public void delete(UUID id) {
-        Order order = repository.validate(id);
-        this.insertStatus(order.getId(), OrderStatus.CANCELADO);
     }
 
     @Override
@@ -251,15 +253,5 @@ public class OrderServiceImpl implements OrderUseCase {
         }
 
         return isItemInOrder;
-    }
-
-    private void insertStatus(UUID orderId, OrderStatus status) {
-        OrderStatusHistory history = new OrderStatusHistory(
-                orderId,
-                status,
-                LocalDateTime.now()
-        );
-
-        orderStatusHistoryRepository.save(history);
     }
 }

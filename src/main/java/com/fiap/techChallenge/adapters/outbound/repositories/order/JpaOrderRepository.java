@@ -27,8 +27,9 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             h.status AS status,
             h.date AS statusDt,
             BIN_TO_UUID(o.customer_id) AS customerId,
-            u.name AS customerName,
+            c.name AS customerName,
             BIN_TO_UUID(o.attendant_id) AS attendantId,
+            a.name AS attendantName,
             o.order_dt AS orderDt,
             TIMESTAMPDIFF(MINUTE, o.order_dt, NOW()) AS waitTimeMinutes
         FROM `order` o
@@ -42,13 +43,16 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             GROUP BY order_id
         ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
         
-        INNER JOIN user u
-        ON u.id = o.customer_id
+        INNER JOIN user c
+        ON c.id = o.customer_id
+        
+        LEFT JOIN user a
+        ON a.id = o.attendant_id
     
         WHERE h.status IN (:statusList)
             AND DATE(h.date) = CURDATE()
             AND (
-            h.status != 'FINALIZADO' OR h.date >= DATE_SUB(NOW(), INTERVAL :finalizedMinutes MINUTE)
+                h.status != 'FINALIZADO' OR h.date >= DATE_SUB(NOW(), INTERVAL :finalizedMinutes MINUTE)
             )
         ORDER BY h.date
     """, nativeQuery = true)
@@ -63,8 +67,9 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             h.status AS status,
             h.date AS statusDt,
             BIN_TO_UUID(o.customer_id) AS customerId,
-            u.name AS customerName,
+            c.name AS customerName,
             BIN_TO_UUID(o.attendant_id) AS attendantId,
+            a.name AS attendantName,
             o.price AS price,
             o.order_dt AS orderDt
         FROM `order` o
@@ -78,8 +83,11 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             GROUP BY order_id
         ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
         
-        INNER JOIN user u
-        ON u.id = o.customer_id
+        INNER JOIN user c
+        ON c.id = o.customer_id
+        
+        LEFT JOIN user a
+        ON a.id = o.attendant_id
 
         WHERE BIN_TO_UUID(o.id) = :id
     """, nativeQuery = true)
@@ -91,8 +99,9 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             h.status AS status,
             h.date AS statusDt,
             BIN_TO_UUID(o.customer_id) AS customerId,
-            u.name AS customerName,
+            c.name AS customerName,
             BIN_TO_UUID(o.attendant_id) AS attendantId,
+            a.name AS attendantName,
             o.price AS price,
             o.order_dt AS orderDt
         FROM `order` o
@@ -105,7 +114,9 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             GROUP BY order_id
         ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
 
-        INNER JOIN user u ON u.id = o.customer_id
+        INNER JOIN user c ON c.id = o.customer_id
+
+        LEFT JOIN user a ON a.id = o.attendant_id
 
         WHERE o.order_dt BETWEEN :startDt AND :endDt
 

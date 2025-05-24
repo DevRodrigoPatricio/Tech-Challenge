@@ -20,6 +20,8 @@ public interface OrderWithStatusProjection {
 
     UUID getAttendantId();
 
+    String getAttendantName();
+
     BigDecimal getPrice();
 
     LocalDateTime getOrderDt();

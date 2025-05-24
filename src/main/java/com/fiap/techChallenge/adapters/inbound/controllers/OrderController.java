@@ -88,12 +88,4 @@ public class OrderController {
         return ResponseEntity.ok(service.listTodayOrders());
     }
 
-    @PostMapping("/cancel-order/{id}")
-    @Operation(summary = "Cancel Order",
-            description = "Cancela um Pedido")
-    public ResponseEntity<String> cancelOrder(@PathVariable UUID id) {
-        service.delete(id);
-        return ResponseEntity.ok("Pedido cancelado com sucesso");
-    }
-
 }

@@ -19,6 +19,8 @@ public interface OrderWithStatusAndWaitMinutesProjection {
 
     UUID getAttendantId();
 
+    String getAttendantName();
+
     LocalDateTime getOrderDt();
 
     int getWaitTimeMinutes();

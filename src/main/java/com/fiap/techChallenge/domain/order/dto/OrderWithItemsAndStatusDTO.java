@@ -13,6 +13,7 @@ public record OrderWithItemsAndStatusDTO(
         OrderStatus status,
         LocalDateTime statusDt,
         UUID attendantId,
+        String attendantName,
         UUID customerId,
         String customerName,
         BigDecimal price,

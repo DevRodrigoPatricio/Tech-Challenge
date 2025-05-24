@@ -47,6 +47,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                     order.getStatus(),
                     order.getStatusDt(),
                     order.getAttendantId(),
+                    order.getAttendantName(),
                     order.getCustomerId(),
                     order.getCustomerName(),
                     order.getPrice(),

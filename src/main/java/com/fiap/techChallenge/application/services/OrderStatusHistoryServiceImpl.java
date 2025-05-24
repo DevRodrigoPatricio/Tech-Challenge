@@ -14,6 +14,8 @@ import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRequest;
+import com.fiap.techChallenge.domain.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.user.attendant.AttendantRepository;
 import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
 
@@ -22,10 +24,12 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
 
     private final OrderStatusHistoryRepository repository;
     private final OrderRepository orderRepository;
+    private final AttendantRepository attendantRepository;
 
-    public OrderStatusHistoryServiceImpl(OrderStatusHistoryRepository repository, OrderRepository orderRepository) {
+    public OrderStatusHistoryServiceImpl(OrderStatusHistoryRepository repository, OrderRepository orderRepository, AttendantRepository attendantRepository) {
         this.repository = repository;
         this.orderRepository = orderRepository;
+        this.attendantRepository = attendantRepository;
     }
 
     @Override
@@ -37,7 +41,14 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
         orderStatusHistory.setOrderId(request.getOrderId());
         orderStatusHistory.setStatus(request.getStatus());
         orderStatusHistory.setDate(LocalDateTime.now());
-        return repository.save(orderStatusHistory);
+        OrderStatusHistory result = repository.save(orderStatusHistory);
+
+        Order order = orderRepository.validate(request.getOrderId());
+        Attendant attendant = attendantRepository.findById(request.getAttendantId()).orElseThrow(() -> new EntityNotFoundException("Atendente"));
+        order.setAttendant(attendant);
+        orderRepository.save(order);
+
+        return result;
     }
 
     @Override
@@ -68,37 +79,14 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
     public void isValidStatusTransition(UUID orderId, OrderStatus newStatus) {
         validateIfStatusAlreadyExists(orderId, newStatus);
 
-        if (orderId == null && newStatus != OrderStatus.INICIADO) {
-            throw new IllegalArgumentException("orderId é obrigatório");
-        }
-
         final String historyNotFound = "Histórico de status não encontrado para o pedido informado";
         OrderStatusHistory lastStatus;
         OrderStatus requiredStatus;
 
         switch (newStatus) {
-            case INICIADO -> {
-                if (orderId != null) {
-                    if (!this.list(orderId).isEmpty()) {
-                        throw new InvalidOrderStatusException("O pedido não pode ser iniciado, pois já foi cadastrado anteriormente");
-                    }
-                }
-            }
-
-            case CONFIRMADO -> {
-                lastStatus = findLastStatusOrThrow(orderId, historyNotFound);
-                requiredStatus = OrderStatus.INICIADO;
-                validateStatus(newStatus, lastStatus.getStatus(), requiredStatus);
-                Order order = orderRepository.validate(orderId);
-
-                if (order.getItems().isEmpty()) {
-                    throw new IllegalArgumentException("O pedido não pode ser confirmado, pois não possui produtos cadastrados");
-                }
-            }
-
             case PAGAMENTO_PENDENTE -> {
                 lastStatus = findLastStatusOrThrow(orderId, historyNotFound);
-                requiredStatus = OrderStatus.CONFIRMADO;
+                requiredStatus = OrderStatus.RECEBIDO;
                 validateStatus(newStatus, lastStatus.getStatus(), requiredStatus);
             }
 
@@ -111,14 +99,12 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
             case PAGO -> {
                 lastStatus = findLastStatusOrThrow(orderId, historyNotFound);
                 validateStatus(newStatus, lastStatus.getStatus(),
-                        OrderStatus.RECEBIDO, OrderStatus.CONFIRMADO,
-                        OrderStatus.PAGAMENTO_PENDENTE, OrderStatus.NAO_PAGO);
+                        OrderStatus.RECEBIDO, OrderStatus.PAGAMENTO_PENDENTE, OrderStatus.NAO_PAGO);
             }
 
             case RECEBIDO -> {
                 lastStatus = findLastStatusOrThrow(orderId, historyNotFound);
-                validateStatus(newStatus, lastStatus.getStatus(),
-                        OrderStatus.CONFIRMADO, OrderStatus.PAGO);
+                validateStatus(newStatus, lastStatus.getStatus(), OrderStatus.PAGO);
             }
 
             case EM_PREPARACAO -> {
@@ -147,7 +133,7 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
     private OrderStatusHistory findLastStatusOrThrow(UUID orderId, String message) {
         OrderStatusHistory lastStatus = this.findLast(orderId);
 
-        if(lastStatus.getId() == null) {
+        if (lastStatus.getId() == null) {
             throw new EntityNotFoundException(message);
         }
 

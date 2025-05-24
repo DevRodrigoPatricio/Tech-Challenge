@@ -24,5 +24,4 @@ public interface OrderUseCase {
 
     List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders();
 
-    void delete(UUID id);
 }
