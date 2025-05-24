@@ -82,7 +82,7 @@ public class OrderServiceImpl implements OrderUseCase {
 
         OrderStatusHistory history = new OrderStatusHistory(
                 order.getId(),
-                OrderStatus.RECEBIDO,
+                OrderStatus.PAGAMENTO_PENDENTE,
                 LocalDateTime.now()
         );
 
@@ -251,5 +251,9 @@ public class OrderServiceImpl implements OrderUseCase {
         }
 
         return isItemInOrder;
+    }
+
+    public Order validate(UUID id) {
+        return repository.validate(id);
     }
 }

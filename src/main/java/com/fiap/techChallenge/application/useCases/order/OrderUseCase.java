@@ -24,4 +24,5 @@ public interface OrderUseCase {
 
     List<OrderWithStatusAndWaitMinutesProjection> listTodayOrders();
 
+    Order validate(UUID id);
 }
