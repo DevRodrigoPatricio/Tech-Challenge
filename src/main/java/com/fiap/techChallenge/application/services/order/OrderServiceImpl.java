@@ -1,4 +1,25 @@
-package com.fiap.techChallenge.application.services;
+package com.fiap.techChallenge.application.services.order;
+
+
+import com.fiap.techChallenge.application.dto.order.OrderRequestDTO;
+import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
+import com.fiap.techChallenge.domain.enums.Category;
+import com.fiap.techChallenge.domain.enums.OrderStatus;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
+import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.order.OrderItem;
+import com.fiap.techChallenge.domain.order.OrderRepository;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
+import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
+import com.fiap.techChallenge.domain.product.Product;
+import com.fiap.techChallenge.domain.product.ProductRepository;
+import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
+import com.mercadopago.client.order.OrderItemRequest;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -6,30 +27,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import org.springframework.stereotype.Service;
-
-import com.fiap.techChallenge.application.useCases.NotificationStatusUseCase;
-import com.fiap.techChallenge.application.useCases.OrderUseCase;
-import com.fiap.techChallenge.domain.enums.Category;
-import com.fiap.techChallenge.domain.enums.OrderStatus;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
-import com.fiap.techChallenge.domain.order.projection.OrderWithStatusProjection;
-import com.fiap.techChallenge.domain.order.request.OrderItemRequest;
-import com.fiap.techChallenge.domain.order.request.OrderRequest;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
-import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
-import com.fiap.techChallenge.utils.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.utils.exceptions.InvalidOrderStatusException;
-import com.fiap.techChallenge.utils.exceptions.WrongCategoryOrderException;
 
 @Service
 public class OrderServiceImpl implements OrderUseCase {
