@@ -1,6 +1,7 @@
 package com.fiap.techChallenge.adapters.inbound.controllers;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fiap.techChallenge.application.services.OrderServiceImpl;
+import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.dto.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.domain.order.projection.OrderWithStatusAndWaitMinutesProjection;
@@ -56,6 +58,13 @@ public class OrderController {
             description = "Remove um Produto do Pedido")
     public ResponseEntity<Order> removeItem(@PathVariable UUID orderId, @PathVariable UUID productId, @PathVariable int quantity) {
         return ResponseEntity.ok(service.removeItem(orderId, productId, quantity));
+    }
+
+    @GetMapping("/list-status")
+    @Operation(summary = "List Status",
+            description = "Lista as opções de status")
+    public ResponseEntity<List<OrderStatus>> listStatus() {
+        return ResponseEntity.ok(Arrays.asList(OrderStatus.values()));
     }
 
     @GetMapping("/find-by-id/{id}")

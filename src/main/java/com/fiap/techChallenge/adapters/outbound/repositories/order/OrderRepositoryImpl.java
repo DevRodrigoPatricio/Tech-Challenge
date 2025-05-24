@@ -37,7 +37,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<OrderWithItemsAndStatusDTO> findById(UUID id) {
-        Optional<OrderWithStatusProjection> orderDTO = repository.find(id.toString());
+        Optional<OrderWithStatusProjection> orderDTO = repository.findWithStatusById(id.toString());
 
         return orderDTO.map(order -> {
             List<OrderItemProjection> items = repository.findItemsByOrderId(id.toString());
@@ -49,6 +49,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                     order.getAttendantId(),
                     order.getCustomerId(),
                     order.getCustomerName(),
+                    order.getPrice(),
                     order.getOrderDt(),
                     items
             );

@@ -65,6 +65,7 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             BIN_TO_UUID(o.customer_id) AS customerId,
             u.name AS customerName,
             BIN_TO_UUID(o.attendant_id) AS attendantId,
+            o.price AS price,
             o.order_dt AS orderDt
         FROM `order` o
         
@@ -82,7 +83,7 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
 
         WHERE BIN_TO_UUID(o.id) = :id
     """, nativeQuery = true)
-    Optional<OrderWithStatusProjection> find(@Param("id") String id);
+    Optional<OrderWithStatusProjection> findWithStatusById(@Param("id") String id);
 
     @Query(value = """
         SELECT 
@@ -92,22 +93,25 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             BIN_TO_UUID(o.customer_id) AS customerId,
             u.name AS customerName,
             BIN_TO_UUID(o.attendant_id) AS attendantId,
+            o.price AS price,
             o.order_dt AS orderDt
         FROM `order` o
-        
-        INNER JOIN order_status_history h
-        ON h.order_id = o.id
+
+        INNER JOIN order_status_history h ON h.order_id = o.id
 
         INNER JOIN (
             SELECT order_id, MAX(date) AS latest_date
             FROM order_status_history
             GROUP BY order_id
         ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
-        
-        INNER JOIN user u
-        ON u.id = o.customer_id
+
+        INNER JOIN user u ON u.id = o.customer_id
 
         WHERE o.order_dt BETWEEN :startDt AND :endDt
+
+        ORDER BY 
+            FIELD(h.status, 'RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO', 'CANCELADO'),
+            o.order_dt
     """, nativeQuery = true)
     List<OrderWithStatusProjection> findAllByOrderDt(@Param("startDt") LocalDateTime startDt, @Param("endDt") LocalDateTime endDt);
 

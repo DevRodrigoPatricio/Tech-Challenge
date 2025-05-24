@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.domain.order.projection;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,6 +19,8 @@ public interface OrderWithStatusProjection {
     String getCustomerName();
 
     UUID getAttendantId();
+
+    BigDecimal getPrice();
 
     LocalDateTime getOrderDt();
 }

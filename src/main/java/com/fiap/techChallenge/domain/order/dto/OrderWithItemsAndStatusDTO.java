@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.domain.order.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +15,7 @@ public record OrderWithItemsAndStatusDTO(
         UUID attendantId,
         UUID customerId,
         String customerName,
+        BigDecimal price,
         LocalDateTime orderDt,
         List<OrderItemProjection> items
         ) {
