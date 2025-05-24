@@ -125,7 +125,9 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
         FROM 
             order_items i
         INNER JOIN `order` o
-        ON BIN_TO_UUID(o.id) = :id
+        ON o.id = i.order_id
+        
+        WHERE BIN_TO_UUID(o.id) = :id
     """, nativeQuery = true)
     List<OrderItemProjection> findItemsByOrderId(@Param("id") String id);
 }
