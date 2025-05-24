@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import com.fiap.techChallenge.application.dto.order.OrderStatusWithClientAndWaitTimeDTO;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 
 public interface OrderStatusHistoryRepository {

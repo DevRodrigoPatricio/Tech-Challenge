@@ -39,7 +39,7 @@ public class GlobalHandlerException {
             WrongCategoryOrderException.class,
             SQLIntegrityConstraintViolationException.class,
     })
-    public ResponseEntity<ErrorResponse> handleExceptions(EntityNotFoundException ex) {
+    public ResponseEntity<ErrorResponse> handleExceptions(Exception ex) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()

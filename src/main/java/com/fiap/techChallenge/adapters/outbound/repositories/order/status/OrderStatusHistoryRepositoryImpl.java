@@ -1,18 +1,15 @@
 package com.fiap.techChallenge.adapters.outbound.repositories.order.status;
 
-import java.sql.Timestamp;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import org.springframework.stereotype.Repository;
-
-import com.fiap.techChallenge.adapters.outbound.entities.OrderStatusHistoryEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderStatusHistoryEntity;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
-import com.fiap.techChallenge.domain.order.status.OrderStatusWithClientAndWaitTimeDTO;
 import com.fiap.techChallenge.utils.mappers.OrderStatusHistoryMapper;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class OrderStatusHistoryRepositoryImpl implements OrderStatusHistoryRepository {
