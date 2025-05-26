@@ -11,8 +11,6 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
 import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
-import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
 import com.fiap.techChallenge.utils.mappers.ProductMapper;
 
 @Repository
@@ -40,17 +38,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Optional<Product> findByName(String name) {
         return repository.findByName(name).map(ProductMapper::toDomain);
-    }
-
-    @Override
-    public Product findAvailableProductById(UUID productId) {
-        Product product = this.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
-
-        if (product.getStatus().compareTo(ProductStatus.DISPONIVEL) != 0) {
-            throw new ProductNotAvaiableException();
-        }
-
-        return product;
     }
 
     @Override
@@ -84,7 +71,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public List<Category> listAvaiableCategorys() {
+    public List<Category> listAvailableCategorys() {
         return repository.listCategorysByProductStatus(ProductStatus.DISPONIVEL);
     }
 

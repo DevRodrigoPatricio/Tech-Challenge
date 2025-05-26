@@ -10,6 +10,8 @@ public interface OrderStatusHistoryUseCase {
 
     OrderStatusHistory save(OrderStatusHistoryRequestDTO request);
 
+    OrderStatusHistory save(OrderStatusHistory orderHistory, UUID attendantId);
+
     OrderStatusHistory findById(UUID id);
 
     List<OrderStatusHistory> list(UUID orderId);

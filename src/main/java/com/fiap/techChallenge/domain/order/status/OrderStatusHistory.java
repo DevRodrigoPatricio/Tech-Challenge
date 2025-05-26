@@ -18,10 +18,9 @@ public class OrderStatusHistory {
     public OrderStatusHistory() {
     }
 
-    public OrderStatusHistory(UUID orderId, OrderStatus status, LocalDateTime date) {
+    public OrderStatusHistory(UUID orderId, OrderStatus status) {
         this.orderId = orderId;
         this.status = status;
-        this.date = date;
     }
 
     public OrderStatusHistory(UUID id, UUID orderId, OrderStatus status, LocalDateTime date) {

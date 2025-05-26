@@ -15,7 +15,10 @@ import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusPr
 import com.fiap.techChallenge.application.dto.order.request.OrderItemRequest;
 import com.fiap.techChallenge.application.dto.order.request.OrderRequestDTO;
 import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
+import com.fiap.techChallenge.application.useCases.order.OrderStatusHistoryUseCase;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
+import com.fiap.techChallenge.application.useCases.product.ProductUseCase;
+import com.fiap.techChallenge.application.useCases.user.CustomerUseCase;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
@@ -25,29 +28,26 @@ import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 
 @Service
 public class OrderServiceImpl implements OrderUseCase {
 
     private final OrderRepository repository;
-    private final ProductRepository productRepository;
-    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
-    private final CustomerRepository customerRepository;
+    private final ProductUseCase productUseCase;
+    private final OrderStatusHistoryUseCase orderStatusHistoryUseCase;
+    private final CustomerUseCase customerUseCase;
     private final NotificationStatusUseCase notificationStatusUseCase;
 
-    public OrderServiceImpl(OrderRepository repository, ProductRepository productRepository,
-            OrderStatusHistoryRepository orderStatusHistoryRepository,
-            CustomerRepository customerRepository,
+    public OrderServiceImpl(OrderRepository repository, ProductUseCase productUseCase,
+            OrderStatusHistoryUseCase orderStatusHistoryUseCase,
+            CustomerUseCase customerUseCase,
             NotificationStatusUseCase notificationStatusUseCase) {
         this.repository = repository;
-        this.productRepository = productRepository;
-        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
-        this.customerRepository = customerRepository;
+        this.productUseCase = productUseCase;
+        this.orderStatusHistoryUseCase = orderStatusHistoryUseCase;
+        this.customerUseCase = customerUseCase;
         this.notificationStatusUseCase = notificationStatusUseCase;
     }
 
@@ -56,7 +56,7 @@ public class OrderServiceImpl implements OrderUseCase {
         List<OrderItem> items = new ArrayList<>();
 
         for (OrderItemRequest itemRequest : request.getItems()) {
-            Product product = productRepository.findAvailableProductById(itemRequest.getProductId());
+            Product product = productUseCase.findAvailableProductById(itemRequest.getProductId());
             OrderItem item = new OrderItem(product, itemRequest.getQuantity());
 
             if (!this.isCategoryOutOfOrder(items, item)) {
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderUseCase {
             }
         }
 
-        Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(() -> new EntityNotFoundException("Cliente"));
+        Customer customer = customerUseCase.findById(request.getCustomerId());
 
         Order order = new Order();
         order.setCustomer(customer);
@@ -83,11 +83,10 @@ public class OrderServiceImpl implements OrderUseCase {
 
         OrderStatusHistory history = new OrderStatusHistory(
                 order.getId(),
-                OrderStatus.PAGAMENTO_PENDENTE,
-                LocalDateTime.now()
+                OrderStatus.PAGAMENTO_PENDENTE
         );
 
-        orderStatusHistoryRepository.save(history);
+        orderStatusHistoryUseCase.save(history, null);
 
         if (customer.getEmail() != null) {
             notificationStatusUseCase.notifyStatus(customer.getEmail(), order.getId(), "Pedido recebido com sucesso.");
@@ -99,14 +98,17 @@ public class OrderServiceImpl implements OrderUseCase {
     @Override
     public Order addItem(UUID id, UUID productId, int quantity) {
         Order order = repository.validate(id);
-        OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+        OrderStatusHistory status = orderStatusHistoryUseCase.findLast(id);
+        if (status.getId() == null) {
+            throw new EntityNotFoundException("Status do Pedido");
+        }
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
                 || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
             throw new InvalidOrderStatusException("Não é possivel adicionar um item ao pedido, pois ele está " + status.getStatus());
         }
 
-        Product product = productRepository.findAvailableProductById(productId);
+        Product product = productUseCase.findAvailableProductById(productId);
 
         order.setPrice(this.calculatePrice(order.getPrice(), product.getPrice(), quantity));
         return repository.save(order);
@@ -115,15 +117,18 @@ public class OrderServiceImpl implements OrderUseCase {
     @Override
     public Order removeItem(UUID id, UUID productId, int quantity) {
         Order order = repository.validate(id);
-        OrderStatusHistory status = orderStatusHistoryRepository.findLast(id).orElseThrow(() -> new EntityNotFoundException("Status do Pedido"));
+        OrderStatusHistory status = orderStatusHistoryUseCase.findLast(id);
+
+        if (status.getId() == null) {
+            throw new EntityNotFoundException("Status do Pedido");
+        }
 
         if (status.getStatus().compareTo(OrderStatus.CANCELADO) == 0
                 || status.getStatus().compareTo(OrderStatus.FINALIZADO) == 0) {
             throw new InvalidOrderStatusException("Não é possivel remover um item do pedido, pois ele está " + status.getStatus());
         }
 
-        Product product = productRepository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
-
+        Product product = productUseCase.validate(productId);
         List<OrderItem> items = order.getItems();
 
         OrderItem existingItem = items.stream()
@@ -186,7 +191,7 @@ public class OrderServiceImpl implements OrderUseCase {
     }
 
     public boolean isCategoryOutOfOrder(List<OrderItem> currentItems, OrderItem newItem) {
-        List<Category> availableCategories = productRepository.listAvaiableCategorys();
+        List<Category> availableCategories = productUseCase.listAvailableCategorys();
 
         List<Category> orderedCategories = Arrays.stream(Category.values())
                 .filter(availableCategories::contains)

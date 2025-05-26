@@ -33,18 +33,29 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
 
     @Override
     public OrderStatusHistory save(OrderStatusHistoryRequestDTO request) {
-        this.isValidStatusTransition(request.getOrderId(), request.getStatus());
 
         OrderStatusHistory orderStatusHistory = new OrderStatusHistory();
-        orderStatusHistory.setId(null);
         orderStatusHistory.setOrderId(request.getOrderId());
         orderStatusHistory.setStatus(request.getStatus());
-        orderStatusHistory.setDate(LocalDateTime.now());
-        OrderStatusHistory result = repository.save(orderStatusHistory);
 
-        Order order = orderRepository.validate(request.getOrderId());
-        Attendant attendant = attendantRepository.findById(request.getAttendantId()).orElseThrow(() -> new EntityNotFoundException("Atendente"));
-        order.setAttendant(attendant);
+        return this.save(orderStatusHistory, request.getAttendantId());
+    }
+
+    @Override
+    public OrderStatusHistory save(OrderStatusHistory orderHistory, UUID attendantId) {
+        this.isValidStatusTransition(orderHistory.getOrderId(), orderHistory.getStatus());
+
+        orderHistory.setId(null);
+        orderHistory.setDate(LocalDateTime.now());
+
+        OrderStatusHistory result = repository.save(orderHistory);
+        Order order = orderRepository.validate(orderHistory.getOrderId());
+
+        if (attendantId != null) {
+            Attendant attendant = attendantRepository.findById(attendantId).orElseThrow(() -> new EntityNotFoundException("Atendente"));
+            order.setAttendant(attendant);
+        }
+
         orderRepository.save(order);
 
         return result;

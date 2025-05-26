@@ -13,7 +13,6 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -33,12 +32,14 @@ public class PaymentService implements ProcessPaymentUseCase {
         this.orderStatusHistoryRepository = orderStatusHistoryRepository;
     }
 
+    @Override
     public PaymentResponseDTO process(PaymentRequestDTO request) {
         Order order = orderUseCase.validate(request.getOrderId());
 
         return paymentProcessor.processPayment(request, order);
     }
 
+     @Override
     public PaymentStatus processPayment(UUID orderId) {
         PaymentStatus paymentStatus = paymentProcessor.checkStatus(orderId);
         OrderStatus status;
@@ -51,8 +52,7 @@ public class PaymentService implements ProcessPaymentUseCase {
 
         OrderStatusHistory history = new OrderStatusHistory(
                 orderId,
-                status,
-                LocalDateTime.now()
+                status
         );
 
         if (history.getStatus() != OrderStatus.PAGAMENTO_PENDENTE) {

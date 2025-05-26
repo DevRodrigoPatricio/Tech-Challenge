@@ -7,12 +7,16 @@ import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.product.Product;
 
 public interface ProductUseCase {
-    
+
     Product save(Product product);
 
     Product findByName(String name);
 
     Product findById(UUID id);
+
+    Product findAvailableProductById(UUID productId);
+
+    Product validate(UUID productId);
 
     List<Category> listAvailableCategorys();
 

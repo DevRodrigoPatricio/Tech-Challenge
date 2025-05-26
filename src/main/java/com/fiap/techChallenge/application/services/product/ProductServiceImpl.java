@@ -14,6 +14,7 @@ import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.domain.exceptions.product.NameAlreadyRegisteredException;
+import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
 
 @Service
 public class ProductServiceImpl implements ProductUseCase {
@@ -43,8 +44,24 @@ public class ProductServiceImpl implements ProductUseCase {
     }
 
     @Override
+    public Product validate(UUID id) {
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException("Produto"));
+    }
+
+    @Override
     public Product findByName(String name) {
         return repository.findByName(name).orElse(Product.empty());
+    }
+
+    @Override
+    public Product findAvailableProductById(UUID productId) {
+        Product product = repository.findById(productId).orElseThrow(() -> new EntityNotFoundException("Produto"));
+
+        if (product.getStatus().compareTo(ProductStatus.DISPONIVEL) != 0) {
+            throw new ProductNotAvaiableException();
+        }
+
+        return product;
     }
 
     @Override
@@ -79,7 +96,7 @@ public class ProductServiceImpl implements ProductUseCase {
 
     @Override
     public List<Category> listAvailableCategorys() {
-        List<Category> availableCategories = repository.listAvaiableCategorys();
+        List<Category> availableCategories = repository.listAvailableCategorys();
 
         List<Category> orderedCategories = Arrays.stream(Category.values())
                 .filter(availableCategories::contains)

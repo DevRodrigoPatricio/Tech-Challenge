@@ -36,7 +36,9 @@ public class CustomerServiceImpl implements CustomerUseCase {
 
         Customer savedAttendant = customerRepository.save(customerToDomain);
 
-        if (savedAttendant.isAnonymous()) return customerMapper.toAnonymousDTO(savedAttendant);
+        if (savedAttendant.isAnonymous()) {
+            return customerMapper.toAnonymousDTO(savedAttendant);
+        }
         return customerMapper.toDTO(savedAttendant);
     }
 
@@ -48,8 +50,17 @@ public class CustomerServiceImpl implements CustomerUseCase {
             throw new EntityNotFoundException("Customer");
         }
 
-        if (optCustomer.get().isAnonymous()) return customerMapper.toAnonymousDTO(optCustomer.get());
+        if (optCustomer.get().isAnonymous()) {
+            return customerMapper.toAnonymousDTO(optCustomer.get());
+        }
         return customerMapper.toDTO(optCustomer.get());
+    }
+
+    @Override
+    public Customer findById(UUID id) {
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente"));
+
+        return customer;
     }
 
     @Override
@@ -60,7 +71,9 @@ public class CustomerServiceImpl implements CustomerUseCase {
             throw new EntityNotFoundException("Customer");
         }
 
-        if (optCustomer.get().isAnonymous()) return customerMapper.toAnonymousDTO(optCustomer.get());
+        if (optCustomer.get().isAnonymous()) {
+            return customerMapper.toAnonymousDTO(optCustomer.get());
+        }
         return customerMapper.toDTO(optCustomer.get());
     }
 }
