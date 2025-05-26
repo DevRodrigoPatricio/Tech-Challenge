@@ -1,10 +1,9 @@
 package com.fiap.techChallenge.adapters.outbound.entities.user;
 
-import com.fiap.techChallenge.adapters.outbound.entities.user.UserEntity;
+import java.util.UUID;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-
-import java.util.UUID;
 
 @Entity
 @Table(name = "user_attendant")

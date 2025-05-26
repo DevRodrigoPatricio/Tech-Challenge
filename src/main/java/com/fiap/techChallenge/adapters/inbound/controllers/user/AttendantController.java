@@ -3,7 +3,6 @@ package com.fiap.techChallenge.adapters.inbound.controllers.user;
 import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
 import com.fiap.techChallenge.application.services.user.AttendantServiceImpl;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;

@@ -1,13 +1,12 @@
 package com.fiap.techChallenge.adapters.inbound.controllers.errorHandler;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
-import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusTransitionException;
-import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
-import com.fiap.techChallenge.domain.exceptions.product.NameAlreadyRegisteredException;
-import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
-import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+
 import org.hibernate.PropertyValueException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,28 +16,29 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
+import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
+import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusTransitionException;
+import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
+import com.fiap.techChallenge.domain.exceptions.product.NameAlreadyRegisteredException;
+import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;
+import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
 
 @RestControllerAdvice
 public class GlobalHandlerException {
 
     @ExceptionHandler({
-            EntityNotFoundException.class,
-            IllegalArgumentException.class,
-            UserAlreadyExistsException.class,
-            NameAlreadyRegisteredException.class,
-            InvalidOrderStatusException.class,
-            NullPointerException.class,
-            ProductNotAvaiableException.class,
-            InvalidOrderStatusTransitionException.class,
-            WrongCategoryOrderException.class,
-            SQLIntegrityConstraintViolationException.class,
-    })
+        EntityNotFoundException.class,
+        IllegalArgumentException.class,
+        UserAlreadyExistsException.class,
+        NameAlreadyRegisteredException.class,
+        InvalidOrderStatusException.class,
+        NullPointerException.class,
+        ProductNotAvaiableException.class,
+        InvalidOrderStatusTransitionException.class,
+        WrongCategoryOrderException.class,
+        SQLIntegrityConstraintViolationException.class,})
     public ResponseEntity<ErrorResponse> handleExceptions(Exception ex) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST,
@@ -93,11 +93,12 @@ public class GlobalHandlerException {
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleEnumPathVariableException(MethodArgumentTypeMismatchException e) {
-        if (e.getRequiredType() != null) {
-            Class<?> targetType = e.getRequiredType();
+        Class<?> targetType = e.getRequiredType();
+        
+        if (targetType != null) {
             String field = e.getName();
             String invalidValue = String.valueOf(e.getValue());
-
+            
             if (targetType.isEnum()) {
                 Object[] constants = targetType.getEnumConstants();
                 String correctValues = Arrays.toString(constants);

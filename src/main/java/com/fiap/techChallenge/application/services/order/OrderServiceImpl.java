@@ -1,5 +1,14 @@
 package com.fiap.techChallenge.application.services.order;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
@@ -21,14 +30,6 @@ import com.fiap.techChallenge.domain.product.Product;
 import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class OrderServiceImpl implements OrderUseCase {
@@ -179,6 +180,11 @@ public class OrderServiceImpl implements OrderUseCase {
         return repository.listTodayOrders(statusList, 5);
     }
 
+    @Override
+    public Order validate(UUID id) {
+        return repository.validate(id);
+    }
+
     public boolean isCategoryOutOfOrder(List<OrderItem> currentItems, OrderItem newItem) {
         List<Category> availableCategories = productRepository.listAvaiableCategorys();
 
@@ -253,7 +259,4 @@ public class OrderServiceImpl implements OrderUseCase {
         return isItemInOrder;
     }
 
-    public Order validate(UUID id) {
-        return repository.validate(id);
-    }
 }

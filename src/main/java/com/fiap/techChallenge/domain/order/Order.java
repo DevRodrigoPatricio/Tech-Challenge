@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 
@@ -41,12 +40,6 @@ public class Order {
         this.attendant = attendant;
         this.price = price;
         this.orderDt = orderDt;
-    }
-
-    public Order(OrderEntity orderEntity) {
-        this.id = orderEntity.getId();
-        this.price = orderEntity.getPrice();
-        this.orderDt = orderEntity.getOrderDt();
     }
 
     public UUID getId() {

@@ -1,5 +1,11 @@
 package com.fiap.techChallenge.application.services.order;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+
 import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryRequestDTO;
 import com.fiap.techChallenge.application.useCases.order.OrderStatusHistoryUseCase;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
@@ -11,13 +17,6 @@ import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
 import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.attendant.AttendantRepository;
-import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
 
 @Service
 public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase {
@@ -84,6 +83,10 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
         OrderStatus requiredStatus;
 
         switch (newStatus) {
+            case PAGAMENTO_PENDENTE -> {
+                break;
+            }
+
             case NAO_PAGO -> {
                 lastStatus = findLastStatusOrThrow(orderId, historyNotFound);
                 requiredStatus = OrderStatus.PAGAMENTO_PENDENTE;
@@ -121,12 +124,6 @@ public class OrderStatusHistoryServiceImpl implements OrderStatusHistoryUseCase 
 
             case CANCELADO ->
                 findLastStatusOrThrow(orderId, historyNotFound);
-
-            default -> Arrays.stream(OrderStatus.values()).forEach(orderStatus -> {
-                if (orderStatus != newStatus) {
-                    throw new HttpMessageNotReadableException("Status inválido");
-                }
-            });
         }
     }
 
