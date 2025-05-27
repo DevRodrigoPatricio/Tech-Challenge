@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.OrderStatus;
+import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
@@ -19,9 +20,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
-import com.fiap.techChallenge.domain.order.Order;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -49,7 +49,7 @@ public class OrderController {
     @PostMapping("/update-status")
     @Operation(summary = "Update Status",
             description = "Atualiza o status do Pedido")
-    public ResponseEntity<Order> save(@RequestBody @Valid OrderStatusHistoryDTO status) {
+    public ResponseEntity<Order> updateStatus(@RequestBody @Valid UpdateOrderStatusHistoryDTO status) {
         return ResponseEntity.ok(orderUseCase.updateStatus(status));
     }
 

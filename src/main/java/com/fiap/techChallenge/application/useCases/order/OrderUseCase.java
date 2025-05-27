@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
-import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
@@ -21,7 +21,7 @@ public interface OrderUseCase {
 
     Order removeItem(UUID id, UUID productId, int quantity);
 
-    Order updateStatus(OrderStatusHistoryDTO status);
+    Order updateStatus(UpdateOrderStatusHistoryDTO status);
 
     OrderWithItemsAndStatusDTO findById(UUID id);
 

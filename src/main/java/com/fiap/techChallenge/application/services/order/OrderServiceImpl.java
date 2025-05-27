@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
-import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
@@ -65,7 +65,6 @@ public class OrderServiceImpl implements OrderUseCase {
         order.setCustomer(customer);
         order.setPrice(this.calculatePrice(items));
         order.setItems(items);
-
         return this.save(order);
     }
 
@@ -75,7 +74,6 @@ public class OrderServiceImpl implements OrderUseCase {
         List<OrderStatusHistory> statusHistory = new ArrayList<>();
 
         for (OrderItem item : order.getItems()) {
-
             if (!this.isCategoryOutOfOrder(items, item)) {
                 if (!this.isItemInAlreadyOrder(items, item)) {
                     items.add(item);
@@ -114,7 +112,7 @@ public class OrderServiceImpl implements OrderUseCase {
     }
 
     @Override
-    public Order updateStatus(OrderStatusHistoryDTO statusDTO) {
+    public Order updateStatus(UpdateOrderStatusHistoryDTO statusDTO) {
         Order order = repository.validate(statusDTO.getOrderId());
         List<OrderStatusHistory> statusHistory = order.getStatusHistory();
 
@@ -291,7 +289,7 @@ public class OrderServiceImpl implements OrderUseCase {
 
     public void validateOrderIsModifiable(UUID id) {
         Order order = repository.validate(id);
-        OrderStatusHistory lastStatus = order.getStatusHistory().get(order.getStatusHistory().size() - 1);
+        OrderStatusHistory lastStatus = order.getStatusHistory().get(0);
 
         if (lastStatus == null) {
             throw new EntityNotFoundException("Status do Pedido");
@@ -310,7 +308,7 @@ public class OrderServiceImpl implements OrderUseCase {
         OrderStatus lastStatus;
 
         if (!order.getStatusHistory().isEmpty()) {
-            lastStatus = order.getStatusHistory().get(order.getStatusHistory().size() - 1).getStatus();
+            lastStatus = order.getStatusHistory().get(0).getStatus();
 
         } else {
             throw new EntityNotFoundException("Histórico de status não encontrado para o pedido informado");

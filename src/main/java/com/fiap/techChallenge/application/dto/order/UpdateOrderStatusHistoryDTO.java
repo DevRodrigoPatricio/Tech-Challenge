@@ -1,22 +1,32 @@
 package com.fiap.techChallenge.application.dto.order;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 
-public class OrderStatusHistoryDTO {
+public class UpdateOrderStatusHistoryDTO {
+
+    private UUID orderId;
 
     private UUID attendantId;
 
     private OrderStatus status;
 
-    private LocalDateTime date;
+    public UpdateOrderStatusHistoryDTO() {
+    }
 
-    public OrderStatusHistoryDTO(UUID attendantId, OrderStatus status, LocalDateTime date) {
+    public UpdateOrderStatusHistoryDTO(UUID orderId, UUID attendantId, OrderStatus status) {
+        this.orderId = orderId;
         this.attendantId = attendantId;
         this.status = status;
-        this.date = date;
+    }
+
+    public UUID getOrderId() {
+        return this.orderId;
+    }
+
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
     }
 
     public UUID getAttendantId() {
@@ -34,13 +44,4 @@ public class OrderStatusHistoryDTO {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
-
-    public LocalDateTime getDate() {
-        return this.date;
-    }
-
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
-
 }

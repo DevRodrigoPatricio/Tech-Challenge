@@ -5,7 +5,7 @@ import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.payment.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
-import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentRequestDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentResponseDTO;
 
@@ -50,9 +50,9 @@ public class PaymentService implements ProcessPaymentUseCase {
                 status = OrderStatus.PAGAMENTO_PENDENTE;
         }
 
-        OrderStatusHistoryDTO orderStatus = new OrderStatusHistoryDTO(
-                null,
+        UpdateOrderStatusHistoryDTO orderStatus = new UpdateOrderStatusHistoryDTO(
                 orderId,
+                null,
                 status
         );
 
