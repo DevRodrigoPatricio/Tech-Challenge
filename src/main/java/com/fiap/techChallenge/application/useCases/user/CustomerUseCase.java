@@ -11,5 +11,5 @@ public interface CustomerUseCase {
     CustomerResponseDTO createCustomer(CustomerRequestDTO customer);
     CustomerResponseDTO searchCustomer(UUID id);
     CustomerResponseDTO searchCustomer(String cpf);
-    Customer findById(UUID id);
+    Customer validate(UUID id);
 }

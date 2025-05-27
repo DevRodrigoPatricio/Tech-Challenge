@@ -1,23 +1,23 @@
-package com.fiap.techChallenge.application.dto.order.request;
+package com.fiap.techChallenge.application.dto.order;
 
 import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Column;
 
-public class OrderRequestDTO {
+public class OrderDTO {
 
     @Column(name = "items", nullable = false)
-    private List<OrderItemRequest> items;
+    private List<OrderItemDTO> items;
 
     @Column(name = "customerId", nullable = false)
     private UUID customerId;
 
-    public List<OrderItemRequest> getItems() {
+    public List<OrderItemDTO> getItems() {
         return this.items;
     }
 
-    public void setItems(List<OrderItemRequest> items) {
+    public void setItems(List<OrderItemDTO> items) {
         this.items = items;
     }
 

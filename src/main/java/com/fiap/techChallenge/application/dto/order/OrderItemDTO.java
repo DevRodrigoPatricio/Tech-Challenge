@@ -1,17 +1,17 @@
-package com.fiap.techChallenge.application.dto.order.request;
+package com.fiap.techChallenge.application.dto.order;
 
 import java.util.UUID;
 
 
-public class OrderItemRequest {
+public class OrderItemDTO{
 
     private UUID productId;
     private int quantity;
 
-    public OrderItemRequest() {
+    public OrderItemDTO() {
     }
 
-    public OrderItemRequest(UUID productId, int quantity) {
+    public OrderItemDTO(UUID productId, int quantity) {
         this.productId = productId;
         this.quantity = quantity;
     }

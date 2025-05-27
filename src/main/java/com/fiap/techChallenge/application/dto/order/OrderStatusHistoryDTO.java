@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 
-public class OrderStatusHistoryRequestDTO {
+public class OrderStatusHistoryDTO {
 
     private UUID orderId;
 
@@ -12,10 +12,10 @@ public class OrderStatusHistoryRequestDTO {
 
     private OrderStatus status;
 
-    public OrderStatusHistoryRequestDTO() {
+    public OrderStatusHistoryDTO() {
     }
 
-    public OrderStatusHistoryRequestDTO(UUID orderId, UUID attendantId, OrderStatus status) {
+    public OrderStatusHistoryDTO(UUID orderId, UUID attendantId, OrderStatus status) {
         this.orderId = orderId;
         this.attendantId = attendantId;
         this.status = status;
@@ -44,5 +44,4 @@ public class OrderStatusHistoryRequestDTO {
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
-
 }

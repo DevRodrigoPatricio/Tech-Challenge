@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AttendantMapper {
-    public Attendant toDomain(com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity entity) {
+
+    public static Attendant toDomain(AttendantEntity entity) {
         if (entity == null) return null;
 
         return Attendant.create(
@@ -19,13 +20,13 @@ public class AttendantMapper {
         );
     }
 
-    public Attendant toDomain(AttendantRequestDTO dto) {
+    public static Attendant toDomain(AttendantRequestDTO dto) {
         if (dto == null) return null;
 
         return Attendant.create(null, dto.name(), dto.email(), dto.cpf());
     }
 
-    public AttendantEntity toEntity(Attendant attendant) {
+    public static AttendantEntity toEntity(Attendant attendant) {
         if (attendant == null) return null;
 
         AttendantEntity entity = new AttendantEntity();
@@ -37,7 +38,7 @@ public class AttendantMapper {
         return entity;
     }
 
-    public AttendantResponseDTO toDto(Attendant attendant) {
+    public static AttendantResponseDTO toDto(Attendant attendant) {
         if (attendant == null) return null;
 
         return new AttendantResponseDTO(

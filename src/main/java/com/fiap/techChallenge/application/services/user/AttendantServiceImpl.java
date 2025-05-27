@@ -17,17 +17,15 @@ import java.util.UUID;
 public class AttendantServiceImpl implements AttendantUseCase {
 
     private final AttendantRepository attendantRepository;
-    private final AttendantMapper attendantMapper;
 
-    public AttendantServiceImpl(AttendantRepository attendantRepository, AttendantMapper attendantMapper) {
+    public AttendantServiceImpl(AttendantRepository attendantRepository) {
         this.attendantRepository = attendantRepository;
-        this.attendantMapper = attendantMapper;
     }
 
     @Override
     public AttendantResponseDTO createAttendant(AttendantRequestDTO attendant) {
 
-        Attendant attendantToDomain = attendantMapper.toDomain(attendant);
+        Attendant attendantToDomain = AttendantMapper.toDomain(attendant);
         Optional<Attendant> optAttendant = attendantRepository.findByCpf(attendant.cpf());
 
         if (optAttendant.isPresent()) {
@@ -35,7 +33,7 @@ public class AttendantServiceImpl implements AttendantUseCase {
         }
 
         Attendant savedAttendant = attendantRepository.save(attendantToDomain);
-        return attendantMapper.toDto(savedAttendant);
+        return AttendantMapper.toDto(savedAttendant);
     }
 
     @Override
@@ -46,7 +44,14 @@ public class AttendantServiceImpl implements AttendantUseCase {
             throw new EntityNotFoundException("Attendant");
         }
 
-        return attendantMapper.toDto(optAttendant.get());
+        return AttendantMapper.toDto(optAttendant.get());
+    }
+
+    @Override
+    public Attendant validate(UUID id) {
+        Attendant attendant = attendantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Attendant"));
+
+        return attendant;
     }
 
     @Override
@@ -57,6 +62,6 @@ public class AttendantServiceImpl implements AttendantUseCase {
             throw new EntityNotFoundException("Attendant");
         }
 
-        return attendantMapper.toDto(optAttendant.get());
+        return AttendantMapper.toDto(optAttendant.get());
     }
 }

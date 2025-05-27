@@ -74,7 +74,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderItem> findItemsById(UUID id) {
-        return OrderMapper.itemToDomainList(repository.findItemsByOrderId(id.toString()));
+        return OrderMapper.toItemDomainList(repository.findItemsByOrderId(id.toString()));
     }
 
 }

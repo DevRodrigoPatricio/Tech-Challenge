@@ -5,11 +5,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.techChallenge.application.services.order.OrderServiceImpl;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
+import com.fiap.techChallenge.application.dto.order.OrderDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.application.dto.order.request.OrderRequestDTO;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,17 +33,24 @@ import jakarta.validation.constraints.Min;
 @Tag(name = "Order", description = "APIs relacionadas aos Pedidos")
 public class OrderController {
 
-    private final OrderServiceImpl service;
+    private final OrderUseCase orderUseCase;
 
-    public OrderController(OrderServiceImpl service) {
-        this.service = service;
+    public OrderController(OrderUseCase orderUseCase) {
+        this.orderUseCase = orderUseCase;
     }
 
     @PostMapping("/save")
     @Operation(summary = "Save",
             description = "Salva um Pedido")
-    public ResponseEntity<Order> save(@RequestBody @Valid OrderRequestDTO order) {
-        return ResponseEntity.ok(service.save(order));
+    public ResponseEntity<Order> save(@RequestBody @Valid OrderDTO order) {
+        return ResponseEntity.ok(orderUseCase.save(order));
+    }
+
+    @PostMapping("/update-status")
+    @Operation(summary = "Update Status",
+            description = "Atualiza o status do Pedido")
+    public ResponseEntity<Order> save(@RequestBody @Valid OrderStatusHistoryDTO status) {
+        return ResponseEntity.ok(orderUseCase.updateStatus(status));
     }
 
     @PostMapping("/add-item/{orderId}/{productId}/{quantity}")
@@ -50,14 +59,14 @@ public class OrderController {
     public ResponseEntity<Order> addItem(@PathVariable UUID orderId,
             @PathVariable UUID productId,
             @PathVariable @Min(value = 1, message = "A quantidade deve ser maior que zero") int quantity) {
-        return ResponseEntity.ok(service.addItem(orderId, productId, quantity));
+        return ResponseEntity.ok(orderUseCase.addItem(orderId, productId, quantity));
     }
 
     @PostMapping("/remove-item/{orderId}/{productId}/{quantity}")
     @Operation(summary = "Remove Item",
             description = "Remove um Produto do Pedido")
     public ResponseEntity<Order> removeItem(@PathVariable UUID orderId, @PathVariable UUID productId, @PathVariable int quantity) {
-        return ResponseEntity.ok(service.removeItem(orderId, productId, quantity));
+        return ResponseEntity.ok(orderUseCase.removeItem(orderId, productId, quantity));
     }
 
     @GetMapping("/list-status")
@@ -71,21 +80,21 @@ public class OrderController {
     @Operation(summary = "Find By ID",
             description = "Encontra um pedido pelo ID")
     public ResponseEntity<OrderWithItemsAndStatusDTO> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(orderUseCase.findById(id));
     }
 
     @GetMapping("/list-by-period/{initialDt}/{finalDt}")
     @Operation(summary = "List By Period",
             description = "Encontra um pedido pelo periodo informado")
     public ResponseEntity<List<OrderWithStatusProjection>> listByPeriod(@PathVariable LocalDateTime initialDt, @PathVariable LocalDateTime finalDt) {
-        return ResponseEntity.ok(service.listByPeriod(initialDt, finalDt));
+        return ResponseEntity.ok(orderUseCase.listByPeriod(initialDt, finalDt));
     }
 
     @GetMapping("/list-today-orders")
     @Operation(summary = "List Today Order",
             description = "Lista os pedidos em Andamento")
     public ResponseEntity<List<OrderWithStatusAndWaitMinutesProjection>> listTodayOrders() {
-        return ResponseEntity.ok(service.listTodayOrders());
+        return ResponseEntity.ok(orderUseCase.listTodayOrders());
     }
 
 }

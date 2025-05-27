@@ -22,39 +22,37 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
     List<OrderEntity> findAllByCustomerId(UUID id);
 
     @Query(value = """
-        SELECT 
-            BIN_TO_UUID(o.id) AS orderId,
-            h.status AS status,
-            h.date AS statusDt,
-            BIN_TO_UUID(o.customer_id) AS customerId,
-            c.name AS customerName,
-            BIN_TO_UUID(o.attendant_id) AS attendantId,
-            a.name AS attendantName,
-            o.order_dt AS orderDt,
-            TIMESTAMPDIFF(MINUTE, o.order_dt, NOW()) AS waitTimeMinutes
-        FROM `order` o
-    
-        INNER JOIN order_status_history h
-        ON h.order_id = o.id
-    
-        INNER JOIN (
-            SELECT order_id, MAX(date) AS latest_date
-            FROM order_status_history
-            GROUP BY order_id
-        ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
-        
-        INNER JOIN user c
-        ON c.id = o.customer_id
-        
-        LEFT JOIN user a
-        ON a.id = o.attendant_id
-    
-        WHERE h.status IN (:statusList)
-            AND DATE(h.date) = CURDATE()
-            AND (
-                h.status != 'FINALIZADO' OR h.date >= DATE_SUB(NOW(), INTERVAL :finalizedMinutes MINUTE)
-            )
-        ORDER BY h.date
+    SELECT 
+        BIN_TO_UUID(h.order_id) AS orderId,
+        h.status AS status,
+        h.date AS statusDt,
+        BIN_TO_UUID(o.customer_id) AS customerId,
+        c.name AS customerName,
+        BIN_TO_UUID(h.attendant_id) AS attendantId,
+        a.name AS attendantName,
+        o.date AS orderDt,
+        TIMESTAMPDIFF(MINUTE, o.date, NOW()) AS waitTimeMinutes
+    FROM order_status_history h
+
+    INNER JOIN (
+        SELECT order_id, MAX(date) AS latest_date
+        FROM order_status_history
+        GROUP BY order_id
+    ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
+
+    INNER JOIN `order` o ON o.id = h.order_id
+
+    INNER JOIN user c ON c.id = o.customer_id
+
+    LEFT JOIN user a ON a.id = h.attendant_id
+
+    WHERE h.status IN (:statusList)
+        AND DATE(h.date) = CURDATE()
+        AND (
+            h.status != 'FINALIZADO' OR h.date >= DATE_SUB(NOW(), INTERVAL :finalizedMinutes MINUTE)
+        )
+
+    ORDER BY h.date
     """, nativeQuery = true)
     List<OrderWithStatusAndWaitMinutesProjection> findTodayOrders(
             @Param("statusList") List<String> statusList,
@@ -62,34 +60,31 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
     );
 
     @Query(value = """
-        SELECT 
-            BIN_TO_UUID(o.id) AS orderId,
-            h.status AS status,
-            h.date AS statusDt,
-            BIN_TO_UUID(o.customer_id) AS customerId,
-            c.name AS customerName,
-            BIN_TO_UUID(o.attendant_id) AS attendantId,
-            a.name AS attendantName,
-            o.price AS price,
-            o.order_dt AS orderDt
-        FROM `order` o
-        
-        INNER JOIN order_status_history h
-        ON h.order_id = o.id
+    SELECT 
+        BIN_TO_UUID(h.order_id) AS orderId,
+        h.status AS status,
+        h.date AS statusDt,
+        BIN_TO_UUID(o.customer_id) AS customerId,
+        c.name AS customerName,
+        BIN_TO_UUID(h.attendant_id) AS attendantId,
+        a.name AS attendantName,
+        o.price AS price,
+        o.date AS orderDt
+    FROM order_status_history h
 
-        INNER JOIN (
-            SELECT order_id, MAX(date) AS latest_date
-            FROM order_status_history
-            GROUP BY order_id
-        ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
-        
-        INNER JOIN user c
-        ON c.id = o.customer_id
-        
-        LEFT JOIN user a
-        ON a.id = o.attendant_id
+    INNER JOIN (
+        SELECT order_id, MAX(date) AS latest_date
+        FROM order_status_history
+        GROUP BY order_id
+    ) latest ON h.order_id = latest.order_id AND h.date = latest.latest_date
 
-        WHERE BIN_TO_UUID(o.id) = :id
+    INNER JOIN `order` o ON o.id = h.order_id
+
+    INNER JOIN user c ON c.id = o.customer_id
+
+    LEFT JOIN user a ON a.id = h.attendant_id
+
+    WHERE BIN_TO_UUID(h.order_id) = :id
     """, nativeQuery = true)
     Optional<OrderWithStatusProjection> findWithStatusById(@Param("id") String id);
 
@@ -100,10 +95,10 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
             h.date AS statusDt,
             BIN_TO_UUID(o.customer_id) AS customerId,
             c.name AS customerName,
-            BIN_TO_UUID(o.attendant_id) AS attendantId,
+            BIN_TO_UUID(h.attendant_id) AS attendantId,
             a.name AS attendantName,
             o.price AS price,
-            o.order_dt AS orderDt
+            o.date AS orderDt
         FROM `order` o
 
         INNER JOIN order_status_history h ON h.order_id = o.id
@@ -116,13 +111,13 @@ public interface JpaOrderRepository extends JpaRepository<OrderEntity, UUID> {
 
         INNER JOIN user c ON c.id = o.customer_id
 
-        LEFT JOIN user a ON a.id = o.attendant_id
+        LEFT JOIN user a ON a.id = h.attendant_id
 
-        WHERE o.order_dt BETWEEN :startDt AND :endDt
+        WHERE h.date BETWEEN :startDt AND :endDt
 
         ORDER BY 
             FIELD(h.status, 'RECEBIDO', 'EM_PREPARACAO', 'PRONTO', 'FINALIZADO', 'CANCELADO'),
-            o.order_dt
+            o.date
     """, nativeQuery = true)
     List<OrderWithStatusProjection> findAllByOrderDt(@Param("startDt") LocalDateTime startDt, @Param("endDt") LocalDateTime endDt);
 

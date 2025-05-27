@@ -57,7 +57,7 @@ public class CustomerServiceImpl implements CustomerUseCase {
     }
 
     @Override
-    public Customer findById(UUID id) {
+    public Customer validate(UUID id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente"));
 
         return customer;

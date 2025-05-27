@@ -5,12 +5,12 @@ import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.payment.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentRequestDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentResponseDTO;
 
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistory;
-import com.fiap.techChallenge.domain.order.status.OrderStatusHistoryRepository;
+
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -20,16 +20,13 @@ public class PaymentService implements ProcessPaymentUseCase {
 
     private final PaymentProcessingPort paymentProcessor;
     private final OrderUseCase orderUseCase;
-    private final OrderStatusHistoryRepository orderStatusHistoryRepository;
 
     public PaymentService(
             PaymentProcessingPort paymentProcessor,
-            OrderUseCase orderUseCase,
-            OrderStatusHistoryRepository orderStatusHistoryRepository
+            OrderUseCase orderUseCase
     ) {
         this.paymentProcessor = paymentProcessor;
         this.orderUseCase = orderUseCase;
-        this.orderStatusHistoryRepository = orderStatusHistoryRepository;
     }
 
     @Override
@@ -39,24 +36,28 @@ public class PaymentService implements ProcessPaymentUseCase {
         return paymentProcessor.processPayment(request, order);
     }
 
-     @Override
+    @Override
     public PaymentStatus processPayment(UUID orderId) {
         PaymentStatus paymentStatus = paymentProcessor.checkStatus(orderId);
         OrderStatus status;
 
         switch (paymentStatus) {
-            case APPROVED -> status = OrderStatus.RECEBIDO;
-            case REJECTED, EXPIRED -> status = OrderStatus.NAO_PAGO;
-            default -> status = OrderStatus.PAGAMENTO_PENDENTE;
+            case APPROVED ->
+                status = OrderStatus.RECEBIDO;
+            case REJECTED, EXPIRED ->
+                status = OrderStatus.NAO_PAGO;
+            default ->
+                status = OrderStatus.PAGAMENTO_PENDENTE;
         }
 
-        OrderStatusHistory history = new OrderStatusHistory(
+        OrderStatusHistoryDTO orderStatus = new OrderStatusHistoryDTO(
+                null,
                 orderId,
                 status
         );
 
-        if (history.getStatus() != OrderStatus.PAGAMENTO_PENDENTE) {
-            orderStatusHistoryRepository.save(history);
+        if (orderStatus.getStatus() != OrderStatus.PAGAMENTO_PENDENTE) {
+            orderUseCase.updateStatus(orderStatus);
         }
 
         return paymentStatus;

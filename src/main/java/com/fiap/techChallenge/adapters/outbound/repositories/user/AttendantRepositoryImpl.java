@@ -14,31 +14,29 @@ import java.util.UUID;
 public class AttendantRepositoryImpl implements AttendantRepository {
 
     private final JpaAttendantRepository jpaAttendantRepository;
-    private final AttendantMapper attendantMapper;
 
-    public AttendantRepositoryImpl(JpaAttendantRepository jpaAttendantRepository, AttendantMapper attendantMapper) {
+    public AttendantRepositoryImpl(JpaAttendantRepository jpaAttendantRepository) {
         this.jpaAttendantRepository = jpaAttendantRepository;
-        this.attendantMapper = attendantMapper;
     }
 
     @Override
     public Optional<Attendant> findById(UUID id) {
         Optional<AttendantEntity> optEntity = jpaAttendantRepository.findById(id);
-        return optEntity.map(attendantMapper::toDomain);
+        return optEntity.map(AttendantMapper::toDomain);
     }
 
     @Override
     public Optional<Attendant> findByCpf(String cpf) {
         CPFEmbeddable emb = new CPFEmbeddable(cpf);
         Optional<AttendantEntity> optEntity = jpaAttendantRepository.findByCpf(emb);
-        return optEntity.map(attendantMapper::toDomain);
+        return optEntity.map(AttendantMapper::toDomain);
     }
 
     @Override
     public Attendant save(Attendant attendant) {
-        AttendantEntity attendantEntity = attendantMapper.toEntity(attendant);
+        AttendantEntity attendantEntity = AttendantMapper.toEntity(attendant);
         jpaAttendantRepository.save(attendantEntity);
 
-        return attendantMapper.toDomain(attendantEntity);
+        return AttendantMapper.toDomain(attendantEntity);
     }
 }

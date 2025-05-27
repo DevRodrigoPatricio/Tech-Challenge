@@ -4,19 +4,24 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.dto.order.OrderDTO;
+import com.fiap.techChallenge.application.dto.order.OrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
 import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.application.dto.order.request.OrderRequestDTO;
 
 public interface OrderUseCase {
 
-    Order save(OrderRequestDTO order);
+    Order save(OrderDTO order);
+
+    Order save(Order order);
 
     Order addItem(UUID id, UUID productId, int quantity);
 
     Order removeItem(UUID id, UUID productId, int quantity);
+
+    Order updateStatus(OrderStatusHistoryDTO status);
 
     OrderWithItemsAndStatusDTO findById(UUID id);
 

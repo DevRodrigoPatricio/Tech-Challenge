@@ -2,12 +2,12 @@ package com.fiap.techChallenge.utils.mappers;
 
 import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.order.OrderItemEmbeddable;
-import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
+import com.fiap.techChallenge.adapters.outbound.entities.order.OrderStatusEmbeddable;
+import com.fiap.techChallenge.domain.order.OrderStatusHistory;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 
 import java.util.ArrayList;
@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
 
 public class OrderMapper {
 
-    public static List<OrderItem> itemToDomainList(List<OrderItemProjection> projection) {
+    public static List<OrderItem> toItemDomainList(List<OrderItemProjection> projection) {
         List<OrderItem> domainList = new ArrayList<>();
 
         domainList.addAll(
                 projection.stream()
-                        .map(OrderMapper::itemToDomain)
+                        .map(OrderMapper::toItemDomain)
                         .toList()
         );
 
         return domainList;
     }
 
-    public static OrderItem itemToDomain(OrderItemProjection projection) {
+    public static OrderItem toItemDomain(OrderItemProjection projection) {
         if (projection == null) {
             return null;
         }
@@ -57,19 +57,22 @@ public class OrderMapper {
                 i.getCategory()
         )).collect(Collectors.toList());
 
+        List<OrderStatusHistory> statusHistory = entity.getStatusHistory().stream().map(s -> new OrderStatusHistory(
+                s.getAttendantId(),
+                s.getStatus(),
+                s.getDate()
+        )).collect(Collectors.toList());
+
         var customerMapper = new CustomerMapper();
         Customer customer = customerMapper.toDomain(entity.getCustomer());
-
-        var attendantMapper = new AttendantMapper();
-        Attendant attendant = attendantMapper.toDomain(entity.getAttendant());
 
         Order order = new Order(
                 entity.getId(),
                 items,
+                statusHistory,
                 customer,
-                attendant,
                 entity.getPrice(),
-                entity.getOrderDt()
+                entity.getDate()
         );
 
         return order;
@@ -80,7 +83,7 @@ public class OrderMapper {
             return null;
         }
 
-        List<OrderItemEmbeddable> embeddables = domain.getItems().stream()
+        List<OrderItemEmbeddable> items = domain.getItems().stream()
                 .map(i -> new OrderItemEmbeddable(
                 i.getProductId(),
                 i.getProductName(),
@@ -89,19 +92,24 @@ public class OrderMapper {
                 i.getCategory()
         )).collect(Collectors.toList());
 
-        var customerMapper = new CustomerMapper();
+        List<OrderStatusEmbeddable> statusHistory = domain.getStatusHistory().stream()
+                .map(s -> new OrderStatusEmbeddable(
+                s.getAttendantId(),
+                s.getStatus(),
+                s.getDate()
+        )).collect(Collectors.toList());
+
+        CustomerMapper customerMapper = new CustomerMapper();
         CustomerEntity customer = customerMapper.toEntity(domain.getCustomer());
 
-        var attendantMapper = new AttendantMapper();
-        AttendantEntity attendant = attendantMapper.toEntity(domain.getAttendant());
-
-        OrderEntity entity = new OrderEntity();
-        entity.setId(domain.getId());
-        entity.setItems(embeddables);
-        entity.setCustomer(customer);
-        entity.setAttendant(attendant);
-        entity.setPrice(domain.getPrice());
-        entity.setOrderDt(domain.getOrderDt());
+        OrderEntity entity = new OrderEntity(
+                domain.getId(),
+                items,
+                statusHistory,
+                customer,
+                domain.getPrice(),
+                domain.getDate()
+        );
 
         return entity;
     }

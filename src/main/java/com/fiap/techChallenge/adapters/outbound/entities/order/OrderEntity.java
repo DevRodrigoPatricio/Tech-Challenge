@@ -1,7 +1,5 @@
 package com.fiap.techChallenge.adapters.outbound.entities.order;
 
-
-import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
 import jakarta.persistence.*;
 
@@ -23,28 +21,30 @@ public class OrderEntity {
     @CollectionTable(name = "orderItems", joinColumns = @JoinColumn(name = "order_id"))
     private List<OrderItemEmbeddable> items;
 
-    @ManyToOne
-    private CustomerEntity customer;
+    @ElementCollection
+    @CollectionTable(name = "order_status_history", joinColumns = @JoinColumn(name = "order_id"))
+    @OrderBy("timestamp DESC")
+    private List<OrderStatusEmbeddable> statusHistory;
 
     @ManyToOne
-    private AttendantEntity attendant;
+    private CustomerEntity customer;
 
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
-    @Column(name = "orderDt", nullable = false)
-    private LocalDateTime orderDt;
+    @Column(name = "date", nullable = false)
+    private LocalDateTime date;
 
     public OrderEntity() {
     }
 
-    public OrderEntity(UUID id, List<OrderItemEmbeddable> items, CustomerEntity customer, AttendantEntity attendant, BigDecimal price, LocalDateTime orderDt) {
+    public OrderEntity(UUID id, List<OrderItemEmbeddable> items, List<OrderStatusEmbeddable> statusHistory, CustomerEntity customer, BigDecimal price, LocalDateTime date) {
         this.id = id;
         this.items = items;
+        this.statusHistory = statusHistory;
         this.customer = customer;
-        this.attendant = attendant;
         this.price = price;
-        this.orderDt = orderDt;
+        this.date = date;
     }
 
     public UUID getId() {
@@ -63,6 +63,14 @@ public class OrderEntity {
         this.items = items;
     }
 
+    public List<OrderStatusEmbeddable> getStatusHistory() {
+        return this.statusHistory;
+    }
+
+    public void setStatusHistory(List<OrderStatusEmbeddable> statusHistory) {
+        this.statusHistory = statusHistory;
+    }
+
     public BigDecimal getPrice() {
         return this.price;
     }
@@ -71,13 +79,15 @@ public class OrderEntity {
         this.price = price;
     }
 
-    public LocalDateTime getOrderDt() {
-        return this.orderDt;
+
+    public LocalDateTime getDate() {
+        return this.date;
     }
 
-    public void setOrderDt(LocalDateTime orderDt) {
-        this.orderDt = orderDt;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
+
 
     public CustomerEntity getCustomer() {
         return customer;
@@ -87,11 +97,4 @@ public class OrderEntity {
         this.customer = customerId;
     }
 
-    public AttendantEntity getAttendant() {
-        return attendant;
-    }
-
-    public void setAttendant(AttendantEntity attendantId) {
-        this.attendant = attendantId;
-    }
 }
