@@ -1,16 +1,22 @@
 package com.fiap.techChallenge.utils.mappers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
 import com.fiap.techChallenge.domain.user.attendant.Attendant;
+
 import org.springframework.stereotype.Component;
 
 @Component
 public class AttendantMapper {
 
     public static Attendant toDomain(AttendantEntity entity) {
-        if (entity == null) return null;
+        if (entity == null) {
+            return null;
+        }
 
         return Attendant.create(
                 entity.getId(),
@@ -21,13 +27,17 @@ public class AttendantMapper {
     }
 
     public static Attendant toDomain(AttendantRequestDTO dto) {
-        if (dto == null) return null;
+        if (dto == null) {
+            return null;
+        }
 
         return Attendant.create(null, dto.name(), dto.email(), dto.cpf());
     }
 
     public static AttendantEntity toEntity(Attendant attendant) {
-        if (attendant == null) return null;
+        if (attendant == null) {
+            return null;
+        }
 
         AttendantEntity entity = new AttendantEntity();
         entity.setId(attendant.getId());
@@ -39,7 +49,9 @@ public class AttendantMapper {
     }
 
     public static AttendantResponseDTO toDto(Attendant attendant) {
-        if (attendant == null) return null;
+        if (attendant == null) {
+            return null;
+        }
 
         return new AttendantResponseDTO(
                 attendant.getId(),
@@ -47,5 +59,27 @@ public class AttendantMapper {
                 attendant.getEmail(),
                 attendant.getCpf()
         );
+    }
+
+    public static List<AttendantResponseDTO> toDtoList(List<Attendant> domains) {
+        List<AttendantResponseDTO> dtoList = new ArrayList<>();
+
+        dtoList.addAll(
+                domains.stream()
+                        .map(AttendantMapper::toDto)
+                        .toList());
+
+        return dtoList;
+    }
+
+    public static List<Attendant> toDomainList(List<AttendantEntity> entities) {
+        List<Attendant> domainList = new ArrayList<>();
+
+        domainList.addAll(
+                entities.stream()
+                        .map(AttendantMapper::toDomain)
+                        .toList());
+
+        return domainList;
     }
 }

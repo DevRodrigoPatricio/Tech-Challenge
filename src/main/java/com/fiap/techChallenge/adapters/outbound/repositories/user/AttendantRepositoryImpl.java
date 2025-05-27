@@ -7,6 +7,7 @@ import com.fiap.techChallenge.domain.user.attendant.AttendantRepository;
 import com.fiap.techChallenge.utils.mappers.AttendantMapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,8 +36,18 @@ public class AttendantRepositoryImpl implements AttendantRepository {
     @Override
     public Attendant save(Attendant attendant) {
         AttendantEntity attendantEntity = AttendantMapper.toEntity(attendant);
-        jpaAttendantRepository.save(attendantEntity);
+        attendantEntity = jpaAttendantRepository.save(attendantEntity);
 
         return AttendantMapper.toDomain(attendantEntity);
+    }
+
+    @Override
+    public List<Attendant> findAll() {
+        return AttendantMapper.toDomainList(jpaAttendantRepository.findAll());
+    }
+
+    @Override
+    public void delete(UUID id) {
+        jpaAttendantRepository.deleteById(id);
     }
 }
