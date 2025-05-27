@@ -27,7 +27,8 @@ public class UserEntity {
     )
     protected CPFEmbeddable cpf;
 
-    protected UserEntity() {}
+    protected UserEntity() {
+    }
 
     protected UUID getId() {
         return id;
@@ -58,9 +59,9 @@ public class UserEntity {
     }
 
     protected void setCpf(String cpfNumber) {
-        var cpf = new CPFEmbeddable();
-        cpf.setNumber(cpfNumber);
+        CPFEmbeddable embeddable = new CPFEmbeddable();
+        embeddable.setNumber(cpfNumber);
 
-        this.cpf = cpf;
+        this.cpf = embeddable;
     }
 }

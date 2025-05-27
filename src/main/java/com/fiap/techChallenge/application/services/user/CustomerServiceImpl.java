@@ -10,6 +10,7 @@ import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
 import com.fiap.techChallenge.utils.mappers.CustomerMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,16 +18,14 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerUseCase {
 
     private final CustomerRepository customerRepository;
-    private final CustomerMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
+    public CustomerServiceImpl(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
-        this.customerMapper = customerMapper;
     }
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customer) {
-        Customer customerToDomain = customerMapper.toDomain(customer);
+        Customer customerToDomain = CustomerMapper.toDomain(customer);
 
         Optional<Customer> optCustomer = customerRepository.findByCPF(customer.cpf());
 
@@ -37,9 +36,21 @@ public class CustomerServiceImpl implements CustomerUseCase {
         Customer savedAttendant = customerRepository.save(customerToDomain);
 
         if (savedAttendant.isAnonymous()) {
-            return customerMapper.toAnonymousDTO(savedAttendant);
+            return CustomerMapper.toAnonymousDTO(savedAttendant);
         }
-        return customerMapper.toDTO(savedAttendant);
+        return CustomerMapper.toDTO(savedAttendant);
+    }
+
+    @Override
+    public CustomerResponseDTO updateCustomer(CustomerRequestDTO customer) {
+        Customer domain = CustomerMapper.toDomain(customer);
+
+        domain.setName(customer.name());
+        domain.setCpf(customer.cpf());
+        domain.setEmail(customer.email());
+        domain = customerRepository.save(domain);
+
+        return CustomerMapper.toDTO(domain);
     }
 
     @Override
@@ -51,14 +62,21 @@ public class CustomerServiceImpl implements CustomerUseCase {
         }
 
         if (optCustomer.get().isAnonymous()) {
-            return customerMapper.toAnonymousDTO(optCustomer.get());
+            return CustomerMapper.toAnonymousDTO(optCustomer.get());
         }
-        return customerMapper.toDTO(optCustomer.get());
+        return CustomerMapper.toDTO(optCustomer.get());
     }
 
     @Override
     public Customer validate(UUID id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Cliente"));
+
+        return customer;
+    }
+
+    @Override
+    public Customer validate(String cpf) {
+        Customer customer = customerRepository.findByCPF(cpf).orElseThrow(() -> new EntityNotFoundException("Cliente"));
 
         return customer;
     }
@@ -72,8 +90,18 @@ public class CustomerServiceImpl implements CustomerUseCase {
         }
 
         if (optCustomer.get().isAnonymous()) {
-            return customerMapper.toAnonymousDTO(optCustomer.get());
+            return CustomerMapper.toAnonymousDTO(optCustomer.get());
         }
-        return customerMapper.toDTO(optCustomer.get());
+        return CustomerMapper.toDTO(optCustomer.get());
+    }
+
+    @Override
+    public List<CustomerResponseDTO> list() {
+        return CustomerMapper.toDtoList(customerRepository.list());
+    }
+
+    @Override
+    public void delete(UUID id) {
+        customerRepository.delete(id);
     }
 }

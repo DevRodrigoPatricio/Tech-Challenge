@@ -63,8 +63,7 @@ public class OrderMapper {
                 s.getDate()
         )).collect(Collectors.toList());
 
-        var customerMapper = new CustomerMapper();
-        Customer customer = customerMapper.toDomain(entity.getCustomer());
+        Customer customer = CustomerMapper.toDomain(entity.getCustomer());
 
         Order order = new Order(
                 entity.getId(),
@@ -99,8 +98,7 @@ public class OrderMapper {
                 s.getDate()
         )).collect(Collectors.toList());
 
-        CustomerMapper customerMapper = new CustomerMapper();
-        CustomerEntity customer = customerMapper.toEntity(domain.getCustomer());
+        CustomerEntity customer = CustomerMapper.toEntity(domain.getCustomer());
 
         OrderEntity entity = new OrderEntity(
                 domain.getId(),

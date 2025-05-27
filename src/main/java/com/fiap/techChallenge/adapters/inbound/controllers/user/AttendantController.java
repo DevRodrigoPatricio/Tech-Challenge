@@ -4,15 +4,16 @@ import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
 import com.fiap.techChallenge.application.services.user.AttendantServiceImpl;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("api/user/attendant")
@@ -53,15 +54,7 @@ public class AttendantController {
         return ResponseEntity.ok(attendant);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") UUID id) {
-        attendantService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/list")
-    @Operation(summary = "List",
-            description = "Lista os Atendnetes")
     public ResponseEntity<List<AttendantResponseDTO>> list() {
         return ResponseEntity.ok(attendantService.list());
     }

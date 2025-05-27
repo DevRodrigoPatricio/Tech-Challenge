@@ -9,7 +9,8 @@ public class User {
     protected String email;
     protected CPF cpf;
 
-    protected User() {}
+    protected User() {
+    }
 
     protected User(UUID id, String name, String email, CPF cpf) {
         this.id = id;
@@ -46,9 +47,9 @@ public class User {
     }
 
     protected void setCpf(String cpfNumber) {
-        var cpf = new CPF();
+        CPF domain = new CPF();
         cpf.setNumber(cpfNumber);
 
-        this.cpf = cpf;
+        this.cpf = domain;
     }
 }
