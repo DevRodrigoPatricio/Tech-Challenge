@@ -18,12 +18,12 @@ public class OrderEntity {
     private UUID id;
 
     @ElementCollection
-    @CollectionTable(name = "orderItems", joinColumns = @JoinColumn(name = "order_id"))
+    @CollectionTable(name = "order_items", joinColumns = @JoinColumn(name = "order_id"))
     private List<OrderItemEmbeddable> items;
 
     @ElementCollection
     @CollectionTable(name = "order_status_history", joinColumns = @JoinColumn(name = "order_id"))
-    @OrderBy("timestamp DESC")
+    @OrderBy("date DESC")
     private List<OrderStatusEmbeddable> statusHistory;
 
     @ManyToOne

@@ -9,9 +9,13 @@ import com.fiap.techChallenge.domain.product.Product;
 public class OrderItem {
 
     private UUID productId;
+
     private String productName;
+
     private int quantity;
+
     private BigDecimal unitPrice;
+
     private Category category;
 
     public OrderItem() {

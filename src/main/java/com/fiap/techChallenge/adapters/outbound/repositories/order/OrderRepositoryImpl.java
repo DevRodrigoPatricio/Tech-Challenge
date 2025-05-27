@@ -58,8 +58,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order validate(UUID id) {
-        return OrderMapper.toDomain(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Pedido")));
+        OrderEntity order = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido"));
+        return OrderMapper.toDomain(order);
     }
 
     @Override
