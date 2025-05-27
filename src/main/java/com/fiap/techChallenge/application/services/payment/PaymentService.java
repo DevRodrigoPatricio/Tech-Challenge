@@ -1,18 +1,19 @@
 package com.fiap.techChallenge.application.services.payment;
 
 import com.fiap.techChallenge.adapters.outbound.storage.payment.PaymentProcessingPort;
-import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
-import com.fiap.techChallenge.application.useCases.payment.ProcessPaymentUseCase;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
+import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
+import com.fiap.techChallenge.application.useCases.payment.ProcessPaymentUseCase;
 import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentRequestDTO;
 import com.fiap.techChallenge.application.dto.payment.PaymentResponseDTO;
 
-import com.fiap.techChallenge.domain.order.Order;
 
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -58,6 +59,9 @@ public class PaymentService implements ProcessPaymentUseCase {
 
         if (orderStatus.getStatus() != OrderStatus.PAGAMENTO_PENDENTE) {
             orderUseCase.updateStatus(orderStatus);
+            Order order = orderUseCase.validate(orderId);
+            order.setDate(LocalDateTime.now());
+            orderUseCase.save(order);
         }
 
         return paymentStatus;
