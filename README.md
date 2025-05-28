@@ -5,8 +5,12 @@ Este repositório contém o projeto desenvolvido por uma equipe de colaboradores
 
 ## 👨‍💻 Equipe
 
-Este projeto foi desenvolvido em equipe, com contribuições de vários desenvolvedores. Para visualizar todos os colaboradores, acesse:  
-[https://github.com/DevRodrigoPatricio/Tech-Challenge/graphs/contributors](https://github.com/DevRodrigoPatricio/Tech-Challenge/graphs/contributors)
+
+# Autores
+
+| <img src="https://avatars.githubusercontent.com/u/62044186?v=" width=115 > | <img src="https://avatars.githubusercontent.com/u/84483277?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/102559866?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/80972527?v=4" width=115 > 
+|---|---|---|---|
+| [Rodrigo Pereira](https://github.com/DevRodrigoPatricio) | [Leyner Bueno ](https://github.com/leynerbueno) | [Luciana Soares](https://github.com/lucianaTSoares) | [Breno Dias Balassoni]([https://github.com/lucianaTSoares](https://github.com/Breno101069)) 
 
 ## 🚀 Objetivo do Projeto
 
