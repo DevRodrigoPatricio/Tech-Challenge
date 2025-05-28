@@ -23,19 +23,6 @@ Criar uma aplicação robusta e escalável para gerenciamento de pedidos em um s
 - **Swagger para documentação de APIs**
 - **Integração com Mercado Pago (QR Code )**
 
-## 📦 Estrutura do Projeto
-
-```
-Tech-Challenge/
-├── domain/               # Camada de domínio (regras de negócio)
-├── application/          # Casos de uso
-├── adapters/             # Entradas e saídas (controllers, gateways, clients)
-├── config/               # Configurações de aplicação
-├── infrastructure/       # Integrações com frameworks, banco e serviços externos
-├── docker-compose.yml
-├── Dockerfile
-└── pom.xml
-```
 
 ## 🧪 Como Executar
 
