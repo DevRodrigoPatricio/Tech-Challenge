@@ -3,12 +3,6 @@
 
 Este repositório contém o projeto desenvolvido por uma equipe de colaboradores como parte de um desafio técnico. O objetivo é criar um sistema de autoatendimento para fast food com foco em boas práticas de engenharia de software, arquitetura hexagonal e integração de serviços como Mercado Pago.
 
-## 👨‍💻 Equipe
-
-
-| <img src="https://avatars.githubusercontent.com/u/84483277?v=4" width=115 > | <img src="https://avatars.githubusercontent.com/u/14063148?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/88734065?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/105437684?v=4" width=115 > 
-|---|---|---|---|
-| [Rodrigo Pereira](https://github.com/DevRodrigoPatricio) | [Leyner Bueno ](https://github.com/leynerbueno) | [Luciana Soares](https://github.com/lucianaTSoares) | [Breno Dias Balassoni](https://github.com/Breno101069)
 
 ## 🚀 Objetivo do Projeto
 
@@ -60,4 +54,12 @@ Se estiver habilitado, acesse o Swagger UI:
 - Integração com Mercado Pago para pagamentos via QRCode
 - Consulta de status de pagamento ( polling)
 - Sistema modular com arquitetura hexagonal
+
+
+  ## 👨‍💻 Equipe
+
+
+| <img src="https://avatars.githubusercontent.com/u/84483277?v=4" width=115 > | <img src="https://avatars.githubusercontent.com/u/14063148?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/88734065?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/105437684?v=4" width=115 > 
+|---|---|---|---|
+| [Rodrigo Pereira](https://github.com/DevRodrigoPatricio) | [Leyner Bueno ](https://github.com/leynerbueno) | [Luciana Soares](https://github.com/lucianaTSoares) | [Breno Dias Balassoni](https://github.com/Breno101069)
 
