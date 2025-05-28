@@ -19,9 +19,9 @@ Criar uma aplicação robusta e escalável para gerenciamento de pedidos em um s
 - **Arquitetura Hexagonal (Ports & Adapters)**
 - **Docker & Docker Compose**
 - **JPA / Hibernate**
-- **Banco de Dados** (especifique aqui: PostgreSQL, MySQL, etc.)
+- **Banco de Dados** ( MySQL)
 - **Swagger para documentação de APIs**
-- **Integração com Mercado Pago (QR Code e Webhooks)**
+- **Integração com Mercado Pago (QR Code )**
 
 ## 📦 Estrutura do Projeto
 
