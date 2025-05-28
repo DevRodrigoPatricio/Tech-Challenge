@@ -6,8 +6,6 @@ Este repositório contém o projeto desenvolvido por uma equipe de colaboradores
 ## 👨‍💻 Equipe
 
 
-# Autores
-
 | <img src="https://avatars.githubusercontent.com/u/84483277?v=4" width=115 > | <img src="https://avatars.githubusercontent.com/u/14063148?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/88734065?v=4" width=115 >| <img src="https://avatars.githubusercontent.com/u/105437684?v=4" width=115 > 
 |---|---|---|---|
 | [Rodrigo Pereira](https://github.com/DevRodrigoPatricio) | [Leyner Bueno ](https://github.com/leynerbueno) | [Luciana Soares](https://github.com/lucianaTSoares) | [Breno Dias Balassoni](https://github.com/Breno101069)
