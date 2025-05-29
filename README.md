@@ -8,6 +8,12 @@ Este repositório contém o projeto desenvolvido por uma equipe de colaboradores
 
 Criar uma aplicação robusta e escalável para gerenciamento de pedidos em um sistema de autoatendimento de lanchonete, utilizando uma arquitetura moderna e tecnologias amplamente utilizadas no mercado.
 
+## 🧠 Event Storming
+
+Mapeamento visual dos principais eventos de negócio da aplicação, facilitando o entendimento do fluxo do sistema e a definição dos limites de contexto.  
+🔗 [Acessar o board no Miro](https://miro.com/app/board/uXjVIDhU-go=/?share_link_id=597379636996)
+
+
 ## 🛠️ Tecnologias Utilizadas
 
 - **Java 17**
