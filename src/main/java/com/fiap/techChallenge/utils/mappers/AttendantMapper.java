@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AttendantMapper {
 
-    public static Attendant toDomain(AttendantEntity entity) {
+    public Attendant toDomain(AttendantEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -26,7 +26,7 @@ public class AttendantMapper {
         );
     }
 
-    public static Attendant toDomain(AttendantRequestDTO dto) {
+    public Attendant toDomain(AttendantRequestDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -34,7 +34,7 @@ public class AttendantMapper {
         return Attendant.create(null, dto.name(), dto.email(), dto.cpf());
     }
 
-    public static AttendantEntity toEntity(Attendant attendant) {
+    public AttendantEntity toEntity(Attendant attendant) {
         if (attendant == null) {
             return null;
         }
@@ -43,12 +43,12 @@ public class AttendantMapper {
         entity.setId(attendant.getId());
         entity.setName(attendant.getName());
         entity.setEmail(attendant.getEmail());
-        entity.setCpf(attendant.getCpf());
+        entity.setCpf(attendant.getUnformattedCpf());
 
         return entity;
     }
 
-    public static AttendantResponseDTO toDto(Attendant attendant) {
+    public AttendantResponseDTO toDto(Attendant attendant) {
         if (attendant == null) {
             return null;
         }
@@ -57,27 +57,27 @@ public class AttendantMapper {
                 attendant.getId(),
                 attendant.getName(),
                 attendant.getEmail(),
-                attendant.getCpf()
+                attendant.getFormattedCpf()
         );
     }
 
-    public static List<AttendantResponseDTO> toDtoList(List<Attendant> domains) {
+    public List<AttendantResponseDTO> toDtoList(List<Attendant> domains) {
         List<AttendantResponseDTO> dtoList = new ArrayList<>();
 
         dtoList.addAll(
                 domains.stream()
-                        .map(AttendantMapper::toDto)
+                        .map(this::toDto)
                         .toList());
 
         return dtoList;
     }
 
-    public static List<Attendant> toDomainList(List<AttendantEntity> entities) {
+    public List<Attendant> toDomainList(List<AttendantEntity> entities) {
         List<Attendant> domainList = new ArrayList<>();
 
         domainList.addAll(
                 entities.stream()
-                        .map(AttendantMapper::toDomain)
+                        .map(this::toDomain)
                         .toList());
 
         return domainList;

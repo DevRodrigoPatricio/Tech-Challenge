@@ -101,13 +101,6 @@ public class OrderServiceImpl implements OrderUseCase {
         order.setDate(LocalDateTime.now());
         order = repository.save(order);
 
-        if (order.getCustomer().getEmail() != null) {
-            notificationStatusUseCase.notifyStatus(order.getCustomer()
-                    .getEmail(),
-                    order.getId(),
-                    "Pedido recebido com sucesso.");
-        }
-
         return order;
     }
 
@@ -126,7 +119,20 @@ public class OrderServiceImpl implements OrderUseCase {
 
         statusHistory.add(newStatus);
         order.setStatusHistory(statusHistory);
-        return repository.save(order);
+        Order savedOrder = repository.save(order);
+
+        if (order.getCustomer().getEmail() != null
+                && (newStatus.getStatus().equals(OrderStatus.RECEBIDO)
+                || newStatus.getStatus().equals(OrderStatus.EM_PREPARACAO)
+                || newStatus.getStatus().equals(OrderStatus.PRONTO))) {
+
+            notificationStatusUseCase.notifyStatus(
+                    savedOrder.getCustomer().getEmail(),
+                    savedOrder.getId(),
+                    newStatus.getStatus().toString());
+        }
+
+        return savedOrder;
     }
 
     @Override

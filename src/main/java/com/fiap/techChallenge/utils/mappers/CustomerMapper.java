@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomerMapper {
 
-    public static Customer toDomain(CustomerEntity entity) {
+    public Customer toDomain(CustomerEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -29,7 +29,7 @@ public class CustomerMapper {
         );
     }
 
-    public static Customer toDomain(CustomerRequestDTO dto) {
+    public Customer toDomain(CustomerRequestDTO dto) {
         if (dto == null) {
             return null;
         }
@@ -37,7 +37,7 @@ public class CustomerMapper {
         return Customer.create(null, dto.name(), dto.email(), dto.cpf(), dto.anonymous());
     }
 
-    public static CustomerEntity toEntity(Customer customer) {
+    public CustomerEntity toEntity(Customer customer) {
         if (customer == null) {
             return null;
         }
@@ -46,13 +46,13 @@ public class CustomerMapper {
         entity.setId(customer.getId());
         entity.setName(customer.getName());
         entity.setEmail(customer.getEmail());
-        entity.setCpf(customer.getCpf());
+        entity.setCpf(customer.getUnformattedCpf());
         entity.setAnonymous(customer.isAnonymous());
 
         return entity;
     }
 
-    public static CustomerResponseFullDTO toDTO(Customer entity) {
+    public CustomerResponseFullDTO toDTO(Customer entity) {
         if (entity == null) {
             return null;
         }
@@ -60,13 +60,13 @@ public class CustomerMapper {
         return new CustomerResponseFullDTO(
                 entity.getId(),
                 entity.getName(),
-                entity.getCpf(),
+                entity.getFormattedCpf(),
                 entity.getEmail(),
                 entity.isAnonymous()
         );
     }
 
-    public static CustomerResponseAnonymDTO toAnonymousDTO(Customer entity) {
+    public CustomerResponseAnonymDTO toAnonymousDTO(Customer entity) {
         if (entity == null) {
             return null;
         }
@@ -78,23 +78,23 @@ public class CustomerMapper {
         );
     }
 
-    public static List<CustomerResponseDTO> toDtoList(List<Customer> domains) {
+    public List<CustomerResponseDTO> toDtoList(List<Customer> domains) {
         List<CustomerResponseDTO> dtoList = new ArrayList<>();
 
         dtoList.addAll(
                 domains.stream()
-                        .map(CustomerMapper::toDTO)
+                        .map(this::toDTO)
                         .toList());
 
         return dtoList;
     }
 
-    public static List<Customer> toDomainList(List<CustomerEntity> entities) {
+    public List<Customer> toDomainList(List<CustomerEntity> entities) {
         List<Customer> domainList = new ArrayList<>();
 
         domainList.addAll(
                 entities.stream()
-                        .map(CustomerMapper::toDomain)
+                        .map(this::toDomain)
                         .toList());
 
         return domainList;

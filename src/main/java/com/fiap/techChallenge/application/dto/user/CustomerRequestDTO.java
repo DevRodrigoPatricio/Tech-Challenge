@@ -1,11 +1,13 @@
 package com.fiap.techChallenge.application.dto.user;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
 
 public record CustomerRequestDTO(
         String name,
         @Email(message = "Email em formato inválido") String email,
-        @Size(min = 11, max = 11, message = "CPF deve possuir 11 caracteres") String cpf,
+        @Pattern(regexp = "^[0-9]{3}\\.[0-9]{3}\\.[0-9]{3}-[0-9]{2}$",
+                message = "CPF deve estar no formato XXX.XXX.XXX-XX")
+        String cpf,
         boolean anonymous
 ) {}

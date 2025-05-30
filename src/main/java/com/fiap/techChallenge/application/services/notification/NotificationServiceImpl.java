@@ -33,11 +33,10 @@ public class NotificationServiceImpl implements NotificationStatusUseCase {
             helper.setSubject("Atualização do Pedido #" + orderId);
 
             String htmlContent = buildHtmlContent(orderId, status);
-            helper.setText(htmlContent, true); // HTML format
+            helper.setText(htmlContent, true);
 
             mailSender.send(message);
         } catch (MessagingException e) {
-            // Em produção: logue isso com logger, não use printStackTrace
             System.err.println("Erro ao enviar e-mail: " + e.getMessage());
         }
     }

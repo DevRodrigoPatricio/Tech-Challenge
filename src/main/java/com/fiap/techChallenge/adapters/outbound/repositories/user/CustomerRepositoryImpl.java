@@ -17,17 +17,20 @@ import java.util.UUID;
 public class CustomerRepositoryImpl implements CustomerRepository {
 
     private final JpaCustomerRepository jpaCustomerRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerRepositoryImpl(JpaCustomerRepository jpaCustomerRepository) {
+    public CustomerRepositoryImpl(JpaCustomerRepository jpaCustomerRepository,
+                                  CustomerMapper customerMapper) {
         this.jpaCustomerRepository = jpaCustomerRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Override
     public Customer save(Customer customer) {
-        CustomerEntity customerEntity = CustomerMapper.toEntity(customer);
+        CustomerEntity customerEntity = customerMapper.toEntity(customer);
         jpaCustomerRepository.save(customerEntity);
 
-        return CustomerMapper.toDomain(customerEntity);
+        return customerMapper.toDomain(customerEntity);
     }
 
     @Override
@@ -35,19 +38,19 @@ public class CustomerRepositoryImpl implements CustomerRepository {
         CPFEmbeddable emb = new CPFEmbeddable(cpf);
         Optional<CustomerEntity> optEntity = jpaCustomerRepository.findByCpf(emb);
 
-        return optEntity.map(CustomerMapper::toDomain);
+        return optEntity.map(customerMapper::toDomain);
     }
 
     @Override
     public Optional<Customer> findById(UUID uuid) {
         Optional<CustomerEntity> optEntity = jpaCustomerRepository.findById(uuid);
 
-        return optEntity.map(CustomerMapper::toDomain);
+        return optEntity.map(customerMapper::toDomain);
     }
 
     @Override
     public List<Customer> list() {
-        return CustomerMapper.toDomainList(jpaCustomerRepository.findByAnonymousFalse());
+        return customerMapper.toDomainList(jpaCustomerRepository.findByAnonymousFalse());
     }
 
     @Override

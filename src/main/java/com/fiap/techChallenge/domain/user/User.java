@@ -1,5 +1,6 @@
 package com.fiap.techChallenge.domain.user;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class User {
@@ -39,17 +40,15 @@ public class User {
         this.email = email;
     }
 
-    protected String getCpf() {
-        if (cpf != null) {
-            return cpf.getNumber();
-        }
-        return new CPF().getNumber();
+    protected void setCpf(String cpfNumber) {
+        this.cpf = new CPF(cpfNumber);
     }
 
-    protected void setCpf(String cpfNumber) {
-        CPF domain = new CPF();
-        cpf.setNumber(cpfNumber);
+    protected String getFormattedCpf() {
+        return Objects.requireNonNullElseGet(cpf, CPF::new).getFormattedNumber();
+    }
 
-        this.cpf = domain;
+    protected String getUnformattedCpf() {
+        return Objects.requireNonNullElseGet(cpf, CPF::new).getUnformattedNumber();
     }
 }
