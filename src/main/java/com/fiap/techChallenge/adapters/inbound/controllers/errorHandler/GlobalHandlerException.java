@@ -31,6 +31,7 @@ public class GlobalHandlerException {
     @ExceptionHandler({
         EntityNotFoundException.class,
         IllegalArgumentException.class,
+        IllegalStateException.class,
         UserAlreadyExistsException.class,
         NameAlreadyRegisteredException.class,
         InvalidOrderStatusException.class,
@@ -109,11 +110,11 @@ public class GlobalHandlerException {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<String> handleEnumPathVariableException(MethodArgumentTypeMismatchException e) {
         Class<?> targetType = e.getRequiredType();
-        
+
         if (targetType != null) {
             String field = e.getName();
             String invalidValue = String.valueOf(e.getValue());
-            
+
             if (targetType.isEnum()) {
                 Object[] constants = targetType.getEnumConstants();
                 String correctValues = Arrays.toString(constants);

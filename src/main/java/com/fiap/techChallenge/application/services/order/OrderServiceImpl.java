@@ -10,11 +10,11 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
-import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
+import com.fiap.techChallenge.application.dto.order.OrderItemDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
+import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
-import com.fiap.techChallenge.application.dto.order.OrderItemDTO;
 import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.product.ProductUseCase;

@@ -1,17 +1,17 @@
 package com.fiap.techChallenge.application.services.notification;
 
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
+
 import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -49,7 +49,7 @@ public class NotificationServiceImpl implements NotificationStatusUseCase {
                 <p>Seu pedido <strong>#%s</strong> está agora com o status: <strong>%s</strong>.</p>
                 <p>Agradecemos pela sua preferência.</p>
                 <br/>
-                <p>Atenciosamente,<br/>Equipe Tech Challenge</p>
+                <p>Atenciosamente,<br/>Equipe Challenge</p>
               </body>
             </html>
             """.formatted(orderId, status);
