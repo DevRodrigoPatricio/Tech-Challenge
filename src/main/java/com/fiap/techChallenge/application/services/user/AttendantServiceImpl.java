@@ -20,14 +20,17 @@ import java.util.UUID;
 public class AttendantServiceImpl implements AttendantUseCase {
 
     private final AttendantRepository attendantRepository;
+    private final AttendantMapper attendantMapper;
 
-    public AttendantServiceImpl(AttendantRepository attendantRepository) {
+    public AttendantServiceImpl(AttendantRepository attendantRepository,
+                                AttendantMapper attendantMapper) {
         this.attendantRepository = attendantRepository;
+        this.attendantMapper = attendantMapper;
     }
 
     @Override
     public AttendantResponseDTO createAttendant(AttendantRequestDTO attendant) {
-        Attendant attendantToDomain = AttendantMapper.toDomain(attendant);
+        Attendant attendantToDomain = attendantMapper.toDomain(attendant);
         Optional<Attendant> optAttendant = attendantRepository.findByCpf(attendant.cpf());
 
         if (optAttendant.isPresent()) {
@@ -35,19 +38,19 @@ public class AttendantServiceImpl implements AttendantUseCase {
         }
 
         Attendant savedAttendant = attendantRepository.save(attendantToDomain);
-        return AttendantMapper.toDto(savedAttendant);
+        return attendantMapper.toDto(savedAttendant);
     }
 
     @Override
     public AttendantResponseDTO updateAttendant(AttendantRequestDTO attendant) {
-        Attendant domain = this.validate(AttendantMapper.toDomain(attendant).getCpf());
+        Attendant domain = this.validate(attendantMapper.toDomain(attendant).getUnformattedCpf());
 
         domain.setName(attendant.name());
         domain.setCpf(attendant.cpf());
         domain.setEmail(attendant.email());
         domain = attendantRepository.save(domain);
         
-        return AttendantMapper.toDto(domain);
+        return attendantMapper.toDto(domain);
     }
 
     @Override
@@ -58,21 +61,17 @@ public class AttendantServiceImpl implements AttendantUseCase {
             throw new EntityNotFoundException("Attendant");
         }
 
-        return AttendantMapper.toDto(optAttendant.get());
+        return attendantMapper.toDto(optAttendant.get());
     }
 
     @Override
     public Attendant validate(String cpf) {
-        Attendant attendant = attendantRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException("Attendant"));
-
-        return attendant;
+        return attendantRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException("Attendant"));
     }
 
     @Override
     public Attendant validate(UUID id) {
-        Attendant attendant = attendantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Attendant"));
-
-        return attendant;
+        return attendantRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Attendant"));
     }
 
     @Override
@@ -84,12 +83,12 @@ public class AttendantServiceImpl implements AttendantUseCase {
             throw new EntityNotFoundException("Attendant");
         }
 
-        return AttendantMapper.toDto(optAttendant.get());
+        return attendantMapper.toDto(optAttendant.get());
     }
 
     @Override
     public List<AttendantResponseDTO> list() {
-        return AttendantMapper.toDtoList(attendantRepository.findAll());
+        return attendantMapper.toDtoList(attendantRepository.findAll());
     }
 
     @Override

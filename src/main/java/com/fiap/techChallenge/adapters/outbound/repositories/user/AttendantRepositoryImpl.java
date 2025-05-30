@@ -15,35 +15,38 @@ import java.util.UUID;
 public class AttendantRepositoryImpl implements AttendantRepository {
 
     private final JpaAttendantRepository jpaAttendantRepository;
+    private final AttendantMapper attendantMapper;
 
-    public AttendantRepositoryImpl(JpaAttendantRepository jpaAttendantRepository) {
+    public AttendantRepositoryImpl(JpaAttendantRepository jpaAttendantRepository,
+                                   AttendantMapper attendantMapper) {
         this.jpaAttendantRepository = jpaAttendantRepository;
+        this.attendantMapper = attendantMapper;
     }
 
     @Override
     public Optional<Attendant> findById(UUID id) {
         Optional<AttendantEntity> optEntity = jpaAttendantRepository.findById(id);
-        return optEntity.map(AttendantMapper::toDomain);
+        return optEntity.map(attendantMapper::toDomain);
     }
 
     @Override
     public Optional<Attendant> findByCpf(String cpf) {
         CPFEmbeddable emb = new CPFEmbeddable(cpf);
         Optional<AttendantEntity> optEntity = jpaAttendantRepository.findByCpf(emb);
-        return optEntity.map(AttendantMapper::toDomain);
+        return optEntity.map(attendantMapper::toDomain);
     }
 
     @Override
     public Attendant save(Attendant attendant) {
-        AttendantEntity attendantEntity = AttendantMapper.toEntity(attendant);
+        AttendantEntity attendantEntity = attendantMapper.toEntity(attendant);
         attendantEntity = jpaAttendantRepository.save(attendantEntity);
 
-        return AttendantMapper.toDomain(attendantEntity);
+        return attendantMapper.toDomain(attendantEntity);
     }
 
     @Override
     public List<Attendant> findAll() {
-        return AttendantMapper.toDomainList(jpaAttendantRepository.findAll());
+        return attendantMapper.toDomainList(jpaAttendantRepository.findAll());
     }
 
     @Override

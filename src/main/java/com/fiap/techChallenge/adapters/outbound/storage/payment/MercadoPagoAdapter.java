@@ -136,7 +136,6 @@ public class MercadoPagoAdapter implements PaymentProcessingPort {
                     return PaymentStatus.PENDING;
                 }
 
-                // Pega o status do primeiro pagamento
                 String status = (String) payments.get(0).get("status");
                 return mapStatus(status);
             } else {

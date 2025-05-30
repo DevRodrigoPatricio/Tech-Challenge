@@ -9,26 +9,34 @@ import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.domain.order.OrderItem;
 import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderMapper {
 
-    public static List<OrderItem> toItemDomainList(List<OrderItemProjection> projection) {
+    private final CustomerMapper customerMapper;
+
+    public OrderMapper(CustomerMapper customerMapper) {
+        this.customerMapper = customerMapper;
+    }
+
+    public List<OrderItem> toItemDomainList(List<OrderItemProjection> projection) {
         List<OrderItem> domainList = new ArrayList<>();
 
         domainList.addAll(
                 projection.stream()
-                        .map(OrderMapper::toItemDomain)
+                        .map(this::toItemDomain)
                         .toList()
         );
 
         return domainList;
     }
 
-    public static OrderItem toItemDomain(OrderItemProjection projection) {
+    public OrderItem toItemDomain(OrderItemProjection projection) {
         if (projection == null) {
             return null;
         }
@@ -44,7 +52,7 @@ public class OrderMapper {
         return item;
     }
 
-    public static Order toDomain(OrderEntity entity) {
+    public Order toDomain(OrderEntity entity) {
         if (entity == null) {
             return null;
         }
@@ -63,7 +71,7 @@ public class OrderMapper {
                 s.getDate()
         )).collect(Collectors.toList());
 
-        Customer customer = CustomerMapper.toDomain(entity.getCustomer());
+        Customer customer = customerMapper.toDomain(entity.getCustomer());
 
         Order order = new Order(
                 entity.getId(),
@@ -77,7 +85,7 @@ public class OrderMapper {
         return order;
     }
 
-    public static OrderEntity toEntity(Order domain) {
+    public OrderEntity toEntity(Order domain) {
         if (domain == null) {
             return null;
         }
@@ -98,7 +106,7 @@ public class OrderMapper {
                 s.getDate()
         )).collect(Collectors.toList());
 
-        CustomerEntity customer = CustomerMapper.toEntity(domain.getCustomer());
+        CustomerEntity customer = customerMapper.toEntity(domain.getCustomer());
 
         OrderEntity entity = new OrderEntity(
                 domain.getId(),
@@ -112,12 +120,12 @@ public class OrderMapper {
         return entity;
     }
 
-    public static List<Order> toDomainList(List<OrderEntity> entities) {
+    public List<Order> toDomainList(List<OrderEntity> entities) {
         List<Order> domainList = new ArrayList<>();
 
         domainList.addAll(
                 entities.stream()
-                        .map(OrderMapper::toDomain)
+                        .map(this::toDomain)
                         .toList()
         );
 

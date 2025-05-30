@@ -21,17 +21,19 @@ import java.util.UUID;
 public class OrderRepositoryImpl implements OrderRepository {
 
     private final JpaOrderRepository repository;
+    private final OrderMapper orderMapper;
 
-    public OrderRepositoryImpl(JpaOrderRepository repository) {
+    public OrderRepositoryImpl(JpaOrderRepository repository, OrderMapper orderMapper) {
         this.repository = repository;
+        this.orderMapper = orderMapper;
     }
 
     @Override
     public Order save(Order order) {
-        OrderEntity entity = OrderMapper.toEntity(order);
+        OrderEntity entity = orderMapper.toEntity(order);
         entity = repository.save(entity);
 
-        return OrderMapper.toDomain(entity);
+        return orderMapper.toDomain(entity);
     }
 
     @Override
@@ -60,7 +62,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public Order validate(UUID id) {
         OrderEntity order = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Pedido"));
-        return OrderMapper.toDomain(order);
+        return orderMapper.toDomain(order);
     }
 
     @Override
@@ -75,7 +77,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<OrderItem> findItemsById(UUID id) {
-        return OrderMapper.toItemDomainList(repository.findItemsByOrderId(id.toString()));
+        return orderMapper.toItemDomainList(repository.findItemsByOrderId(id.toString()));
     }
 
 }

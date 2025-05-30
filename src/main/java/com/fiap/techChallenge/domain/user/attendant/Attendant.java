@@ -51,9 +51,12 @@ public class Attendant extends User {
         super.setEmail(email);
     }
 
-    @Override
-    public String getCpf() {
-        return super.getCpf();
+    public String getFormattedCpf() {
+        return super.getFormattedCpf();
+    }
+
+    public String getUnformattedCpf() {
+        return super.getUnformattedCpf();
     }
 
     @Override

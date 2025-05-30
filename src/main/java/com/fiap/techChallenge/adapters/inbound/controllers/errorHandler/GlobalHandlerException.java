@@ -37,12 +37,27 @@ public class GlobalHandlerException {
         NullPointerException.class,
         ProductNotAvaiableException.class,
         InvalidOrderStatusTransitionException.class,
-        WrongCategoryOrderException.class,
-        SQLIntegrityConstraintViolationException.class,})
+        WrongCategoryOrderException.class})
     public ResponseEntity<ErrorResponse> handleExceptions(Exception ex) {
         ErrorResponse response = new ErrorResponse(
                 HttpStatus.BAD_REQUEST,
                 ex.getMessage()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException ex) {
+
+        String regex = "(Duplicate entry '\\S+')";
+        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+        java.util.regex.Matcher matcher = pattern.matcher(ex.getMessage());
+        String message = matcher.find() ? matcher.group(1) : ex.getMessage();
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                message
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);

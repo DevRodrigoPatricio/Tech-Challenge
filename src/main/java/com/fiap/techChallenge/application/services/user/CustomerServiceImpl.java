@@ -18,14 +18,17 @@ import java.util.UUID;
 public class CustomerServiceImpl implements CustomerUseCase {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository,
+                               CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
     @Override
     public CustomerResponseDTO createCustomer(CustomerRequestDTO customer) {
-        Customer customerToDomain = CustomerMapper.toDomain(customer);
+        Customer customerToDomain = customerMapper.toDomain(customer);
 
         Optional<Customer> optCustomer = customerRepository.findByCPF(customer.cpf());
 
@@ -36,21 +39,21 @@ public class CustomerServiceImpl implements CustomerUseCase {
         Customer savedAttendant = customerRepository.save(customerToDomain);
 
         if (savedAttendant.isAnonymous()) {
-            return CustomerMapper.toAnonymousDTO(savedAttendant);
+            return customerMapper.toAnonymousDTO(savedAttendant);
         }
-        return CustomerMapper.toDTO(savedAttendant);
+        return customerMapper.toDTO(savedAttendant);
     }
 
     @Override
     public CustomerResponseDTO updateCustomer(CustomerRequestDTO customer) {
-        Customer domain = CustomerMapper.toDomain(customer);
+        Customer domain = customerMapper.toDomain(customer);
 
         domain.setName(customer.name());
         domain.setCpf(customer.cpf());
         domain.setEmail(customer.email());
         domain = customerRepository.save(domain);
 
-        return CustomerMapper.toDTO(domain);
+        return customerMapper.toDTO(domain);
     }
 
     @Override
@@ -62,9 +65,9 @@ public class CustomerServiceImpl implements CustomerUseCase {
         }
 
         if (optCustomer.get().isAnonymous()) {
-            return CustomerMapper.toAnonymousDTO(optCustomer.get());
+            return customerMapper.toAnonymousDTO(optCustomer.get());
         }
-        return CustomerMapper.toDTO(optCustomer.get());
+        return customerMapper.toDTO(optCustomer.get());
     }
 
     @Override
@@ -90,14 +93,14 @@ public class CustomerServiceImpl implements CustomerUseCase {
         }
 
         if (optCustomer.get().isAnonymous()) {
-            return CustomerMapper.toAnonymousDTO(optCustomer.get());
+            return customerMapper.toAnonymousDTO(optCustomer.get());
         }
-        return CustomerMapper.toDTO(optCustomer.get());
+        return customerMapper.toDTO(optCustomer.get());
     }
 
     @Override
     public List<CustomerResponseDTO> list() {
-        return CustomerMapper.toDtoList(customerRepository.list());
+        return customerMapper.toDtoList(customerRepository.list());
     }
 
     @Override
