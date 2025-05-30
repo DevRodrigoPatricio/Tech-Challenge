@@ -6,7 +6,7 @@ import java.util.List;
 import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.core.user.attendant.Attendant;
 
 import org.springframework.stereotype.Component;
 

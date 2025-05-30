@@ -4,10 +4,10 @@ import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.order.OrderItemEmbeddable;
 import com.fiap.techChallenge.adapters.outbound.entities.order.OrderStatusEmbeddable;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
-import com.fiap.techChallenge.domain.order.OrderStatusHistory;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.core.order.Order;
+import com.fiap.techChallenge.domain.core.order.OrderItem;
+import com.fiap.techChallenge.domain.core.order.OrderStatusHistory;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
 import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
 import org.springframework.stereotype.Component;
 

@@ -1,11 +1,11 @@
-package com.fiap.techChallenge.domain.order;
+package com.fiap.techChallenge.domain.core.order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import com.fiap.techChallenge.domain.user.customer.Customer;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
 
 public class Order {
 

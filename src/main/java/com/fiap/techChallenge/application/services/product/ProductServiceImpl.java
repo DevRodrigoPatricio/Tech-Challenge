@@ -8,10 +8,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.fiap.techChallenge.application.useCases.product.ProductUseCase;
+import com.fiap.techChallenge.domain.core.product.Product;
+import com.fiap.techChallenge.domain.core.product.ProductRepository;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.ProductStatus;
-import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.product.ProductRepository;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.domain.exceptions.product.NameAlreadyRegisteredException;
 import com.fiap.techChallenge.domain.exceptions.product.ProductNotAvaiableException;

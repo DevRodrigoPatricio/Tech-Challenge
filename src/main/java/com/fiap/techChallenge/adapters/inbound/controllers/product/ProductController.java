@@ -8,8 +8,8 @@ import com.fiap.techChallenge.application.services.product.ProductServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fiap.techChallenge.domain.core.product.Product;
 import com.fiap.techChallenge.domain.enums.Category;
-import com.fiap.techChallenge.domain.product.Product;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

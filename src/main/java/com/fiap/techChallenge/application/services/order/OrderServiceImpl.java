@@ -19,17 +19,17 @@ import com.fiap.techChallenge.application.useCases.notification.NotificationStat
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.product.ProductUseCase;
 import com.fiap.techChallenge.application.useCases.user.CustomerUseCase;
+import com.fiap.techChallenge.domain.core.order.Order;
+import com.fiap.techChallenge.domain.core.order.OrderItem;
+import com.fiap.techChallenge.domain.core.order.OrderRepository;
+import com.fiap.techChallenge.domain.core.order.OrderStatusHistory;
+import com.fiap.techChallenge.domain.core.product.Product;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
 import com.fiap.techChallenge.domain.enums.Category;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.domain.exceptions.order.InvalidOrderStatusException;
 import com.fiap.techChallenge.domain.exceptions.order.WrongCategoryOrderException;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderRepository;
-import com.fiap.techChallenge.domain.order.OrderStatusHistory;
-import com.fiap.techChallenge.domain.product.Product;
-import com.fiap.techChallenge.domain.user.customer.Customer;
 
 @Service
 public class OrderServiceImpl implements OrderUseCase {

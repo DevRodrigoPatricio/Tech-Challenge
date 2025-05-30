@@ -4,9 +4,9 @@ import java.util.List;
 
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
 import com.fiap.techChallenge.application.useCases.user.AttendantUseCase;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
-import com.fiap.techChallenge.domain.user.attendant.AttendantRepository;
 import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
+import com.fiap.techChallenge.domain.core.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.core.user.attendant.AttendantRepository;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
 import com.fiap.techChallenge.utils.mappers.AttendantMapper;

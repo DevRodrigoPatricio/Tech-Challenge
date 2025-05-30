@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fiap.techChallenge.adapters.outbound.entities.product.ProductEntity;
-import com.fiap.techChallenge.domain.product.Product;
+import com.fiap.techChallenge.domain.core.product.Product;
 
 public class ProductMapper {
 

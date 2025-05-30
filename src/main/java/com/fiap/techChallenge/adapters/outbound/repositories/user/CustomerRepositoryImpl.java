@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.fiap.techChallenge.adapters.outbound.entities.user.CPFEmbeddable;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
-import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
+import com.fiap.techChallenge.domain.core.user.customer.CustomerRepository;
 import com.fiap.techChallenge.utils.mappers.CustomerMapper;
 
 import org.springframework.stereotype.Repository;

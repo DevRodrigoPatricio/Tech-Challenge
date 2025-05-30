@@ -1,11 +1,11 @@
 package com.fiap.techChallenge.utils.mappers;
 
 import com.fiap.techChallenge.adapters.outbound.entities.user.CustomerEntity;
-import com.fiap.techChallenge.domain.user.customer.Customer;
 import com.fiap.techChallenge.application.dto.user.CustomerRequestDTO;
 import com.fiap.techChallenge.application.dto.user.CustomerResponseAnonymDTO;
 import com.fiap.techChallenge.application.dto.user.CustomerResponseDTO;
 import com.fiap.techChallenge.application.dto.user.CustomerResponseFullDTO;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
 
 import java.util.ArrayList;
 import java.util.List;

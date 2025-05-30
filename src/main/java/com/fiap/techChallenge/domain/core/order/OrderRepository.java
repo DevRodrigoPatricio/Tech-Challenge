@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.order;
+package com.fiap.techChallenge.domain.core.order;
 
 import java.time.LocalDateTime;
 import java.util.List;

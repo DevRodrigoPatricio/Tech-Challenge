@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.product;
+package com.fiap.techChallenge.domain.core.product;
 
 import java.math.BigDecimal;
 import java.util.UUID;

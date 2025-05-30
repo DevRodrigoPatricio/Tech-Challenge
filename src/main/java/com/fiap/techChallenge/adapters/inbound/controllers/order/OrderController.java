@@ -5,8 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.core.order.Order;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
-import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;

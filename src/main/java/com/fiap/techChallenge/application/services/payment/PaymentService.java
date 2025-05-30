@@ -1,9 +1,9 @@
 package com.fiap.techChallenge.application.services.payment;
 
 import com.fiap.techChallenge.adapters.outbound.storage.payment.PaymentProcessingPort;
+import com.fiap.techChallenge.domain.core.order.Order;
 import com.fiap.techChallenge.domain.enums.OrderStatus;
 import com.fiap.techChallenge.domain.enums.PaymentStatus;
-import com.fiap.techChallenge.domain.order.Order;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.payment.ProcessPaymentUseCase;
 import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;

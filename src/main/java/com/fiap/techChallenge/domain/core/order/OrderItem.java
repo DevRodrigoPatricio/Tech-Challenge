@@ -1,10 +1,10 @@
-package com.fiap.techChallenge.domain.order;
+package com.fiap.techChallenge.domain.core.order;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fiap.techChallenge.domain.core.product.Product;
 import com.fiap.techChallenge.domain.enums.Category;
-import com.fiap.techChallenge.domain.product.Product;
 
 public class OrderItem {
 

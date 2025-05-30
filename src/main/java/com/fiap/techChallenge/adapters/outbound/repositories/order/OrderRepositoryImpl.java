@@ -1,10 +1,10 @@
 package com.fiap.techChallenge.adapters.outbound.repositories.order;
 
 import com.fiap.techChallenge.adapters.outbound.entities.order.OrderEntity;
+import com.fiap.techChallenge.domain.core.order.Order;
+import com.fiap.techChallenge.domain.core.order.OrderItem;
+import com.fiap.techChallenge.domain.core.order.OrderRepository;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
-import com.fiap.techChallenge.domain.order.Order;
-import com.fiap.techChallenge.domain.order.OrderItem;
-import com.fiap.techChallenge.domain.order.OrderRepository;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderItemProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;

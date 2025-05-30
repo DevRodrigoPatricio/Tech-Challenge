@@ -1,12 +1,11 @@
 package com.fiap.techChallenge.application.useCases.user;
 
 import com.fiap.techChallenge.application.dto.user.CustomerResponseDTO;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
 import com.fiap.techChallenge.application.dto.user.CustomerRequestDTO;
 
 import java.util.List;
 import java.util.UUID;
-
-import com.fiap.techChallenge.domain.user.customer.Customer;
 
 public interface CustomerUseCase {
 

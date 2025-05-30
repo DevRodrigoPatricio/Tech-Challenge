@@ -2,9 +2,9 @@ package com.fiap.techChallenge.application.services.user;
 
 import com.fiap.techChallenge.application.dto.user.CustomerResponseDTO;
 import com.fiap.techChallenge.application.useCases.user.CustomerUseCase;
-import com.fiap.techChallenge.domain.user.customer.Customer;
-import com.fiap.techChallenge.domain.user.customer.CustomerRepository;
 import com.fiap.techChallenge.application.dto.user.CustomerRequestDTO;
+import com.fiap.techChallenge.domain.core.user.customer.Customer;
+import com.fiap.techChallenge.domain.core.user.customer.CustomerRepository;
 import com.fiap.techChallenge.domain.exceptions.EntityNotFoundException;
 import com.fiap.techChallenge.domain.exceptions.user.UserAlreadyExistsException;
 import com.fiap.techChallenge.utils.mappers.CustomerMapper;

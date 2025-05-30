@@ -2,8 +2,8 @@ package com.fiap.techChallenge.adapters.outbound.repositories.user;
 
 import com.fiap.techChallenge.adapters.outbound.entities.user.AttendantEntity;
 import com.fiap.techChallenge.adapters.outbound.entities.user.CPFEmbeddable;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
-import com.fiap.techChallenge.domain.user.attendant.AttendantRepository;
+import com.fiap.techChallenge.domain.core.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.core.user.attendant.AttendantRepository;
 import com.fiap.techChallenge.utils.mappers.AttendantMapper;
 import org.springframework.stereotype.Repository;
 

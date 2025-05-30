@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.fiap.techChallenge.application.dto.user.AttendantRequestDTO;
 import com.fiap.techChallenge.application.dto.user.AttendantResponseDTO;
-import com.fiap.techChallenge.domain.user.attendant.Attendant;
+import com.fiap.techChallenge.domain.core.user.attendant.Attendant;
 
 public interface AttendantUseCase {
 

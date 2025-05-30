@@ -9,7 +9,7 @@ import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
-import com.fiap.techChallenge.domain.order.Order;
+import com.fiap.techChallenge.domain.core.order.Order;
 
 public interface OrderUseCase {
 
