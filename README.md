@@ -1,7 +1,7 @@
 
 # Tech Challenge
 
-Este repositório contém o projeto desenvolvido por uma equipe de colaboradores como parte de um desafio técnico. O objetivo é criar um sistema de autoatendimento para fast food com foco em boas práticas de engenharia de software, arquitetura hexagonal e integração de serviços como Mercado Pago.
+Este repositório contém o projeto Challenge, desenvolvido por uma equipe de colaboradores como parte do desafio técnico referente a Fase 1 da pós graduação de Arquitetura de Software FIAP. O objetivo é criar um sistema de autoatendimento para fast food com foco em boas práticas de engenharia de software, arquitetura hexagonal e integração de serviços como Mercado Pago.
 
 
 ## 🚀 Objetivo do Projeto
