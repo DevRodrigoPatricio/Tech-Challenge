@@ -1,9 +1,9 @@
-package com.fiap.techChallenge.domain.user.customer;
-
-import com.fiap.techChallenge.domain.user.CPF;
-import com.fiap.techChallenge.domain.user.User;
+package com.fiap.techChallenge.domain.core.user.customer;
 
 import java.util.UUID;
+
+import com.fiap.techChallenge.domain.core.user.CPF;
+import com.fiap.techChallenge.domain.core.user.User;
 
 public class Customer extends User {
 
@@ -64,10 +64,12 @@ public class Customer extends User {
         super.setEmail(email);
     }
 
+    @Override
     public String getFormattedCpf() {
         return super.getFormattedCpf();
     }
-
+    
+    @Override
     public String getUnformattedCpf() {
         return super.getUnformattedCpf();
     }

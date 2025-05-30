@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.user;
+package com.fiap.techChallenge.domain.core.user;
 
 import java.util.Objects;
 import java.util.UUID;

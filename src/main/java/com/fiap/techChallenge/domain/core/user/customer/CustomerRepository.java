@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.user.customer;
+package com.fiap.techChallenge.domain.core.user.customer;
 
 import java.util.List;
 import java.util.Optional;

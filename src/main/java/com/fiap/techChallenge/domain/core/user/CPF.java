@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.user;
+package com.fiap.techChallenge.domain.core.user;
 
 public class CPF {
 

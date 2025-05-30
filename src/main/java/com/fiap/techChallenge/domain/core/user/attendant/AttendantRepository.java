@@ -1,4 +1,4 @@
-package com.fiap.techChallenge.domain.user.attendant;
+package com.fiap.techChallenge.domain.core.user.attendant;
 
 import java.util.Optional;
 import java.util.UUID;
