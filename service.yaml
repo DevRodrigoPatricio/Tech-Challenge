@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tech-challenge-service
+spec:
+  ports:
+    - port: 8080
+      nodePort: 30005
+  selector:
+    app: tech-challenge
+  type: NodePort

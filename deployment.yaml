@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tech-challenge
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tech-challenge
+  template:
+    metadata:
+      labels:
+        app: tech-challenge
+    spec:
+      containers:
+        - name: tech-challenge
+          image: breno091073/tech-challenge:1.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            # Configurações do Banco de Dados
+            - name: SPRING_DATASOURCE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_URL
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_USERNAME
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: SPRING_DATASOURCE_PASSWORD
+
+            # Configurações do Mercado Pago
+            - name: MERCADO_PAGO_ACCESS_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MERCADO_PAGO_ACCESS_TOKEN
+            - name: MERCADO_PAGO_COLLECTOR_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MERCADO_PAGO_COLLECTOR_ID
+            - name: MERCADO_PAGO_POS_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: MERCADO_PAGO_POS_ID
+
+            # Configurações de Email
+            - name: EMAIL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: EMAIL_USER
+            - name: EMAIL_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: EMAIL_PASS
+            - name: EMAIL_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: app-secrets
+                  key: EMAIL_FROM
+
+            # Configurações do Java e Spring
+            - name: SPRING_PROFILES_ACTIVE
+              value: "kubernetes"
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+#          readinessProbe:
+#            httpGet:
+#              path: /api/v1/swagger-ui/index.html
+#              port: 8080
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#          livenessProbe:
+#            httpGet:
+#              path: /api/v1/swagger-ui/index.html
+#              port: 8080
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
