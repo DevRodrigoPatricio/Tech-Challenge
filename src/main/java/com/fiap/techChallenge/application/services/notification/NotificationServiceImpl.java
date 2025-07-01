@@ -41,7 +41,7 @@ public class NotificationServiceImpl implements NotificationStatusUseCase {
         }
     }
 
-    private String buildHtmlContent(UUID orderId, String status) {
+    public String buildHtmlContent(UUID orderId, String status) {
         return """
             <html>
               <body style="font-family: Arial, sans-serif; color: #333;">
