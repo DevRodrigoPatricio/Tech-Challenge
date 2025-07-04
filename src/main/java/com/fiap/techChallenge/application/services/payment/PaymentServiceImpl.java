@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-public class PaymentService implements ProcessPaymentUseCase {
+public class PaymentServiceImpl implements ProcessPaymentUseCase {
 
     private final PaymentProcessingPort paymentProcessor;
     private final OrderUseCase orderUseCase;
 
-    public PaymentService(
+    public PaymentServiceImpl(
             PaymentProcessingPort paymentProcessor,
             OrderUseCase orderUseCase
     ) {
@@ -31,7 +31,11 @@ public class PaymentService implements ProcessPaymentUseCase {
 
     @Override
     public PaymentResponseDTO process(PaymentRequestDTO request) {
+
         Order order = orderUseCase.validate(request.getOrderId());
+        if (order == null) {
+            throw new IllegalArgumentException("Order não encontrada ou inválida.");
+        }
 
         return paymentProcessor.processPayment(request, order);
     }
@@ -39,30 +43,38 @@ public class PaymentService implements ProcessPaymentUseCase {
     @Override
     public PaymentStatus processPayment(UUID orderId) {
         PaymentStatus paymentStatus = paymentProcessor.checkStatus(orderId);
-        OrderStatus status;
+        OrderStatus status = mapPaymentStatusToOrderStatus(paymentStatus);
 
-        switch (paymentStatus) {
-            case APPROVED ->
-                status = OrderStatus.RECEBIDO;
-            case REJECTED, EXPIRED ->
-                status = OrderStatus.NAO_PAGO;
-            default ->
-                status = OrderStatus.PAGAMENTO_PENDENTE;
-        }
-
-        UpdateOrderStatusHistoryDTO orderStatus = new UpdateOrderStatusHistoryDTO(
-                orderId,
-                null,
-                status
-        );
-
-        if (orderStatus.getStatus() != OrderStatus.PAGAMENTO_PENDENTE) {
-            orderUseCase.updateStatus(orderStatus);
-            Order order = orderUseCase.validate(orderId);
-            order.setDate(LocalDateTime.now());
-            orderUseCase.save(order);
+        if (status != OrderStatus.PAGAMENTO_PENDENTE) {
+            updateOrderStatus(orderId, status);
         }
 
         return paymentStatus;
+    }
+
+    private OrderStatus mapPaymentStatusToOrderStatus(PaymentStatus paymentStatus) {
+        switch (paymentStatus) {
+            case APPROVED:
+                return OrderStatus.RECEBIDO;
+            case REJECTED:
+            case EXPIRED:
+                return OrderStatus.NAO_PAGO;
+            default:
+                return OrderStatus.PAGAMENTO_PENDENTE;
+        }
+    }
+
+    private void updateOrderStatus(UUID orderId, OrderStatus status) {
+        UpdateOrderStatusHistoryDTO orderStatus = new UpdateOrderStatusHistoryDTO(orderId, null, status);
+        orderUseCase.updateStatus(orderStatus);
+
+
+        Order order = orderUseCase.validate(orderId);
+        if (order != null) {
+            order.setDate(LocalDateTime.now());
+            orderUseCase.save(order);
+        } else {
+            throw new IllegalArgumentException("Order não encontrada ou inválida para update de status.");
+        }
     }
 }
