@@ -6,16 +6,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
 import org.springframework.stereotype.Service;
-
 import com.fiap.techChallenge.application.dto.order.OrderDTO;
 import com.fiap.techChallenge.application.dto.order.OrderItemDTO;
 import com.fiap.techChallenge.application.dto.order.OrderWithItemsAndStatusDTO;
 import com.fiap.techChallenge.application.dto.order.UpdateOrderStatusHistoryDTO;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusAndWaitMinutesProjection;
 import com.fiap.techChallenge.application.dto.order.projection.OrderWithStatusProjection;
-import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
+import com.fiap.techChallenge.domain.services.NotificationService;
 import com.fiap.techChallenge.application.useCases.order.OrderUseCase;
 import com.fiap.techChallenge.application.useCases.product.ProductUseCase;
 import com.fiap.techChallenge.application.useCases.user.CustomerUseCase;
@@ -37,16 +35,16 @@ public class OrderServiceImpl implements OrderUseCase {
     private final OrderRepository repository;
     private final ProductUseCase productUseCase;
     private final CustomerUseCase customerUseCase;
-    private final NotificationStatusUseCase notificationStatusUseCase;
+    private final NotificationService notificationService;
 
     public OrderServiceImpl(OrderRepository repository,
             ProductUseCase productUseCase,
             CustomerUseCase customerUseCase,
-            NotificationStatusUseCase notificationStatusUseCase) {
+                            NotificationService notificationService) {
         this.repository = repository;
         this.productUseCase = productUseCase;
         this.customerUseCase = customerUseCase;
-        this.notificationStatusUseCase = notificationStatusUseCase;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -126,7 +124,7 @@ public class OrderServiceImpl implements OrderUseCase {
                 || newStatus.getStatus().equals(OrderStatus.EM_PREPARACAO)
                 || newStatus.getStatus().equals(OrderStatus.PRONTO))) {
 
-            notificationStatusUseCase.notifyStatus(
+            notificationService.notifyStatus(
                     savedOrder.getCustomer().getEmail(),
                     savedOrder.getId(),
                     newStatus.getStatus().toString());

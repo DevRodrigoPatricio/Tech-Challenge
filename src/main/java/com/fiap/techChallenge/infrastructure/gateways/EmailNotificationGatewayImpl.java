@@ -1,29 +1,29 @@
-package com.fiap.techChallenge.application.services.notification;
+package com.fiap.techChallenge.infrastructure.gateways;
 
 import java.util.UUID;
 
+import com.fiap.techChallenge.application.gateways.EmailNotificationGateway;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
-
-import com.fiap.techChallenge.application.useCases.notification.NotificationStatusUseCase;
-
+import org.springframework.stereotype.Component;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.RequiredArgsConstructor;
 
-@Service
-@RequiredArgsConstructor
-public class NotificationServiceImpl implements NotificationStatusUseCase {
+@Component
+public class EmailNotificationGatewayImpl implements EmailNotificationGateway {
 
     private final JavaMailSender mailSender;
 
     @Value("${app.mail.from}")
     private String from;
 
+    public EmailNotificationGatewayImpl(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
     @Override
-    public void notifyStatus(String toEmail, UUID orderId, String status) {
+    public void sendEmail(String toEmail, UUID orderId, String status) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

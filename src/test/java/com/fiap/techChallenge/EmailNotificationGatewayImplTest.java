@@ -1,6 +1,6 @@
 package com.fiap.techChallenge;
 
-import com.fiap.techChallenge.application.services.notification.NotificationServiceImpl;
+import com.fiap.techChallenge.infrastructure.gateways.EmailNotificationGatewayImpl;
 import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,13 +16,13 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class NotificationServiceImplTest {
+class EmailNotificationGatewayImplTest {
 
     @Mock
     private JavaMailSender mailSender;
 
     @InjectMocks
-    private NotificationServiceImpl notificationService;
+    private EmailNotificationGatewayImpl emailNotificationGateway;
 
     private final String fromEmail = "no-reply@techchallenge.com.br";
     private final String toEmail = "cliente@exemplo.com";
@@ -31,7 +31,7 @@ class NotificationServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        ReflectionTestUtils.setField(notificationService, "from", fromEmail);
+        ReflectionTestUtils.setField(emailNotificationGateway, "from", fromEmail);
     }
 
     @Test
@@ -41,7 +41,7 @@ class NotificationServiceImplTest {
         when(mailSender.createMimeMessage()).thenReturn(mimeMessage);
 
         // Act
-        notificationService.notifyStatus(toEmail, orderId, status);
+        emailNotificationGateway.sendEmail(toEmail, orderId, status);
 
         // Assert
         verify(mailSender).createMimeMessage();
@@ -51,7 +51,7 @@ class NotificationServiceImplTest {
     @Test
     void shouldBuildCorrectHtmlContent() {
         // Act
-        String htmlContent = notificationService.buildHtmlContent(orderId, status);
+        String htmlContent = emailNotificationGateway.buildHtmlContent(orderId, status);
 
         // Assert
         assertAll(
@@ -67,7 +67,6 @@ class NotificationServiceImplTest {
         );
     }
 
-
     @Test
     void shouldIncludeAllStatusOptionsInTemplate() {
         String[] allStatuses = {
@@ -81,7 +80,7 @@ class NotificationServiceImplTest {
         };
 
         for (String statusValue : allStatuses) {
-            String htmlContent = notificationService.buildHtmlContent(orderId, statusValue);
+            String htmlContent = emailNotificationGateway.buildHtmlContent(orderId, statusValue);
             assertTrue(htmlContent.contains(statusValue),
                     "Deveria suportar o status: " + statusValue);
         }
